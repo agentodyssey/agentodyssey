@@ -1,0 +1,31 @@
+{
+    "agents": [
+        {
+            "agent_type": "LongContextAgent",
+            "agent_id": "agent_adam_davis",
+            "agent_name": "adam_davis",
+            "llm_name": "Qwen/Qwen3-4B",
+            "enable_short_term_memory": false,
+            "enable_reflection": false,
+            "enable_summarization": false
+        },
+        {
+            "agent_type": "LongContextAgent",
+            "agent_id": "agent_bella_chen",
+            "agent_name": "bella_chen",
+            "llm_name": "Qwen/Qwen3-4B",
+            "enable_short_term_memory": false,
+            "enable_reflection": false,
+            "enable_summarization": false
+        },
+        {
+            "agent_type": "LongContextAgent",
+            "agent_id": "agent_carlos_martinez",
+            "agent_name": "carlos_martinez",
+            "llm_name": "Qwen/Qwen3-4B",
+            "enable_short_term_memory": false,
+            "enable_reflection": false,
+            "enable_summarization": false
+        }
+    ]
+}

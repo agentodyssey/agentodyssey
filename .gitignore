@@ -1,0 +1,7 @@
+*.pyc
+*.egg-info/
+.aider*
+.DS_Store
+.ipynb_checkpoints
+dist/
+output/

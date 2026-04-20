@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentodyssey"
+version = "0.1.0"
+description = "Open-Ended Long-Horizon Text Game Generation Engine and Evaluation Framework for Test-Time Continual Learning Agents"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "gymnasium",
+    "termcolor",
+    "psutil",
+    "openai",
+    "vllm",
+    "sentence-transformers",
+    "accelerate",
+    "peft",
+    "matplotlib",
+    "diffusers[torch]",
+]
+
+[project.scripts]
+agentodyssey = "agentodyssey:main"
+
+[project.urls]
+Homepage = "https://agentodyssey.github.io"
+Repository = "https://github.com/agentodyssey/agentodyssey"
+
+[tool.setuptools]
+py-modules = ["agentodyssey", "eval", "utils"]
+
+[tool.setuptools.packages.find]
+include = ["agents*", "assets*", "games*", "providers*", "tools*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.json", "*.jsonl", "*.js", "*.html", "*.mmd", "*.png", "*.jpg", "*.svg"]

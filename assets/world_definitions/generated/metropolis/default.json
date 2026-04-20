@@ -1,0 +1,1267 @@
+{
+  "entities": {
+    "places": [
+      {
+        "type": "place",
+        "id": "place_central_courthouse",
+        "name": "Central Courthouse",
+        "unlocked": true,
+        "areas": [
+          {
+            "type": "area",
+            "id": "area_lobby",
+            "name": "lobby",
+            "level": 1,
+            "light": true
+          },
+          {
+            "type": "area",
+            "id": "area_clerks_office",
+            "name": "clerks_office",
+            "level": 1,
+            "light": true
+          },
+          {
+            "type": "area",
+            "id": "area_evidence_room",
+            "name": "evidence_room",
+            "level": 2,
+            "light": false
+          },
+          {
+            "type": "area",
+            "id": "area_courtroom",
+            "name": "courtroom",
+            "level": 3,
+            "light": true
+          }
+        ]
+      },
+      {
+        "type": "place",
+        "id": "place_statute_district",
+        "name": "Statute District",
+        "unlocked": true,
+        "areas": [
+          {
+            "type": "area",
+            "id": "area_market_square",
+            "name": "market_square",
+            "level": 2,
+            "light": true
+          },
+          {
+            "type": "area",
+            "id": "area_alley",
+            "name": "alley",
+            "level": 3,
+            "light": false
+          },
+          {
+            "type": "area",
+            "id": "area_archive_tower",
+            "name": "archive_tower",
+            "level": 4,
+            "light": true
+          }
+        ]
+      },
+      {
+        "type": "place",
+        "id": "place_nullification_vault",
+        "name": "Nullification Vault",
+        "unlocked": false,
+        "areas": [
+          {
+            "type": "area",
+            "id": "area_antechamber",
+            "name": "antechamber",
+            "level": 4,
+            "light": false
+          },
+          {
+            "type": "area",
+            "id": "area_gravity_well",
+            "name": "gravity_well",
+            "level": 5,
+            "light": false
+          },
+          {
+            "type": "area",
+            "id": "area_prime_bench",
+            "name": "prime_bench",
+            "level": 5,
+            "light": true
+          }
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "type": "object",
+        "id": "obj_coin",
+        "name": "writ_token",
+        "category": "currency",
+        "usage": "exchange",
+        "value": null,
+        "size": 0,
+        "description": "A stamped brass token bearing the city seal, used as common tender in every courthouse district.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_pen",
+        "name": "decree_stylus",
+        "category": "tool",
+        "usage": "write",
+        "value": 6,
+        "size": 1,
+        "description": "A slim stylus whose ink changes color with the prevailing nightly law.",
+        "craft": {
+          "ingredients": {
+            "obj_gavel_splint": 1,
+            "obj_parchment_scrap": 0.5
+          },
+          "dependencies": []
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_paper",
+        "name": "legal_brief",
+        "category": "tool",
+        "usage": "writable",
+        "value": 5,
+        "size": 1,
+        "text": "",
+        "max_text_length": 200,
+        "description": "A single sheet of court-grade parchment that holds written arguments.",
+        "craft": {
+          "ingredients": {
+            "obj_parchment_scrap": 0.5
+          },
+          "dependencies": []
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_small_bag",
+        "name": "docket_satchel",
+        "category": "container",
+        "usage": "store",
+        "value": 20,
+        "size": 2,
+        "capacity": 20,
+        "description": "A canvas satchel embossed with the scales of justice, suitable for carrying legal materials and small goods.",
+        "craft": {
+          "ingredients": {
+            "obj_parchment_scrap": 3,
+            "obj_binding_thread": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_key_blank",
+        "name": "seal_blank",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "An uncut judicial seal blank, ready to be pressed into an official key.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_key",
+        "name": "chamber_key",
+        "category": "tool",
+        "usage": "unlock",
+        "value": 15,
+        "size": 1,
+        "description": "A heavy brass key bearing the seal of the High Court, opening locked chambers throughout the metropolis.",
+        "craft": {
+          "ingredients": {
+            "obj_key_blank": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_wood_log",
+        "name": "gavel_timber",
+        "category": "material",
+        "usage": "craft",
+        "value": 2,
+        "size": 1,
+        "description": "A dense block of ironwood harvested from the courthouse pillars, still humming with residual statutes.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_lobby",
+          "area_clerks_office",
+          "area_market_square"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_parchment_scrap",
+        "name": "parchment_scrap",
+        "category": "material",
+        "usage": "craft",
+        "value": 2,
+        "size": 1,
+        "description": "A torn piece of law-paper that still shimmers faintly when held to light.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_lobby",
+          "area_clerks_office",
+          "area_evidence_room"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_gavel_splint",
+        "name": "gavel_splint",
+        "category": "material",
+        "usage": "craft",
+        "value": 3,
+        "size": 1,
+        "description": "A narrow splint carved from gavel timber, useful for shafts and handles.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_log": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_binding_thread",
+        "name": "binding_thread",
+        "category": "material",
+        "usage": "craft",
+        "value": 2,
+        "size": 1,
+        "description": "Thread spun from courthouse tapestry fibers, strong enough to bind evidence or stitch armor.",
+        "craft": {
+          "ingredients": {
+            "obj_parchment_scrap": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 1,
+        "areas": [
+          "area_clerks_office",
+          "area_evidence_room"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_marble_chunk",
+        "name": "marble_chunk",
+        "category": "material",
+        "usage": "craft",
+        "value": 3,
+        "size": 1,
+        "description": "A chunk of veined marble, broken from the courthouse floor. Each night's laws give it different weight.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 2,
+        "areas": [
+          "area_evidence_room",
+          "area_courtroom",
+          "area_market_square"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_wax_seal",
+        "name": "wax_seal",
+        "category": "material",
+        "usage": "craft",
+        "value": 3,
+        "size": 1,
+        "description": "A disc of judicial wax that hardens under current gravity laws, useful for binding and reinforcing.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_clerks_office",
+          "area_lobby"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_statute_shard",
+        "name": "statute_shard",
+        "category": "material",
+        "usage": "craft",
+        "value": 5,
+        "size": 1,
+        "description": "A crystallized fragment of a repealed law. It hums and shifts form slightly after midnight.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 3,
+        "areas": [
+          "area_courtroom",
+          "area_alley",
+          "area_archive_tower"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_bar",
+        "name": "iron_bar",
+        "category": "material",
+        "usage": "craft",
+        "value": 7,
+        "size": 1,
+        "description": "A smelted bar of courthouse-grade iron, drawn from courtroom railings and melted gavel heads.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_filings": 2
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 3,
+        "areas": [
+          "area_alley",
+          "area_courtroom"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_filings",
+        "name": "iron_filings",
+        "category": "material",
+        "usage": "craft",
+        "value": 3,
+        "size": 1,
+        "description": "Fine iron shavings scraped from old cell bars, awaiting the furnace.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 2,
+        "areas": [
+          "area_evidence_room",
+          "area_market_square",
+          "area_alley"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_parchment_roll",
+        "name": "parchment_roll",
+        "category": "material",
+        "usage": "craft",
+        "value": 6,
+        "size": 2,
+        "description": "A rolled bolt of parchment prepared for layering into protective garments or long documents.",
+        "craft": {
+          "ingredients": {
+            "obj_parchment_scrap": 2,
+            "obj_binding_thread": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_padded_robe_lining",
+        "name": "padded_lining",
+        "category": "material",
+        "usage": "craft",
+        "value": 10,
+        "size": 3,
+        "description": "Layered parchment and thread pressed into a cushioning lining, absorbing the shock of shifting physics.",
+        "craft": {
+          "ingredients": {
+            "obj_parchment_roll": 1,
+            "obj_parchment_scrap": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_marble_slab",
+        "name": "marble_slab",
+        "category": "material",
+        "usage": "craft",
+        "value": 5,
+        "size": 2,
+        "description": "A flat slab ground from marble, useful for shields and heavy plating.",
+        "craft": {
+          "ingredients": {
+            "obj_marble_chunk": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_marble_plate",
+        "name": "marble_plate",
+        "category": "material",
+        "usage": "craft",
+        "value": 12,
+        "size": 4,
+        "description": "A heavy marble plate drilled and fitted with straps for armor assembly.",
+        "craft": {
+          "ingredients": {
+            "obj_marble_slab": 2,
+            "obj_binding_strap": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_binding_strap",
+        "name": "binding_strap",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "A tough strap woven from doubled thread and wax-stiffened parchment, used for fastening gear.",
+        "craft": {
+          "ingredients": {
+            "obj_binding_thread": 1,
+            "obj_parchment_roll": 0.25
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_forged_gavel_head",
+        "name": "gavel_head",
+        "category": "material",
+        "usage": "craft",
+        "value": 14,
+        "size": 3,
+        "description": "A heavy iron head forged into the shape of a judicial gavel, awaiting a haft.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 2,
+            "obj_gavel_splint": 1
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_sharpened_gavel",
+        "name": "sharpened_gavel",
+        "category": "material",
+        "usage": "craft",
+        "value": 18,
+        "size": 3,
+        "description": "A gavel head honed to a brutal edge with statute shards, ready for mounting.",
+        "craft": {
+          "ingredients": {
+            "obj_forged_gavel_head": 1,
+            "obj_statute_shard": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_nullstone",
+        "name": "nullstone",
+        "category": "material",
+        "usage": "craft",
+        "value": 18,
+        "size": 1,
+        "description": "A rare ore found only in the Vault, where repealed laws crystallize into raw physics-defying matter.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 5,
+        "areas": [
+          "area_antechamber",
+          "area_gravity_well",
+          "area_prime_bench"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_nullstone_ingot",
+        "name": "nullstone_ingot",
+        "category": "material",
+        "usage": "craft",
+        "value": 24,
+        "size": 1,
+        "description": "A refined ingot of nullstone that subtly warps gravity in a small radius around it.",
+        "craft": {
+          "ingredients": {
+            "obj_nullstone": 2
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_nullstone_blade",
+        "name": "nullstone_blade",
+        "category": "material",
+        "usage": "craft",
+        "value": 45,
+        "size": 4,
+        "description": "A finished blade of nullstone that severs not just flesh but the local physics around whatever it strikes.",
+        "craft": {
+          "ingredients": {
+            "obj_nullstone_blade_blank": 1,
+            "obj_statute_shard": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_nullstone_blade_blank",
+        "name": "nullstone_blank",
+        "category": "material",
+        "usage": "craft",
+        "value": 35,
+        "size": 4,
+        "description": "A forged blank of nullstone requiring precise finishing to become a blade.",
+        "craft": {
+          "ingredients": {
+            "obj_nullstone_ingot": 2,
+            "obj_gavel_splint": 1
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_sheet",
+        "name": "iron_sheet",
+        "category": "material",
+        "usage": "craft",
+        "value": 10,
+        "size": 3,
+        "description": "A hammered sheet of iron, suitable for cutting into scales or plating.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 2
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_scale",
+        "name": "iron_scale",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "A single iron scale stamped with a miniature balance sigil.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_sheet": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_scale_bundle",
+        "name": "scale_bundle",
+        "category": "material",
+        "usage": "craft",
+        "value": 22,
+        "size": 6,
+        "description": "A bundled set of iron scales tied and sorted, ready for assembly into armor.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_scale": 6,
+            "obj_binding_thread": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_verdict_essence",
+        "name": "verdict_essence",
+        "category": "material",
+        "usage": "craft",
+        "value": 12,
+        "size": 1,
+        "description": "A dense distillation of repealed verdicts boiled from statute shards, used to temper rare alloys.",
+        "craft": {
+          "ingredients": {
+            "obj_statute_shard": 3,
+            "obj_wax_seal": 1
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_paradox_alloy",
+        "name": "paradox_alloy",
+        "category": "material",
+        "usage": "craft",
+        "value": 40,
+        "size": 1,
+        "description": "A nullstone alloy quenched in verdict essence, shimmering between states of matter depending on tonight's laws.",
+        "craft": {
+          "ingredients": {
+            "obj_nullstone_ingot": 1,
+            "obj_verdict_essence": 1
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_bailiff_eye",
+        "name": "bailiff_eye",
+        "category": "material",
+        "usage": "craft",
+        "value": null,
+        "size": 1,
+        "description": "A glowing ocular lens pried from a defeated bailiff construct, used in the most forbidden crafts.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_original_charter",
+        "name": "original_charter",
+        "category": "material",
+        "usage": "craft",
+        "value": null,
+        "size": 1,
+        "description": "The founding charter of the metropolis, pulsing with the first law ever written — said to anchor reality itself.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_gavel_club",
+        "name": "gavel_club",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 12,
+        "size": 4,
+        "attack": 5,
+        "description": "A crude bludgeon fashioned from gavel timber, favored by low-ranking enforcers.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_log": 2,
+            "obj_binding_thread": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_marble_mace",
+        "name": "marble_mace",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 24,
+        "size": 5,
+        "attack": 9,
+        "description": "A hefty mace with a marble head, capable of cracking bone and statute alike.",
+        "craft": {
+          "ingredients": {
+            "obj_marble_slab": 1,
+            "obj_gavel_splint": 1,
+            "obj_binding_thread": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_statute_pike",
+        "name": "statute_pike",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 33,
+        "size": 5,
+        "attack": 15,
+        "description": "A pike tipped with crystallized statute shards that hum with contradictory physics.",
+        "craft": {
+          "ingredients": {
+            "obj_statute_shard": 2,
+            "obj_gavel_splint": 1,
+            "obj_parchment_roll": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_gavel",
+        "name": "iron_gavel",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 45,
+        "size": 5,
+        "attack": 21,
+        "description": "A fearsome iron gavel sharpened to a killing edge, the weapon of senior enforcers.",
+        "craft": {
+          "ingredients": {
+            "obj_sharpened_gavel": 1,
+            "obj_gavel_splint": 1,
+            "obj_binding_strap": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_nullstone_greatsword",
+        "name": "nullstone_greatsword",
+        "category": "weapon",
+        "usage": "attack",
+        "value": null,
+        "size": 6,
+        "attack": 25,
+        "description": "A massive blade of nullstone that temporarily repeals gravity along its swing arc.",
+        "craft": {
+          "ingredients": {
+            "obj_nullstone_blade": 1,
+            "obj_gavel_splint": 1,
+            "obj_binding_strap": 1,
+            "obj_bailiff_eye": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_paradox_warhammer",
+        "name": "paradox_warhammer",
+        "category": "weapon",
+        "usage": "attack",
+        "value": null,
+        "size": 6,
+        "attack": 28,
+        "description": "A warhammer forged from paradox alloy whose impacts rewrite local physics on contact.",
+        "craft": {
+          "ingredients": {
+            "obj_paradox_alloy": 2,
+            "obj_gavel_splint": 1,
+            "obj_binding_strap": 1,
+            "obj_original_charter": 1
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_parchment_wrap",
+        "name": "parchment_wrap",
+        "category": "armor",
+        "usage": "defend",
+        "value": 10,
+        "size": 4,
+        "defense": 3,
+        "description": "Layers of law-paper wrapped around the torso, offering token protection that shifts nightly.",
+        "craft": {
+          "ingredients": {
+            "obj_parchment_scrap": 3,
+            "obj_binding_thread": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_clerks_robe",
+        "name": "clerks_robe",
+        "category": "armor",
+        "usage": "defend",
+        "value": 16,
+        "size": 5,
+        "defense": 5,
+        "description": "A padded robe worn by courthouse clerks, comfortable and lightly protective.",
+        "craft": {
+          "ingredients": {
+            "obj_padded_robe_lining": 1,
+            "obj_binding_thread": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_marble_cuirass",
+        "name": "marble_cuirass",
+        "category": "armor",
+        "usage": "defend",
+        "value": 28,
+        "size": 8,
+        "defense": 10,
+        "description": "Marble slabs strapped over a padded lining, heavy courthouse armor for those expecting violence.",
+        "craft": {
+          "ingredients": {
+            "obj_marble_plate": 2,
+            "obj_padded_robe_lining": 1,
+            "obj_binding_strap": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_scale_armor",
+        "name": "scale_vestment",
+        "category": "armor",
+        "usage": "defend",
+        "value": 50,
+        "size": 10,
+        "defense": 15,
+        "description": "Overlapping iron scales stitched onto a padded vestment, standard issue for courtroom enforcers.",
+        "craft": {
+          "ingredients": {
+            "obj_scale_bundle": 1,
+            "obj_padded_robe_lining": 2,
+            "obj_binding_strap": 3
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_nullstone_plate_armor",
+        "name": "nullstone_vestment",
+        "category": "armor",
+        "usage": "defend",
+        "value": null,
+        "size": 12,
+        "defense": 20,
+        "description": "Full nullstone plating over layered court vestments; gravity bends around the wearer, partially deflecting blows.",
+        "craft": {
+          "ingredients": {
+            "obj_paradox_alloy": 2,
+            "obj_scale_bundle": 1,
+            "obj_padded_robe_lining": 1,
+            "obj_binding_strap": 2
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_workbench",
+        "name": "clerks_bench",
+        "category": "station",
+        "usage": "craft",
+        "value": null,
+        "size": null,
+        "description": "A sturdy clerk's workbench covered in tool marks and statute residue, used for assembling and crafting.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_log": 5,
+            "obj_marble_chunk": 5
+          },
+          "dependencies": []
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_furnace",
+        "name": "statute_forge",
+        "category": "station",
+        "usage": "craft",
+        "value": null,
+        "size": null,
+        "description": "A forge heated by burning old statutes, hot enough to smelt iron and nullstone alike.",
+        "craft": {
+          "ingredients": {
+            "obj_marble_chunk": 10
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_casebook",
+        "name": "casebook",
+        "category": "tool",
+        "usage": "writable",
+        "value": 35,
+        "size": 5,
+        "text": "",
+        "max_text_length": 1200,
+        "description": "A bound volume of legal parchment with many pages, suitable for recording cases, laws, and secrets.",
+        "craft": {
+          "ingredients": {
+            "obj_paper": 5,
+            "obj_binding_thread": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      }
+    ],
+    "npcs": [
+      {
+        "type": "npc",
+        "id": "npc_magistrate_vesper",
+        "name": "magistrate_vesper",
+        "enemy": false,
+        "unique": true,
+        "description": "A sharp-eyed magistrate who trades in confiscated goods and court supplies, always calculating fair market value under tonight's laws.",
+        "objects": [
+          "obj_paper",
+          "obj_pen",
+          "obj_iron_gavel",
+          "obj_iron_scale_armor",
+          "obj_scale_bundle",
+          "obj_statute_shard"
+        ],
+        "role": "merchant"
+      },
+      {
+        "type": "npc",
+        "id": "npc_clerk_aldiss",
+        "name": "clerk_aldiss",
+        "enemy": false,
+        "unique": true,
+        "description": "A nervous junior clerk who knows every passage in the courthouse and whispers about the nightly law-rewrites. Offers guidance and minor quest leads.",
+        "role": "quest"
+      },
+      {
+        "type": "npc",
+        "id": "npc_rogue_advocate",
+        "name": "rogue_advocate",
+        "enemy": true,
+        "unique": false,
+        "description": "A disbarred lawyer turned violent enforcer, wielding sharpened legal instruments and citing expired statutes as battle cries.",
+        "role": "enemy",
+        "base_attack_power": 5,
+        "slope_attack_power": 8,
+        "base_hp": 30,
+        "slope_hp": 15,
+        "objects": [
+          "obj_parchment_scrap",
+          "obj_wax_seal",
+          "obj_iron_filings"
+        ],
+        "combat_pattern": [
+          "attack",
+          "attack",
+          "defend",
+          "attack"
+        ]
+      },
+      {
+        "type": "npc",
+        "id": "npc_bailiff_construct",
+        "name": "bailiff_construct",
+        "enemy": true,
+        "unique": false,
+        "description": "A towering automaton of marble and iron animated by the night's current statutes. Its eyes glow with enforced law, and it shows no mercy to trespassers.",
+        "role": "enemy",
+        "base_attack_power": 10,
+        "slope_attack_power": 12,
+        "base_hp": 45,
+        "slope_hp": 20,
+        "objects": [
+          "obj_bailiff_eye",
+          "obj_marble_chunk",
+          "obj_statute_shard"
+        ],
+        "combat_pattern": [
+          "attack",
+          "defend",
+          "attack",
+          "attack",
+          "wait"
+        ]
+      },
+      {
+        "type": "npc",
+        "id": "npc_spectral_judge",
+        "name": "spectral_judge",
+        "enemy": false,
+        "unique": false,
+        "description": "A translucent figure in flowing judicial robes, eyes burning with the light of every law ever written. It appears whenever blood is spilled, demanding written justification for the act.",
+        "role": "judge",
+        "quest": true,
+        "base_attack_power": 0,
+        "slope_attack_power": 0,
+        "base_hp": 1000000000,
+        "slope_hp": 0,
+        "objects": []
+      },
+      {
+        "type": "npc",
+        "id": "npc_fence_orin",
+        "name": "fence_orin",
+        "enemy": false,
+        "unique": true,
+        "description": "A black-market dealer hiding in the alleys of the Statute District, selling rare materials that fell off the evidence cart.",
+        "objects": [
+          "obj_nullstone",
+          "obj_statute_shard",
+          "obj_iron_bar",
+          "obj_key",
+          "obj_small_bag"
+        ],
+        "role": "merchant"
+      }
+    ]
+  },
+  "initializations": {
+    "spawn": {
+      "area": "area_lobby",
+      "npcs": {},
+      "objects": {
+        "obj_coin": 10,
+        "obj_key": 2,
+        "obj_small_bag": 1,
+        "obj_paper": 1,
+        "obj_pen": 1,
+        "obj_workbench": 1
+      }
+    },
+    "undistributable_objects": []
+  },
+  "custom_events": [
+    "main_quest",
+    "side_quest"
+  ],
+  "features": {
+    "online_expansion": true,
+    "expansion_model": "gpt-5-mini"
+  },
+  "graph": {
+    "connections": [
+      {
+        "from": "area_lobby",
+        "to": "area_clerks_office",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_lobby",
+        "to": "area_evidence_room",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_clerks_office",
+        "to": "area_courtroom",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_evidence_room",
+        "to": "area_courtroom",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_lobby",
+        "to": "area_market_square",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_market_square",
+        "to": "area_alley",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_market_square",
+        "to": "area_archive_tower",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_alley",
+        "to": "area_archive_tower",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_courtroom",
+        "to": "area_alley",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_archive_tower",
+        "to": "area_antechamber",
+        "locked": true,
+        "key": "obj_key"
+      },
+      {
+        "from": "area_courtroom",
+        "to": "area_antechamber",
+        "locked": true,
+        "key": "obj_key"
+      },
+      {
+        "from": "area_antechamber",
+        "to": "area_gravity_well",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_antechamber",
+        "to": "area_prime_bench",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_gravity_well",
+        "to": "area_prime_bench",
+        "locked": false,
+        "key": null
+      }
+    ]
+  }
+}

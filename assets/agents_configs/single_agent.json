@@ -1,0 +1,13 @@
+{
+    "agents": [
+        {
+            "agent_type": "LongContextAgent",
+            "agent_id": "agent_adam_davis",
+            "agent_name": "adam_davis",
+            "llm_name": null,
+            "enable_short_term_memory": false,
+            "enable_reflection": false,
+            "enable_summarization": false
+        }
+    ]
+}

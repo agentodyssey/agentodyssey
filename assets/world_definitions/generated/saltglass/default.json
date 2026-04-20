@@ -1,0 +1,813 @@
+{
+  "entities": {
+    "places": [
+      {
+        "type": "place",
+        "id": "place_saltreach",
+        "name": "Saltreach",
+        "unlocked": true,
+        "areas": [
+          {
+            "type": "area",
+            "id": "area_hall",
+            "name": "hall",
+            "level": 1,
+            "light": true
+          },
+          {
+            "type": "area",
+            "id": "area_yard",
+            "name": "yard",
+            "level": 1,
+            "light": true
+          },
+          {
+            "type": "area",
+            "id": "area_library",
+            "name": "library",
+            "level": 2,
+            "light": false
+          },
+          {
+            "type": "area",
+            "id": "area_armory",
+            "name": "armory",
+            "level": 3,
+            "light": true
+          },
+          {
+            "type": "area",
+            "id": "area_flats",
+            "name": "flats",
+            "level": 2,
+            "light": true
+          },
+          {
+            "type": "area",
+            "id": "area_basin",
+            "name": "basin",
+            "level": 3,
+            "light": true
+          },
+          {
+            "type": "area",
+            "id": "area_orrery",
+            "name": "orrery",
+            "level": 4,
+            "light": false
+          },
+          {
+            "type": "area",
+            "id": "area_spire",
+            "name": "spire",
+            "level": 5,
+            "light": false
+          }
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "type": "object",
+        "id": "obj_coin",
+        "name": "saltmark",
+        "category": "currency",
+        "usage": "exchange",
+        "value": null,
+        "size": 0,
+        "description": "A stamped trade chip crusted white from the flats.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_key_blank",
+        "name": "brass_blank",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "An uncut brass key blank scavenged from observatory locks.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_key",
+        "name": "brass_key",
+        "category": "tool",
+        "usage": "unlock",
+        "value": 14,
+        "size": 1,
+        "description": "A filed key used to open sealed observatory passages.",
+        "craft": {
+          "ingredients": {
+            "obj_key_blank": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_pen",
+        "name": "reed_pen",
+        "category": "tool",
+        "usage": "write",
+        "value": 5,
+        "size": 1,
+        "description": "A salt-cured reed pen used by chart-keepers.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_log": 0.25,
+            "obj_saltcloth": 0.25
+          },
+          "dependencies": []
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_paper",
+        "name": "chart_paper",
+        "category": "tool",
+        "usage": "writable",
+        "value": 5,
+        "size": 1,
+        "text": "",
+        "max_text_length": 200,
+        "description": "A dry sheet for notes, routes, and star readings.",
+        "craft": {
+          "ingredients": {
+            "obj_saltcloth": 0.25
+          },
+          "dependencies": []
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_small_bag",
+        "name": "satchel",
+        "category": "container",
+        "usage": "store",
+        "value": 18,
+        "size": 2,
+        "capacity": 20,
+        "description": "A waxed satchel that keeps salt out of stored goods.",
+        "craft": {
+          "ingredients": {
+            "obj_saltcloth": 2,
+            "obj_thread": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_wood_log",
+        "name": "drift_log",
+        "category": "material",
+        "usage": "craft",
+        "value": 2,
+        "size": 1,
+        "description": "A bleached log carried into the flats long ago.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_yard",
+          "area_flats"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_salt_shard",
+        "name": "salt_shard",
+        "category": "material",
+        "usage": "craft",
+        "value": 3,
+        "size": 1,
+        "description": "A hard crystal chipped from the binding crust.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_hall",
+          "area_flats"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_lens_shard",
+        "name": "lens_shard",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "A curved splinter of observatory glass with a keen edge.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 2,
+        "areas": [
+          "area_library",
+          "area_basin"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_saltcloth",
+        "name": "saltcloth",
+        "category": "material",
+        "usage": "craft",
+        "value": 3,
+        "size": 1,
+        "description": "A stiff cloth used to wrap tools against the brine dust.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_hall",
+          "area_yard",
+          "area_library"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_thread",
+        "name": "thread",
+        "category": "material",
+        "usage": "craft",
+        "value": 2,
+        "size": 1,
+        "description": "Twisted thread suitable for binding cloth and grips.",
+        "craft": {
+          "ingredients": {
+            "obj_saltcloth": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_brine_glass",
+        "name": "brine_glass",
+        "category": "material",
+        "usage": "craft",
+        "value": 7,
+        "size": 1,
+        "description": "A fused bead of salty glass made in fierce heat.",
+        "craft": {
+          "ingredients": {
+            "obj_salt_shard": 2,
+            "obj_lens_shard": 1
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_bar",
+        "name": "rustbar",
+        "category": "material",
+        "usage": "craft",
+        "value": 7,
+        "size": 1,
+        "description": "A salvaged iron bar hammered straight for reuse.",
+        "craft": {
+          "ingredients": {
+            "obj_star_scrap": 2
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 3,
+        "areas": [
+          "area_armory",
+          "area_basin"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_star_scrap",
+        "name": "star_scrap",
+        "category": "material",
+        "usage": "craft",
+        "value": 5,
+        "size": 1,
+        "description": "Glinting machine scrap from fallen observatory frames.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 3,
+        "areas": [
+          "area_armory",
+          "area_orrery"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_astrolabe_core",
+        "name": "astrolabe_core",
+        "category": "material",
+        "usage": "craft",
+        "value": 14,
+        "size": 2,
+        "description": "A precise brass core from a ruined tracking instrument.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 1,
+            "obj_brine_glass": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_void_salt",
+        "name": "void_salt",
+        "category": "material",
+        "usage": "craft",
+        "value": 16,
+        "size": 1,
+        "description": "Black salt gathered where the toppled spire drinks the night.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 5,
+        "areas": [
+          "area_spire",
+          "area_orrery"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_workbench",
+        "name": "bench",
+        "category": "station",
+        "usage": "craft",
+        "value": null,
+        "size": null,
+        "description": "A scavenger's bench for fitting salvage into useful gear.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_log": 4,
+            "obj_salt_shard": 4
+          },
+          "dependencies": []
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_furnace",
+        "name": "kiln",
+        "category": "station",
+        "usage": "craft",
+        "value": null,
+        "size": null,
+        "description": "A squat kiln used to melt glass and rework metal.",
+        "craft": {
+          "ingredients": {
+            "obj_salt_shard": 6,
+            "obj_iron_bar": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_salt_knife",
+        "name": "salt_knife",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 14,
+        "size": 2,
+        "attack_power": 6,
+        "description": "A crude blade of crystal and wrapped driftwood.",
+        "craft": {
+          "ingredients": {
+            "obj_salt_shard": 2,
+            "obj_wood_log": 0.5,
+            "obj_thread": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_lens_dagger",
+        "name": "lens_dagger",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 24,
+        "size": 3,
+        "attack_power": 10,
+        "description": "A bright glass dagger sharpened from observatory ruin.",
+        "craft": {
+          "ingredients": {
+            "obj_lens_shard": 2,
+            "obj_thread": 1,
+            "obj_wood_log": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_bar_spear",
+        "name": "bar_spear",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 38,
+        "size": 5,
+        "attack_power": 16,
+        "description": "A long spear tipped with reforged iron.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 2,
+            "obj_wood_log": 1,
+            "obj_thread": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_orrery_blade",
+        "name": "orrery_blade",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 56,
+        "size": 5,
+        "attack_power": 22,
+        "description": "A balanced blade built around an astrolabe core.",
+        "craft": {
+          "ingredients": {
+            "obj_astrolabe_core": 1,
+            "obj_iron_bar": 2,
+            "obj_brine_glass": 1
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_spire_pike",
+        "name": "spire_pike",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 78,
+        "size": 6,
+        "attack_power": 29,
+        "description": "A severe pike tempered with void salt for the deepest ruins.",
+        "craft": {
+          "ingredients": {
+            "obj_orrery_blade": 1,
+            "obj_void_salt": 1,
+            "obj_astrolabe_core": 1
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_wrap_vest",
+        "name": "wrap_vest",
+        "category": "armor",
+        "usage": "defend",
+        "value": 12,
+        "size": 4,
+        "defense": 4,
+        "description": "Layered saltcloth wraps that soften light blows.",
+        "craft": {
+          "ingredients": {
+            "obj_saltcloth": 2,
+            "obj_thread": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_glass_guard",
+        "name": "glass_guard",
+        "category": "armor",
+        "usage": "defend",
+        "value": 23,
+        "size": 5,
+        "defense": 8,
+        "description": "A light guard lined with cloth and set with lens splints.",
+        "craft": {
+          "ingredients": {
+            "obj_lens_shard": 2,
+            "obj_saltcloth": 2,
+            "obj_thread": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_bar_mail",
+        "name": "bar_mail",
+        "category": "armor",
+        "usage": "defend",
+        "value": 40,
+        "size": 7,
+        "defense": 13,
+        "description": "A practical coat of linked iron salvage.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 3,
+            "obj_thread": 2,
+            "obj_saltcloth": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_orrery_plate",
+        "name": "orrery_plate",
+        "category": "armor",
+        "usage": "defend",
+        "value": 58,
+        "size": 9,
+        "defense": 19,
+        "description": "Segmented plate built from observatory rings and glass seals.",
+        "craft": {
+          "ingredients": {
+            "obj_astrolabe_core": 1,
+            "obj_iron_bar": 3,
+            "obj_brine_glass": 2,
+            "obj_saltcloth": 1
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_void_plate",
+        "name": "void_plate",
+        "category": "armor",
+        "usage": "defend",
+        "value": 84,
+        "size": 10,
+        "defense": 25,
+        "description": "A heavy blackened harness that resists the harshest strikes.",
+        "craft": {
+          "ingredients": {
+            "obj_orrery_plate": 1,
+            "obj_void_salt": 1,
+            "obj_astrolabe_core": 1
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      }
+    ],
+    "npcs": [
+      {
+        "type": "npc",
+        "id": "npc_vesin",
+        "name": "vesin",
+        "enemy": false,
+        "unique": true,
+        "description": "A practical salvage merchant who trades in cloth, glass, and field gear beneath a cracked dome.",
+        "role": "merchant",
+        "objects": [
+          "obj_paper",
+          "obj_pen",
+          "obj_small_bag",
+          "obj_saltcloth",
+          "obj_lens_dagger",
+          "obj_glass_guard"
+        ],
+        "coins": 80
+      },
+      {
+        "type": "npc",
+        "id": "npc_tidebound",
+        "name": "tidebound",
+        "enemy": true,
+        "unique": false,
+        "description": "A salt-caked wanderer bound in place until prey comes close.",
+        "role": "enemy",
+        "base_attack_power": 6,
+        "slope_attack_power": 7,
+        "base_hp": 35,
+        "slope_hp": 16,
+        "objects": [
+          "obj_salt_shard",
+          "obj_saltcloth"
+        ],
+        "combat_pattern": [
+          "attack",
+          "defend",
+          "attack",
+          "wait"
+        ]
+      },
+      {
+        "type": "npc",
+        "id": "npc_lens_wraith",
+        "name": "lens_wraith",
+        "enemy": true,
+        "unique": false,
+        "description": "A pale ruin-haunt that flickers through broken glass and strikes from dark corners.",
+        "role": "enemy",
+        "base_attack_power": 9,
+        "slope_attack_power": 9,
+        "base_hp": 42,
+        "slope_hp": 18,
+        "objects": [
+          "obj_lens_shard",
+          "obj_star_scrap",
+          "obj_void_salt"
+        ],
+        "combat_pattern": [
+          "attack",
+          "attack",
+          "defend",
+          "wait"
+        ]
+      },
+      {
+        "type": "npc",
+        "id": "npc_naia",
+        "name": "naia",
+        "enemy": false,
+        "unique": true,
+        "description": "A quest-keeper mapping safe routes between toppled observatories and warning travelers away from the spire.",
+        "role": "quest",
+        "coins": 20
+      }
+    ]
+  },
+  "initializations": {
+    "spawn": {
+      "area": "area_hall",
+      "npcs": {},
+      "objects": {
+        "obj_coin": 10,
+        "obj_key": 2,
+        "obj_small_bag": 1,
+        "obj_paper": 1,
+        "obj_pen": 1,
+        "obj_workbench": 1
+      }
+    },
+    "undistributable_objects": []
+  },
+  "custom_events": [
+    "main_quest",
+    "side_quest",
+    "tutorial"
+  ],
+  "features": {
+    "online_expansion": true,
+    "expansion_model": "gpt-5-mini"
+  },
+  "graph": {
+    "connections": [
+      {
+        "from": "area_hall",
+        "to": "area_yard",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_hall",
+        "to": "area_library",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_hall",
+        "to": "area_flats",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_yard",
+        "to": "area_library",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_yard",
+        "to": "area_armory",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_flats",
+        "to": "area_basin",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_library",
+        "to": "area_basin",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_armory",
+        "to": "area_basin",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_armory",
+        "to": "area_orrery",
+        "locked": true,
+        "key": "obj_key"
+      },
+      {
+        "from": "area_basin",
+        "to": "area_orrery",
+        "locked": true,
+        "key": "obj_key"
+      },
+      {
+        "from": "area_orrery",
+        "to": "area_spire",
+        "locked": true,
+        "key": "obj_key"
+      }
+    ]
+  }
+}

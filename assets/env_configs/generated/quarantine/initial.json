@@ -1,0 +1,8 @@
+{
+    "step": 0,
+    "curr_time": "0001-01-01 08:00:00",
+    "curr_agents_state": {"area": {}, "areas_visited": {}, "objects_crafted": {}, "npcs_killed": {}, "objects_acquired": {}, "objects_traded": {}, "unique_npcs_killed": {}, "barricaded_paths": [], "area_corpses": {}, "area_corruption": {}, "corruption_spawn_cooldown": {}, "in_darkness": {}, "light_fuel": {}, "quarantine_lockdown": {}},
+    "scores": {},
+    "world": {},
+    "agents": []
+}

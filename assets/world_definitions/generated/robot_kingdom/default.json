@@ -1,0 +1,2380 @@
+{
+  "entities": {
+    "places": [
+      {
+        "type": "place",
+        "id": "place_ashen_bastion",
+        "name": "Ashen Bastion",
+        "unlocked": true,
+        "areas": [
+          {
+            "type": "area",
+            "id": "area_bastion_courtyard",
+            "name": "courtyard",
+            "level": 1,
+            "light": true
+          },
+          {
+            "type": "area",
+            "id": "area_bastion_barracks",
+            "name": "barracks",
+            "level": 2,
+            "light": true
+          },
+          {
+            "type": "area",
+            "id": "area_bastion_cellar",
+            "name": "cellar",
+            "level": 2,
+            "light": false
+          },
+          {
+            "type": "area",
+            "id": "area_bastion_watchtower",
+            "name": "watchtower",
+            "level": 3,
+            "light": true
+          }
+        ]
+      },
+      {
+        "type": "place",
+        "id": "place_scorched_vale",
+        "name": "Scorched Vale",
+        "unlocked": true,
+        "areas": [
+          {
+            "type": "area",
+            "id": "area_vale_trailhead",
+            "name": "trailhead",
+            "level": 1,
+            "light": true
+          },
+          {
+            "type": "area",
+            "id": "area_vale_ruins",
+            "name": "ruins",
+            "level": 2,
+            "light": true
+          },
+          {
+            "type": "area",
+            "id": "area_vale_crater",
+            "name": "crater",
+            "level": 3,
+            "light": false
+          }
+        ]
+      },
+      {
+        "type": "place",
+        "id": "place_ironwreck_gulch",
+        "name": "Ironwreck Gulch",
+        "unlocked": false,
+        "areas": [
+          {
+            "type": "area",
+            "id": "area_gulch_entrance",
+            "name": "entrance",
+            "level": 3,
+            "light": true
+          },
+          {
+            "type": "area",
+            "id": "area_gulch_scrapyard",
+            "name": "scrapyard",
+            "level": 4,
+            "light": true
+          },
+          {
+            "type": "area",
+            "id": "area_gulch_forge",
+            "name": "forge",
+            "level": 4,
+            "light": false
+          }
+        ]
+      },
+      {
+        "type": "place",
+        "id": "place_devils_foundry",
+        "name": "Devils Foundry",
+        "unlocked": false,
+        "areas": [
+          {
+            "type": "area",
+            "id": "area_foundry_gate",
+            "name": "gate",
+            "level": 4,
+            "light": false
+          },
+          {
+            "type": "area",
+            "id": "area_foundry_furnaceroom",
+            "name": "furnace_room",
+            "level": 5,
+            "light": true
+          },
+          {
+            "type": "area",
+            "id": "area_foundry_core",
+            "name": "core",
+            "level": 5,
+            "light": false
+          }
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "type": "object",
+        "id": "obj_coin",
+        "name": "crown_shard",
+        "category": "currency",
+        "usage": "exchange",
+        "value": null,
+        "size": 0,
+        "description": "A broken fragment of an old kingdom's crown coin, still accepted as currency among the allied ruins.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_key_blank",
+        "name": "gate_blank",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "A rough iron blank cut to the shape of a siege-gate key, awaiting precise filing.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_key",
+        "name": "siege_key",
+        "category": "tool",
+        "usage": "unlock",
+        "value": 15,
+        "size": 1,
+        "description": "A heavy key forged to open the great locks of ruined fortifications.",
+        "craft": {
+          "ingredients": {
+            "obj_key_blank": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_pen",
+        "name": "charcoal_stylus",
+        "category": "tool",
+        "usage": "write",
+        "value": 6,
+        "size": 1,
+        "description": "A stylus made from compressed charcoal and a wooden grip, used for field reports.",
+        "craft": {
+          "ingredients": {
+            "obj_wooden_rod": 1,
+            "obj_charite": 0.5
+          },
+          "dependencies": []
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_paper",
+        "name": "war_parchment",
+        "category": "tool",
+        "usage": "writable",
+        "value": 5,
+        "size": 1,
+        "text": "",
+        "max_text_length": 200,
+        "description": "A coarse parchment used by scouts and commanders to record war machine sightings.",
+        "craft": {
+          "ingredients": {
+            "obj_salvage_cloth": 0.25
+          },
+          "dependencies": []
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_small_bag",
+        "name": "scout_satchel",
+        "category": "container",
+        "usage": "store",
+        "value": 20,
+        "size": 2,
+        "capacity": 20,
+        "description": "A worn leather satchel issued to every hunter of devil-forged machines.",
+        "craft": {
+          "ingredients": {
+            "obj_salvage_cloth": 3,
+            "obj_sinew_cord": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_wood_log",
+        "name": "charred_timber",
+        "category": "material",
+        "usage": "craft",
+        "value": 2,
+        "size": 1,
+        "description": "A blackened timber salvaged from a burned kingdom, still sturdy enough for crafting.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_bastion_courtyard",
+          "area_vale_trailhead",
+          "area_vale_ruins",
+          "area_bastion_barracks"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_bar",
+        "name": "iron_bar",
+        "category": "material",
+        "usage": "craft",
+        "value": 7,
+        "size": 1,
+        "description": "A smelted bar of iron pulled from the ruins, ready for forging into weapons against devil machines.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_nugget": 2
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 3,
+        "areas": [
+          "area_gulch_scrapyard",
+          "area_bastion_watchtower"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_workbench",
+        "name": "war_bench",
+        "category": "station",
+        "usage": "craft",
+        "value": null,
+        "size": null,
+        "description": "A reinforced workbench built by allied smiths for field assembly of anti-machine weapons.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_log": 5,
+            "obj_rubble": 5
+          },
+          "dependencies": []
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_furnace",
+        "name": "crucible",
+        "category": "station",
+        "usage": "craft",
+        "value": null,
+        "size": null,
+        "description": "A stone crucible heated by hellcoal embers, hot enough to smelt war-grade metals.",
+        "craft": {
+          "ingredients": {
+            "obj_rubble": 10
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_rubble",
+        "name": "rubble",
+        "category": "material",
+        "usage": "craft",
+        "value": 3,
+        "size": 1,
+        "description": "Chunks of broken stone from a kingdom's collapsed walls, useful for construction.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_bastion_courtyard",
+          "area_bastion_cellar",
+          "area_vale_ruins",
+          "area_vale_trailhead"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_salvage_cloth",
+        "name": "salvage_cloth",
+        "category": "material",
+        "usage": "craft",
+        "value": 2,
+        "size": 1,
+        "description": "Tattered fabric pulled from ruined banners and bedrolls, still serviceable.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_bastion_courtyard",
+          "area_bastion_barracks",
+          "area_bastion_cellar",
+          "area_vale_ruins"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_charite",
+        "name": "charite",
+        "category": "material",
+        "usage": "craft",
+        "value": 2,
+        "size": 1,
+        "description": "Black mineral powder from scorched earth, used for writing and simple firestarters.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_vale_trailhead",
+          "area_vale_crater",
+          "area_bastion_cellar"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_scrap_iron",
+        "name": "scrap_iron",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "Bent iron fragments torn from a destroyed war machine's hull.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 2,
+        "areas": [
+          "area_vale_ruins",
+          "area_vale_crater",
+          "area_bastion_watchtower",
+          "area_bastion_barracks"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_devil_oil",
+        "name": "devil_oil",
+        "category": "material",
+        "usage": "craft",
+        "value": 5,
+        "size": 1,
+        "description": "A dark, viscous lubricant drained from a fallen war machine's joints. Burns with infernal heat.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 2,
+        "areas": [
+          "area_vale_crater",
+          "area_bastion_cellar",
+          "area_gulch_scrapyard"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_hellcoal",
+        "name": "hellcoal",
+        "category": "material",
+        "usage": "craft",
+        "value": 6,
+        "size": 1,
+        "description": "A smoldering lump of infernal fuel that never fully cools, salvaged from machine furnaces.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 3,
+        "areas": [
+          "area_vale_crater",
+          "area_gulch_forge",
+          "area_foundry_gate"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_cog",
+        "name": "cog",
+        "category": "material",
+        "usage": "craft",
+        "value": 5,
+        "size": 1,
+        "description": "A precision-cut gear from a war machine's drive assembly, still perfectly meshed.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 3,
+        "areas": [
+          "area_gulch_scrapyard",
+          "area_gulch_entrance",
+          "area_vale_crater"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_fiend_plate",
+        "name": "fiend_plate",
+        "category": "material",
+        "usage": "craft",
+        "value": 9,
+        "size": 2,
+        "description": "A thick armor plate ripped from a devil machine's chassis, etched with hellish runes.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 4,
+        "areas": [
+          "area_gulch_scrapyard",
+          "area_gulch_forge",
+          "area_foundry_gate"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_demon_core_shard",
+        "name": "demon_core_shard",
+        "category": "material",
+        "usage": "craft",
+        "value": 18,
+        "size": 1,
+        "description": "A pulsing fragment from a war machine's heart, radiating malevolent energy.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 5,
+        "areas": [
+          "area_foundry_furnaceroom",
+          "area_foundry_core"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_brimite_ore",
+        "name": "brimite_ore",
+        "category": "material",
+        "usage": "craft",
+        "value": 8,
+        "size": 1,
+        "description": "A sulfurous ore found near devil forges, glowing faintly with trapped hellfire.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 4,
+        "areas": [
+          "area_gulch_forge",
+          "area_foundry_gate",
+          "area_foundry_furnaceroom"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_sinew_cord",
+        "name": "sinew_cord",
+        "category": "material",
+        "usage": "craft",
+        "value": 2,
+        "size": 1,
+        "description": "Twisted cord braided from salvaged fibers and dried sinew, surprisingly tough.",
+        "craft": {
+          "ingredients": {
+            "obj_salvage_cloth": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 1,
+        "areas": [
+          "area_bastion_barracks",
+          "area_bastion_courtyard"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_wood_plank",
+        "name": "scorched_plank",
+        "category": "material",
+        "usage": "craft",
+        "value": 3,
+        "size": 1,
+        "description": "A plank cut from charred timber, still solid beneath the blackened surface.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_log": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_wood_strip",
+        "name": "wood_strip",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "A thin strip of wood shaped for hafts, pegs, and reinforcements.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_plank": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_wooden_rod",
+        "name": "wooden_rod",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "attack": 5,
+        "description": "A straight rod of hardened wood, useful as a weapon haft or striking tool.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_strip": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_wood_plate",
+        "name": "timber_plate",
+        "category": "material",
+        "usage": "craft",
+        "value": 6,
+        "size": 3,
+        "description": "A broad wooden plate cut for crude shielding and barricades.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_plank": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_wood_rivet",
+        "name": "wood_rivet",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "A small wooden peg for fastening plates together in field-built armor.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_strip": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_cloth_roll",
+        "name": "bandage_roll",
+        "category": "material",
+        "usage": "craft",
+        "value": 6,
+        "size": 2,
+        "description": "A rolled bolt of salvage cloth prepared for binding wounds or crafting gear.",
+        "craft": {
+          "ingredients": {
+            "obj_salvage_cloth": 1,
+            "obj_sinew_cord": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_stitched_panel",
+        "name": "stitched_panel",
+        "category": "material",
+        "usage": "craft",
+        "value": 8,
+        "size": 2,
+        "description": "A reinforced cloth panel stitched for field armor assembly.",
+        "craft": {
+          "ingredients": {
+            "obj_cloth_roll": 1,
+            "obj_sinew_cord": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_padded_lining",
+        "name": "padded_lining",
+        "category": "material",
+        "usage": "craft",
+        "value": 10,
+        "size": 3,
+        "description": "Layered padding that absorbs the crushing blows of war machines.",
+        "craft": {
+          "ingredients": {
+            "obj_stitched_panel": 1,
+            "obj_salvage_cloth": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_cloth_strap",
+        "name": "war_strap",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "A tough strap for securing armor plates and weapon grips.",
+        "craft": {
+          "ingredients": {
+            "obj_sinew_cord": 1,
+            "obj_cloth_roll": 0.25
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_rubble_chunk",
+        "name": "rubble_chunk",
+        "category": "material",
+        "usage": "craft",
+        "value": 3,
+        "size": 1,
+        "description": "A roughly split chunk of masonry, the bones of a dead kingdom.",
+        "craft": {
+          "ingredients": {
+            "obj_rubble": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_stone_slab",
+        "name": "ruin_slab",
+        "category": "material",
+        "usage": "craft",
+        "value": 5,
+        "size": 2,
+        "description": "A flat slab of old kingdom stone, chipped smooth for crafting.",
+        "craft": {
+          "ingredients": {
+            "obj_rubble_chunk": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_knapped_edge",
+        "name": "knapped_edge",
+        "category": "material",
+        "usage": "craft",
+        "value": 6,
+        "size": 1,
+        "description": "A sharp stone edge flaked from ruin slabs, crude but effective.",
+        "craft": {
+          "ingredients": {
+            "obj_stone_slab": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_stone_blade",
+        "name": "ruin_blade",
+        "category": "material",
+        "usage": "craft",
+        "value": 11,
+        "size": 3,
+        "description": "A finished stone blade shaped from kingdom ruins, ready for mounting.",
+        "craft": {
+          "ingredients": {
+            "obj_knapped_edge": 2,
+            "obj_stone_slab": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_stone_plate",
+        "name": "ruin_plate",
+        "category": "material",
+        "usage": "craft",
+        "value": 12,
+        "size": 4,
+        "description": "A heavy stone plate drilled and smoothed, strapped for protective use.",
+        "craft": {
+          "ingredients": {
+            "obj_stone_slab": 2,
+            "obj_cloth_strap": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_nugget",
+        "name": "iron_nugget",
+        "category": "material",
+        "usage": "craft",
+        "value": 3,
+        "size": 1,
+        "description": "A small smelted lump of iron recovered from scrap, a step toward war-grade metal.",
+        "craft": {
+          "ingredients": {
+            "obj_scrap_iron": 1
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_sheet",
+        "name": "iron_sheet",
+        "category": "material",
+        "usage": "craft",
+        "value": 10,
+        "size": 3,
+        "description": "A hammered iron sheet for cutting into armor segments.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 2
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_scale",
+        "name": "iron_scale",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "A single iron scale punched from sheet metal, designed to overlap with others.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_sheet": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_scale_bundle",
+        "name": "scale_bundle",
+        "category": "material",
+        "usage": "craft",
+        "value": 22,
+        "size": 6,
+        "description": "A bundled set of iron scales sorted and tied for assembly into armor.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_scale": 6,
+            "obj_sinew_cord": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_forged_blade_blank",
+        "name": "forged_blade_blank",
+        "category": "material",
+        "usage": "craft",
+        "value": 14,
+        "size": 4,
+        "description": "A rough-forged blade blank awaiting an edge, made from kingdom iron.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 2,
+            "obj_wooden_rod": 1
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_sharpened_iron_blade",
+        "name": "honed_blade",
+        "category": "material",
+        "usage": "craft",
+        "value": 18,
+        "size": 4,
+        "description": "A sharpened iron blade with a keen edge, forged specifically to pierce machine armor.",
+        "craft": {
+          "ingredients": {
+            "obj_forged_blade_blank": 1,
+            "obj_devil_oil": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_fiend_strip",
+        "name": "fiend_strip",
+        "category": "material",
+        "usage": "craft",
+        "value": 12,
+        "size": 1,
+        "description": "A narrow strip cut from fiend plate, resilient and unnaturally light.",
+        "craft": {
+          "ingredients": {
+            "obj_fiend_plate": 1
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_fiend_rivet",
+        "name": "fiend_rivet",
+        "category": "material",
+        "usage": "craft",
+        "value": 8,
+        "size": 1,
+        "description": "A small rivet punched from fiend plate, impossibly strong for its size.",
+        "craft": {
+          "ingredients": {
+            "obj_fiend_strip": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_brimite_nugget",
+        "name": "brimite_nugget",
+        "category": "material",
+        "usage": "craft",
+        "value": 10,
+        "size": 1,
+        "description": "A dense nugget smelted from brimite ore, hot to the touch and faintly glowing.",
+        "craft": {
+          "ingredients": {
+            "obj_brimite_ore": 1
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_brimite_ingot",
+        "name": "brimite_ingot",
+        "category": "material",
+        "usage": "craft",
+        "value": 24,
+        "size": 1,
+        "description": "A refined brimite ingot that pulses with trapped hellfire, forged for the strongest gear.",
+        "craft": {
+          "ingredients": {
+            "obj_brimite_nugget": 2
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_brimite_blade_blank",
+        "name": "brimite_blade_blank",
+        "category": "material",
+        "usage": "craft",
+        "value": 35,
+        "size": 4,
+        "description": "A forged blank of brimite alloy that glows along hairline fractures.",
+        "craft": {
+          "ingredients": {
+            "obj_brimite_ingot": 2,
+            "obj_wooden_rod": 1
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_brimite_blade",
+        "name": "brimite_blade",
+        "category": "material",
+        "usage": "craft",
+        "value": 45,
+        "size": 4,
+        "description": "A finished brimite blade that seethes with infernal heat along its edge.",
+        "craft": {
+          "ingredients": {
+            "obj_brimite_blade_blank": 1,
+            "obj_demon_core_shard": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_hellcoal_concentrate",
+        "name": "hellcoal_concentrate",
+        "category": "material",
+        "usage": "craft",
+        "value": 12,
+        "size": 1,
+        "description": "Compressed hellcoal reduced to a volatile paste, used to temper devil-forged alloys.",
+        "craft": {
+          "ingredients": {
+            "obj_hellcoal": 3,
+            "obj_devil_oil": 1
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_fiend_alloy_ingot",
+        "name": "fiend_alloy",
+        "category": "material",
+        "usage": "craft",
+        "value": 40,
+        "size": 1,
+        "description": "A brimite alloy quenched in hellcoal, shimmering with dark fire.",
+        "craft": {
+          "ingredients": {
+            "obj_brimite_ingot": 1,
+            "obj_hellcoal_concentrate": 1
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_fiend_alloy_sheet",
+        "name": "fiend_alloy_sheet",
+        "category": "material",
+        "usage": "craft",
+        "value": 48,
+        "size": 3,
+        "description": "A hammered sheet of fiend alloy, nearly impervious and radiating dark heat.",
+        "craft": {
+          "ingredients": {
+            "obj_fiend_alloy_ingot": 2
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_fiend_alloy_scale",
+        "name": "fiend_alloy_scale",
+        "category": "material",
+        "usage": "craft",
+        "value": 20,
+        "size": 1,
+        "description": "A single scale of fiend alloy, warm to the touch and nearly indestructible.",
+        "craft": {
+          "ingredients": {
+            "obj_fiend_alloy_sheet": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_fiend_scale_bundle",
+        "name": "fiend_scale_bundle",
+        "category": "material",
+        "usage": "craft",
+        "value": 65,
+        "size": 6,
+        "description": "A bundled set of fiend alloy scales, enough to armor a machine hunter.",
+        "craft": {
+          "ingredients": {
+            "obj_fiend_alloy_scale": 6,
+            "obj_sinew_cord": 3
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_war_engine_heart",
+        "name": "war_engine_heart",
+        "category": "material",
+        "usage": "craft",
+        "value": null,
+        "size": 1,
+        "description": "The intact heart of a devil-forged war engine, thrumming with infernal power. A trophy and key component.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_oil_flask",
+        "name": "oil_flask",
+        "category": "material",
+        "usage": "craft",
+        "value": 8,
+        "size": 1,
+        "description": "A sealed flask of concentrated devil oil, useful for tempering blades and igniting traps.",
+        "craft": {
+          "ingredients": {
+            "obj_devil_oil": 2,
+            "obj_rubble_chunk": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_cog_assembly",
+        "name": "cog_assembly",
+        "category": "material",
+        "usage": "craft",
+        "value": 14,
+        "size": 2,
+        "description": "A linked assembly of war machine cogs, repurposed for crafting mechanical devices.",
+        "craft": {
+          "ingredients": {
+            "obj_cog": 3,
+            "obj_devil_oil": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_gearwork_frame",
+        "name": "gearwork_frame",
+        "category": "material",
+        "usage": "craft",
+        "value": 22,
+        "size": 3,
+        "description": "A mechanical frame assembled from cogs and iron, the skeleton of a machine hunter's tool.",
+        "craft": {
+          "ingredients": {
+            "obj_cog_assembly": 1,
+            "obj_iron_bar": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_charcoal_brick",
+        "name": "charcoal_brick",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "A compressed block of charite, burns slow and hot for field smelting.",
+        "craft": {
+          "ingredients": {
+            "obj_charite": 3
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_wooden_club",
+        "name": "ruin_club",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 8,
+        "size": 4,
+        "attack": 4,
+        "description": "A heavy chunk of timber shaped into a crude club. Better than bare fists.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_log": 2
+          },
+          "dependencies": []
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_spiked_club",
+        "name": "spiked_club",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 14,
+        "size": 5,
+        "attack": 7,
+        "description": "A wooden club studded with rubble shards, effective against lesser automatons.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_log": 2,
+            "obj_rubble_chunk": 2,
+            "obj_sinew_cord": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_wooden_sword",
+        "name": "timber_sword",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 24,
+        "size": 5,
+        "attack": 9,
+        "description": "A hardened wooden sword, standard issue for newly recruited machine hunters.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_plank": 1,
+            "obj_wood_strip": 1,
+            "obj_sinew_cord": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_stone_maul",
+        "name": "ruin_maul",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 28,
+        "size": 6,
+        "attack": 12,
+        "description": "A heavy stone head mounted on a wooden haft, built to crack machine plating.",
+        "craft": {
+          "ingredients": {
+            "obj_stone_blade": 1,
+            "obj_wooden_rod": 1,
+            "obj_cloth_roll": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_stone_spear",
+        "name": "ruin_spear",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 22,
+        "size": 5,
+        "attack": 10,
+        "description": "A stone-tipped spear for keeping war machines at arm's length.",
+        "craft": {
+          "ingredients": {
+            "obj_knapped_edge": 1,
+            "obj_wooden_rod": 1,
+            "obj_sinew_cord": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_mace",
+        "name": "iron_mace",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 35,
+        "size": 5,
+        "attack": 15,
+        "description": "A flanged iron mace designed to dent and buckle war machine armor.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 2,
+            "obj_wooden_rod": 1,
+            "obj_cloth_strap": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_sword",
+        "name": "hunter_sword",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 45,
+        "size": 5,
+        "attack": 18,
+        "description": "A sharp iron sword honed for slicing through war machine tendons and cables.",
+        "craft": {
+          "ingredients": {
+            "obj_sharpened_iron_blade": 1,
+            "obj_wooden_rod": 1,
+            "obj_cloth_strap": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_gearwork_lance",
+        "name": "gearwork_lance",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 50,
+        "size": 7,
+        "attack": 20,
+        "description": "A mechanical lance driven by cog assemblies that punch through the thickest plating.",
+        "craft": {
+          "ingredients": {
+            "obj_gearwork_frame": 1,
+            "obj_sharpened_iron_blade": 1,
+            "obj_fiend_rivet": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_brimite_sword",
+        "name": "brimite_sword",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 70,
+        "size": 5,
+        "attack": 24,
+        "description": "A brimite-edged sword that sears through devil-forged metal as if it were parchment.",
+        "craft": {
+          "ingredients": {
+            "obj_brimite_blade": 1,
+            "obj_wooden_rod": 1,
+            "obj_cloth_strap": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_demonslayer",
+        "name": "demonslayer",
+        "category": "weapon",
+        "usage": "attack",
+        "value": null,
+        "size": 6,
+        "attack": 30,
+        "description": "A legendary blade forged from fiend alloy and quenched in a war engine's dying heart. The bane of all devil machines.",
+        "craft": {
+          "ingredients": {
+            "obj_fiend_alloy_ingot": 2,
+            "obj_brimite_blade": 1,
+            "obj_war_engine_heart": 1,
+            "obj_cloth_strap": 1
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_oil_bomb",
+        "name": "oil_bomb",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 15,
+        "size": 2,
+        "attack": 8,
+        "description": "A clay pot filled with devil oil and charcoal, thrown to ignite war machines.",
+        "craft": {
+          "ingredients": {
+            "obj_oil_flask": 1,
+            "obj_charcoal_brick": 1,
+            "obj_salvage_cloth": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_hellfire_bomb",
+        "name": "hellfire_bomb",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 30,
+        "size": 2,
+        "attack": 16,
+        "description": "A volatile bomb packed with hellcoal concentrate that erupts in searing infernal fire.",
+        "craft": {
+          "ingredients": {
+            "obj_hellcoal_concentrate": 1,
+            "obj_oil_flask": 1,
+            "obj_iron_bar": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_cog_crossbow",
+        "name": "cog_crossbow",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 55,
+        "size": 6,
+        "attack": 22,
+        "description": "A crossbow with a cog-driven winch that fires iron bolts with devastating force.",
+        "craft": {
+          "ingredients": {
+            "obj_gearwork_frame": 1,
+            "obj_iron_bar": 2,
+            "obj_sinew_cord": 3
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_fiend_halberd",
+        "name": "fiend_halberd",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 80,
+        "size": 8,
+        "attack": 27,
+        "description": "A massive polearm tipped with fiend alloy, made to cleave war machines in two.",
+        "craft": {
+          "ingredients": {
+            "obj_fiend_alloy_ingot": 1,
+            "obj_iron_bar": 2,
+            "obj_wooden_rod": 2,
+            "obj_cloth_strap": 2
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_scrap_buckler",
+        "name": "scrap_buckler",
+        "category": "armor",
+        "usage": "defend",
+        "value": 10,
+        "size": 4,
+        "defense": 3,
+        "description": "A small shield hammered together from scrap iron. Barely holds, but it's something.",
+        "craft": {
+          "ingredients": {
+            "obj_scrap_iron": 2,
+            "obj_sinew_cord": 1
+          },
+          "dependencies": []
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_cloth_tunic",
+        "name": "padded_tunic",
+        "category": "armor",
+        "usage": "defend",
+        "value": 16,
+        "size": 5,
+        "defense": 5,
+        "description": "A padded tunic that absorbs the shock of machine strikes.",
+        "craft": {
+          "ingredients": {
+            "obj_padded_lining": 1,
+            "obj_sinew_cord": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_wooden_chestplate",
+        "name": "timber_vest",
+        "category": "armor",
+        "usage": "defend",
+        "value": 28,
+        "size": 8,
+        "defense": 8,
+        "description": "Overlapping timber plates strapped to a padded lining, crude but effective.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_plate": 2,
+            "obj_wood_rivet": 1,
+            "obj_padded_lining": 1,
+            "obj_cloth_strap": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_stone_plate_armor",
+        "name": "ruin_cuirass",
+        "category": "armor",
+        "usage": "defend",
+        "value": 38,
+        "size": 10,
+        "defense": 12,
+        "description": "Heavy stone plates from fallen walls, strapped into a crude but formidable cuirass.",
+        "craft": {
+          "ingredients": {
+            "obj_stone_plate": 4,
+            "obj_cloth_strap": 2,
+            "obj_padded_lining": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_scale_armor",
+        "name": "hunter_scale",
+        "category": "armor",
+        "usage": "defend",
+        "value": 50,
+        "size": 10,
+        "defense": 16,
+        "description": "Layered iron scales riveted to a padded frame, the standard armor of machine hunters.",
+        "craft": {
+          "ingredients": {
+            "obj_scale_bundle": 1,
+            "obj_padded_lining": 2,
+            "obj_cloth_strap": 3
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_fiend_plate_armor",
+        "name": "fiend_cuirass",
+        "category": "armor",
+        "usage": "defend",
+        "value": 65,
+        "size": 10,
+        "defense": 20,
+        "description": "Armor assembled from war machine plating, turning a devil's own armor against its kind.",
+        "craft": {
+          "ingredients": {
+            "obj_fiend_plate": 3,
+            "obj_fiend_rivet": 4,
+            "obj_padded_lining": 2,
+            "obj_cloth_strap": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_fiend_alloy_armor",
+        "name": "demonhide_armor",
+        "category": "armor",
+        "usage": "defend",
+        "value": null,
+        "size": 12,
+        "defense": 28,
+        "description": "The ultimate armor forged from fiend alloy scales and a war engine's heart, nearly impervious to all attack.",
+        "craft": {
+          "ingredients": {
+            "obj_fiend_scale_bundle": 1,
+            "obj_padded_lining": 2,
+            "obj_cloth_strap": 3,
+            "obj_war_engine_heart": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_scrap_helm",
+        "name": "scrap_helm",
+        "category": "armor",
+        "usage": "defend",
+        "value": 12,
+        "size": 3,
+        "defense": 4,
+        "description": "A dented helmet cobbled from scrap iron and leather straps.",
+        "craft": {
+          "ingredients": {
+            "obj_scrap_iron": 2,
+            "obj_salvage_cloth": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_helm",
+        "name": "hunter_helm",
+        "category": "armor",
+        "usage": "defend",
+        "value": 30,
+        "size": 3,
+        "defense": 8,
+        "description": "A proper iron helmet with cheek guards, standard for machine hunters entering combat zones.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 2,
+            "obj_padded_lining": 1
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_fiend_helm",
+        "name": "fiend_helm",
+        "category": "armor",
+        "usage": "defend",
+        "value": 55,
+        "size": 3,
+        "defense": 14,
+        "description": "A helm forged from fiend alloy, its visor shaped like a snarling devil's face.",
+        "craft": {
+          "ingredients": {
+            "obj_fiend_alloy_ingot": 1,
+            "obj_padded_lining": 1
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_wooden_shield",
+        "name": "timber_shield",
+        "category": "armor",
+        "usage": "defend",
+        "value": 18,
+        "size": 5,
+        "defense": 6,
+        "description": "A broad wooden shield reinforced with rivets, good for blocking machine strikes.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_plate": 2,
+            "obj_wood_rivet": 2,
+            "obj_cloth_strap": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_shield",
+        "name": "hunter_shield",
+        "category": "armor",
+        "usage": "defend",
+        "value": 40,
+        "size": 6,
+        "defense": 11,
+        "description": "An iron-faced shield built to deflect the crushing blows of war machines.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_sheet": 1,
+            "obj_wood_plate": 1,
+            "obj_cloth_strap": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_fiend_shield",
+        "name": "fiend_shield",
+        "category": "armor",
+        "usage": "defend",
+        "value": 70,
+        "size": 7,
+        "defense": 18,
+        "description": "A tower shield faced with fiend alloy that can stop even a charging war engine.",
+        "craft": {
+          "ingredients": {
+            "obj_fiend_alloy_sheet": 1,
+            "obj_wood_plate": 1,
+            "obj_cloth_strap": 2,
+            "obj_fiend_rivet": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_stone_gauntlets",
+        "name": "ruin_gauntlets",
+        "category": "armor",
+        "usage": "defend",
+        "value": 20,
+        "size": 3,
+        "defense": 4,
+        "description": "Heavy gauntlets armored with stone plates, for punching through machine casings.",
+        "craft": {
+          "ingredients": {
+            "obj_rubble_chunk": 2,
+            "obj_cloth_strap": 2,
+            "obj_salvage_cloth": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_gauntlets",
+        "name": "hunter_gauntlets",
+        "category": "armor",
+        "usage": "defend",
+        "value": 35,
+        "size": 3,
+        "defense": 9,
+        "description": "Articulated iron gauntlets that protect the hands without sacrificing grip.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 1,
+            "obj_cloth_strap": 1,
+            "obj_sinew_cord": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_fiend_gauntlets",
+        "name": "fiend_gauntlets",
+        "category": "armor",
+        "usage": "defend",
+        "value": 60,
+        "size": 3,
+        "defense": 15,
+        "description": "Gauntlets of fiend alloy that grip with supernatural strength and shrug off infernal heat.",
+        "craft": {
+          "ingredients": {
+            "obj_fiend_alloy_ingot": 1,
+            "obj_cloth_strap": 1,
+            "obj_sinew_cord": 2
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_war_pack",
+        "name": "war_pack",
+        "category": "container",
+        "usage": "store",
+        "value": 35,
+        "size": 3,
+        "capacity": 40,
+        "description": "A reinforced pack built for machine hunters carrying salvage from the field.",
+        "craft": {
+          "ingredients": {
+            "obj_stitched_panel": 2,
+            "obj_cloth_strap": 2,
+            "obj_iron_bar": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_siege_crate",
+        "name": "siege_crate",
+        "category": "container",
+        "usage": "store",
+        "value": 50,
+        "size": 5,
+        "capacity": 60,
+        "description": "A heavy iron-banded crate used for transporting machine parts and war supplies.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_plank": 4,
+            "obj_iron_bar": 2,
+            "obj_sinew_cord": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_field_journal",
+        "name": "field_journal",
+        "category": "tool",
+        "usage": "writable",
+        "value": 35,
+        "size": 5,
+        "text": "",
+        "max_text_length": 1200,
+        "description": "A bound journal for recording war machine sightings, weak points, and battle strategies.",
+        "craft": {
+          "ingredients": {
+            "obj_paper": 5,
+            "obj_sinew_cord": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_scrap_lantern",
+        "name": "scrap_lantern",
+        "category": "tool",
+        "usage": "craft",
+        "value": 12,
+        "size": 2,
+        "description": "A crude lantern fueled by devil oil, casting flickering light in dark machine lairs.",
+        "craft": {
+          "ingredients": {
+            "obj_scrap_iron": 1,
+            "obj_devil_oil": 1,
+            "obj_salvage_cloth": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_repair_kit",
+        "name": "repair_kit",
+        "category": "tool",
+        "usage": "craft",
+        "value": 20,
+        "size": 2,
+        "description": "A toolkit of scrap iron, cord, and oil for field repairs on armor and weapons.",
+        "craft": {
+          "ingredients": {
+            "obj_scrap_iron": 2,
+            "obj_sinew_cord": 2,
+            "obj_oil_flask": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_chain_net",
+        "name": "chain_net",
+        "category": "tool",
+        "usage": "craft",
+        "value": 25,
+        "size": 4,
+        "description": "A weighted net of iron chain used to entangle smaller war machines. Also an ingredient for traps.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 3,
+            "obj_sinew_cord": 2
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_machine_trap",
+        "name": "machine_trap",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 40,
+        "size": 5,
+        "attack": 14,
+        "description": "A spring-loaded trap of iron and cogs designed to cripple war machine legs.",
+        "craft": {
+          "ingredients": {
+            "obj_chain_net": 1,
+            "obj_cog_assembly": 1,
+            "obj_iron_bar": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_warding_charm",
+        "name": "warding_charm",
+        "category": "armor",
+        "usage": "defend",
+        "value": 45,
+        "size": 1,
+        "defense": 10,
+        "description": "A charm woven from sinew and demon core shards that deflects infernal energy.",
+        "craft": {
+          "ingredients": {
+            "obj_demon_core_shard": 1,
+            "obj_sinew_cord": 3,
+            "obj_hellcoal_concentrate": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_book",
+        "name": "war_codex",
+        "category": "tool",
+        "usage": "writable",
+        "value": 60,
+        "size": 5,
+        "text": "",
+        "max_text_length": 2000,
+        "description": "A thick codex cataloguing every known devil-forged war machine, with blank pages for new entries.",
+        "craft": {
+          "ingredients": {
+            "obj_field_journal": 2,
+            "obj_sinew_cord": 2,
+            "obj_fiend_strip": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      }
+    ],
+    "npcs": [
+      {
+        "type": "npc",
+        "id": "npc_kael_ashworth",
+        "name": "kael_ashworth",
+        "enemy": false,
+        "unique": true,
+        "description": "A grizzled quartermaster of the united kingdoms, selling supplies to machine hunters from his battered wagon.",
+        "objects": [
+          "obj_paper",
+          "obj_pen",
+          "obj_oil_bomb",
+          "obj_scrap_buckler",
+          "obj_wooden_sword",
+          "obj_small_bag"
+        ],
+        "role": "merchant"
+      },
+      {
+        "type": "npc",
+        "id": "npc_vessa_ironhand",
+        "name": "vessa_ironhand",
+        "enemy": false,
+        "unique": true,
+        "description": "A master smith from a fallen kingdom who specializes in forging weapons from salvaged war machine parts.",
+        "objects": [
+          "obj_iron_sword",
+          "obj_iron_scale_armor",
+          "obj_iron_helm",
+          "obj_repair_kit",
+          "obj_chain_net",
+          "obj_war_pack"
+        ],
+        "role": "merchant"
+      },
+      {
+        "type": "npc",
+        "id": "npc_old_marshal",
+        "name": "old_marshal",
+        "enemy": false,
+        "unique": true,
+        "description": "A scarred veteran of the first machine wars who guides new hunters and knows where the devil engines prowl.",
+        "role": "quest"
+      },
+      {
+        "type": "npc",
+        "id": "npc_scrap_automaton",
+        "name": "scrap_automaton",
+        "enemy": true,
+        "unique": false,
+        "description": "A small devil-forged automaton cobbled from scrap metal, jerking forward on broken legs with murderous intent.",
+        "role": "enemy",
+        "base_hp": 30,
+        "slope_hp": 15,
+        "base_attack_power": 5,
+        "slope_attack_power": 8,
+        "objects": [
+          "obj_scrap_iron",
+          "obj_cog",
+          "obj_devil_oil"
+        ],
+        "combat_pattern": [
+          "attack",
+          "attack",
+          "defend",
+          "attack"
+        ]
+      },
+      {
+        "type": "npc",
+        "id": "npc_iron_ravager",
+        "name": "iron_ravager",
+        "enemy": true,
+        "unique": false,
+        "description": "A hulking war machine on four iron legs, its saw-blade arms still spinning with hellfire fury.",
+        "role": "enemy",
+        "base_hp": 50,
+        "slope_hp": 25,
+        "base_attack_power": 10,
+        "slope_attack_power": 12,
+        "objects": [
+          "obj_fiend_plate",
+          "obj_cog",
+          "obj_hellcoal",
+          "obj_scrap_iron"
+        ],
+        "combat_pattern": [
+          "attack",
+          "attack",
+          "attack",
+          "defend",
+          "wait"
+        ]
+      },
+      {
+        "type": "npc",
+        "id": "npc_infernal_colossus",
+        "name": "infernal_colossus",
+        "enemy": true,
+        "unique": false,
+        "description": "A towering devil-forged siege engine wreathed in brimstone smoke, the deadliest machine the allied kingdoms have ever faced.",
+        "role": "enemy",
+        "base_hp": 80,
+        "slope_hp": 35,
+        "base_attack_power": 15,
+        "slope_attack_power": 15,
+        "objects": [
+          "obj_demon_core_shard",
+          "obj_fiend_plate",
+          "obj_brimite_ore",
+          "obj_war_engine_heart"
+        ],
+        "combat_pattern": [
+          "attack",
+          "defend",
+          "attack",
+          "attack",
+          "wait",
+          "attack"
+        ]
+      },
+      {
+        "type": "npc",
+        "id": "npc_ember_scavenger",
+        "name": "ember_scavenger",
+        "enemy": true,
+        "unique": false,
+        "description": "A swift, spider-like automaton that scuttles through wreckage, scavenging parts and attacking anyone who disturbs its hoard.",
+        "role": "enemy",
+        "base_hp": 20,
+        "slope_hp": 12,
+        "base_attack_power": 4,
+        "slope_attack_power": 6,
+        "objects": [
+          "obj_scrap_iron",
+          "obj_devil_oil",
+          "obj_charite"
+        ],
+        "combat_pattern": [
+          "attack",
+          "wait",
+          "attack",
+          "attack",
+          "defend"
+        ]
+      }
+    ]
+  },
+  "initializations": {
+    "spawn": {
+      "area": "area_bastion_courtyard",
+      "npcs": {},
+      "objects": {
+        "obj_coin": 10,
+        "obj_key": 2,
+        "obj_small_bag": 1,
+        "obj_paper": 1,
+        "obj_pen": 1,
+        "obj_workbench": 1
+      }
+    },
+    "undistributable_objects": ["obj_war_engine_heart"]
+  },
+  "custom_events": [
+    "main_quest",
+    "side_quest"
+  ],
+  "features": {
+    "online_expansion": true,
+    "expansion_model": "gpt-5-mini"
+  },
+  "graph": {
+    "connections": [
+      {
+        "from": "area_bastion_courtyard",
+        "to": "area_bastion_barracks",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_bastion_courtyard",
+        "to": "area_bastion_cellar",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_bastion_barracks",
+        "to": "area_bastion_watchtower",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_bastion_cellar",
+        "to": "area_bastion_watchtower",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_bastion_courtyard",
+        "to": "area_vale_trailhead",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_vale_trailhead",
+        "to": "area_vale_ruins",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_vale_trailhead",
+        "to": "area_vale_crater",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_vale_ruins",
+        "to": "area_vale_crater",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_bastion_watchtower",
+        "to": "area_gulch_entrance",
+        "locked": true,
+        "key": "obj_key"
+      },
+      {
+        "from": "area_vale_crater",
+        "to": "area_gulch_entrance",
+        "locked": true,
+        "key": "obj_key"
+      },
+      {
+        "from": "area_gulch_entrance",
+        "to": "area_gulch_scrapyard",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_gulch_entrance",
+        "to": "area_gulch_forge",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_gulch_scrapyard",
+        "to": "area_gulch_forge",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_gulch_forge",
+        "to": "area_foundry_gate",
+        "locked": true,
+        "key": "obj_key"
+      },
+      {
+        "from": "area_foundry_gate",
+        "to": "area_foundry_furnaceroom",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_foundry_gate",
+        "to": "area_foundry_core",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_foundry_furnaceroom",
+        "to": "area_foundry_core",
+        "locked": false,
+        "key": null
+      }
+    ]
+  }
+}

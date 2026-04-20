@@ -1,0 +1,8 @@
+{
+    "step": 0,
+    "curr_time": "0001-01-01 08:00:00",
+    "curr_agents_state": {"area": {}, "areas_visited": {}, "objects_crafted": {}, "npcs_killed": {}, "objects_acquired": {}, "objects_traded": {}, "unique_npcs_killed": {}, "rallied_allies": {}, "corrupted_areas": {}, "corruption_object_decay": {}, "intimidation_state": {}, "area_last_visited": {}, "reclamation_state": {}, "united_presence": {}, "forge_echo_state": {"active_echoes": {}, "merchant_origin": {}, "migration_targets": {}}},
+    "scores": {},
+    "world": {},
+    "agents": []
+}

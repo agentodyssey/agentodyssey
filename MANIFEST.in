@@ -1,0 +1,15 @@
+include README.md
+include pyproject.toml
+include requirements.txt
+
+# Game assets (world definitions, env configs, visualizer icons, etc.)
+recursive-include assets *.json *.jsonl *.png *.jpg *.svg
+
+# Base game + generated game templates
+recursive-include games *.py *.json
+
+# Scripts
+recursive-include scripts *.sh
+
+# Tool data files
+recursive-include tools *.html *.js *.json

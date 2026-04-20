@@ -1,0 +1,1857 @@
+{
+  "entities": {
+    "places": [
+      {
+        "type": "place",
+        "id": "place_raccoon_hospital",
+        "name": "Raccoon Hospital",
+        "unlocked": true,
+        "areas": [
+          {
+            "type": "area",
+            "id": "area_hospital_lobby",
+            "name": "lobby",
+            "level": 1
+          },
+          {
+            "type": "area",
+            "id": "area_hospital_ward",
+            "name": "ward",
+            "level": 2
+          },
+          {
+            "type": "area",
+            "id": "area_hospital_morgue",
+            "name": "morgue",
+            "level": 3
+          },
+          {
+            "type": "area",
+            "id": "area_hospital_rooftop",
+            "name": "rooftop",
+            "level": 2
+          }
+        ]
+      },
+      {
+        "type": "place",
+        "id": "place_underground_lab",
+        "name": "Underground Lab",
+        "unlocked": false,
+        "areas": [
+          {
+            "type": "area",
+            "id": "area_lab_entrance",
+            "name": "entrance",
+            "level": 3
+          },
+          {
+            "type": "area",
+            "id": "area_lab_chamber",
+            "name": "chamber",
+            "level": 4
+          },
+          {
+            "type": "area",
+            "id": "area_lab_reactor",
+            "name": "reactor",
+            "level": 5
+          }
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "type": "object",
+        "id": "obj_green_herb",
+        "name": "green_herb",
+        "category": "consumable",
+        "usage": "concoct",
+        "value": 3,
+        "size": 1,
+        "description": "A common medicinal herb with mild restorative properties. Combine with another herb to concoct a remedy.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_hospital_lobby",
+          "area_hospital_ward",
+          "area_hospital_rooftop",
+          "area_lab_entrance"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_red_herb",
+        "name": "red_herb",
+        "category": "consumable",
+        "usage": "concoct",
+        "value": 6,
+        "size": 1,
+        "description": "An uncommon herb with potent healing compounds. Combine with another herb to concoct a stronger remedy.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 2,
+        "areas": [
+          "area_hospital_ward",
+          "area_hospital_morgue",
+          "area_hospital_rooftop",
+          "area_lab_entrance"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_blue_herb",
+        "name": "blue_herb",
+        "category": "consumable",
+        "usage": "concoct",
+        "value": 10,
+        "size": 1,
+        "description": "A rare herb that glows faintly under UV light. Its compounds can neutralize toxins and accelerate cell regeneration.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 3,
+        "areas": [
+          "area_hospital_morgue",
+          "area_lab_entrance",
+          "area_lab_chamber",
+          "area_lab_reactor"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_lantern",
+        "name": "lantern",
+        "category": "tool",
+        "usage": "light",
+        "value": 12,
+        "size": 2,
+        "description": "A battered oil lantern salvaged from a maintenance closet. Its flickering flame pushes back the darkness, but the fuel won't last forever.",
+        "craft": {
+          "ingredients": {
+            "obj_scrap_metal": 2,
+            "obj_glass_shard": 1,
+            "obj_chemical": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2,
+        "fuel": 30,
+        "max_fuel": 30,
+        "light_source": true
+      },
+      {
+        "type": "object",
+        "id": "obj_flashlight",
+        "name": "flashlight",
+        "category": "tool",
+        "usage": "light",
+        "value": 20,
+        "size": 2,
+        "description": "A heavy-duty flashlight assembled from lab components. Its bright beam reveals every shadow, but the improvised battery drains quickly.",
+        "craft": {
+          "ingredients": {
+            "obj_plastic_tube": 1,
+            "obj_circuit_board": 1,
+            "obj_chemical": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4,
+        "fuel": 50,
+        "max_fuel": 50,
+        "light_source": true
+      },
+      {
+        "type": "object",
+        "id": "obj_lantern_fuel",
+        "name": "lantern_fuel",
+        "category": "consumable",
+        "usage": "refuel",
+        "value": 6,
+        "size": 1,
+        "description": "A small canister of flammable liquid that can be used to refuel a lantern or flashlight.",
+        "craft": {
+          "ingredients": {
+            "obj_chemical": 2,
+            "obj_rag": 1
+          },
+          "dependencies": []
+        },
+        "level": 2,
+        "areas": [
+          "area_hospital_ward",
+          "area_hospital_morgue",
+          "area_lab_entrance",
+          "area_lab_chamber"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_coin",
+        "name": "coin",
+        "category": "currency",
+        "usage": "exchange",
+        "value": null,
+        "size": 0,
+        "description": "A tarnished coin still accepted by survivors who bother to trade.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_key_blank",
+        "name": "key_blank",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "A rough metal blank filed from scrap, ready to be cut into a key.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_key",
+        "name": "key",
+        "category": "tool",
+        "usage": "unlock",
+        "value": 15,
+        "size": 1,
+        "description": "A crudely cut key that fits the heavy locks found throughout the facility.",
+        "craft": {
+          "ingredients": {
+            "obj_key_blank": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_pen",
+        "name": "pen",
+        "category": "tool",
+        "usage": "write",
+        "value": 6,
+        "size": 1,
+        "description": "A ballpoint pen scavenged from a nurse's station.",
+        "craft": {
+          "ingredients": {
+            "obj_plastic_tube": 1,
+            "obj_rag": 0.5
+          },
+          "dependencies": []
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_paper",
+        "name": "paper",
+        "category": "tool",
+        "usage": "writable",
+        "value": 5,
+        "size": 1,
+        "text": "",
+        "max_text_length": 200,
+        "description": "A crumpled sheet torn from a medical chart.",
+        "craft": {
+          "ingredients": {
+            "obj_rag": 0.25
+          },
+          "dependencies": []
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_journal",
+        "name": "journal",
+        "category": "tool",
+        "usage": "writable",
+        "value": 35,
+        "size": 5,
+        "text": "",
+        "max_text_length": 1200,
+        "description": "A leather-bound journal found in a doctor's office, many pages still blank.",
+        "craft": {
+          "ingredients": {
+            "obj_paper": 5,
+            "obj_duct_tape": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_small_bag",
+        "name": "small_bag",
+        "category": "container",
+        "usage": "store",
+        "value": 20,
+        "size": 2,
+        "capacity": 20,
+        "description": "A bloodstained messenger bag, still functional for carrying supplies.",
+        "craft": {
+          "ingredients": {
+            "obj_rag": 3,
+            "obj_duct_tape": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_desk",
+        "name": "desk",
+        "category": "furniture",
+        "usage": "shove",
+        "value": null,
+        "size": null,
+        "description": "A heavy hospital desk. Could be shoved into an enemy to stun them, but it will be destroyed in the process.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_hospital_lobby",
+          "area_hospital_ward",
+          "area_hospital_rooftop"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_shelf",
+        "name": "shelf",
+        "category": "furniture",
+        "usage": "shove",
+        "value": null,
+        "size": null,
+        "description": "A tall metal shelf unit bolted to nothing. Topple it onto an enemy to stun them, destroying the shelf.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_hospital_ward",
+          "area_hospital_morgue",
+          "area_lab_entrance",
+          "area_lab_chamber"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_wood_log",
+        "name": "wood_log",
+        "category": "material",
+        "usage": "craft",
+        "value": 2,
+        "size": 1,
+        "description": "A splintered piece of furniture leg, still solid enough to work with.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_hospital_lobby",
+          "area_hospital_ward",
+          "area_hospital_rooftop",
+          "area_lab_entrance"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_bar",
+        "name": "iron_bar",
+        "category": "material",
+        "usage": "craft",
+        "value": 7,
+        "size": 1,
+        "description": "A heavy iron bar pried from a hospital bed frame.",
+        "craft": {
+          "ingredients": {
+            "obj_scrap_metal": 2
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 3,
+        "areas": [
+          "area_hospital_morgue",
+          "area_lab_entrance"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_workbench",
+        "name": "workbench",
+        "category": "station",
+        "usage": "craft",
+        "value": null,
+        "size": null,
+        "description": "A makeshift workbench assembled from hospital furniture and bolted to the floor.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_log": 5,
+            "obj_scrap_metal": 3
+          },
+          "dependencies": []
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_furnace",
+        "name": "furnace",
+        "category": "station",
+        "usage": "craft",
+        "value": null,
+        "size": null,
+        "description": "A crude smelting furnace built from hospital bricks and ventilation ducts.",
+        "craft": {
+          "ingredients": {
+            "obj_scrap_metal": 8,
+            "obj_chemical": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_rag",
+        "name": "rag",
+        "category": "material",
+        "usage": "craft",
+        "value": 1,
+        "size": 1,
+        "description": "A torn strip of hospital linen, useful for bandages and bindings.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_hospital_lobby",
+          "area_hospital_ward",
+          "area_hospital_morgue",
+          "area_hospital_rooftop"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_scrap_metal",
+        "name": "scrap_metal",
+        "category": "material",
+        "usage": "craft",
+        "value": 3,
+        "size": 1,
+        "description": "Twisted metal salvaged from wrecked equipment and collapsed walls.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 2,
+        "areas": [
+          "area_hospital_ward",
+          "area_hospital_morgue",
+          "area_hospital_rooftop",
+          "area_lab_entrance"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_glass_shard",
+        "name": "glass_shard",
+        "category": "material",
+        "usage": "craft",
+        "value": 2,
+        "size": 1,
+        "description": "A jagged piece of broken window glass, dangerously sharp.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_hospital_lobby",
+          "area_hospital_ward",
+          "area_hospital_rooftop"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_chemical",
+        "name": "chemical",
+        "category": "material",
+        "usage": "craft",
+        "value": 5,
+        "size": 1,
+        "description": "A sealed vial of industrial chemical salvaged from a supply closet.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 2,
+        "areas": [
+          "area_hospital_morgue",
+          "area_lab_entrance",
+          "area_lab_chamber"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_plastic_tube",
+        "name": "plastic_tube",
+        "category": "material",
+        "usage": "craft",
+        "value": 2,
+        "size": 1,
+        "description": "A length of medical-grade plastic tubing.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_hospital_lobby",
+          "area_hospital_ward",
+          "area_lab_entrance"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_gunpowder",
+        "name": "gunpowder",
+        "category": "material",
+        "usage": "craft",
+        "value": 8,
+        "size": 1,
+        "description": "A small pouch of black powder, volatile and precious.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 3,
+        "areas": [
+          "area_hospital_morgue",
+          "area_lab_entrance",
+          "area_lab_chamber"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_circuit_board",
+        "name": "circuit_board",
+        "category": "material",
+        "usage": "craft",
+        "value": 12,
+        "size": 1,
+        "description": "A salvaged circuit board from lab monitoring equipment.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 4,
+        "areas": [
+          "area_lab_chamber",
+          "area_lab_reactor"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_biohazard_sample",
+        "name": "biohazard_sample",
+        "category": "material",
+        "usage": "craft",
+        "value": 20,
+        "size": 1,
+        "description": "A sealed containment vial of mutagen, glowing faintly green.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 5,
+        "areas": [
+          "area_lab_reactor",
+          "area_lab_chamber"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_titanium_shard",
+        "name": "titanium_shard",
+        "category": "material",
+        "usage": "craft",
+        "value": 18,
+        "size": 1,
+        "description": "A fragment of titanium alloy from a destroyed containment pod.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 5,
+        "areas": [
+          "area_lab_reactor",
+          "area_lab_chamber"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_zombie_claw",
+        "name": "zombie_claw",
+        "category": "material",
+        "usage": "craft",
+        "value": null,
+        "size": 1,
+        "description": "A severed claw from a reanimated corpse, still twitching.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_licker_tongue",
+        "name": "licker_tongue",
+        "category": "material",
+        "usage": "craft",
+        "value": null,
+        "size": 1,
+        "description": "The barbed tongue of a licker, razor-sharp and disturbingly flexible.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_duct_tape",
+        "name": "duct_tape",
+        "category": "material",
+        "usage": "craft",
+        "value": 3,
+        "size": 1,
+        "description": "A half-used roll of duct tape. Holds anything together in a pinch.",
+        "craft": {
+          "ingredients": {
+            "obj_rag": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 1,
+        "areas": [
+          "area_hospital_lobby",
+          "area_hospital_ward"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_bandage",
+        "name": "bandage",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "A clean bandage roll, essential for field medicine.",
+        "craft": {
+          "ingredients": {
+            "obj_rag": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 1
+      },
+      {
+        "type": "object",
+        "id": "obj_splint",
+        "name": "splint",
+        "category": "material",
+        "usage": "craft",
+        "value": 5,
+        "size": 1,
+        "description": "A rigid splint fashioned from wood and tape.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_log": 1,
+            "obj_duct_tape": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_medkit",
+        "name": "medkit",
+        "category": "consumable",
+        "usage": "consumable",
+        "value": 15,
+        "size": 3,
+        "description": "A first-aid kit assembled from hospital scraps. Restores health when used.",
+        "craft": {
+          "ingredients": {
+            "obj_bandage": 2,
+            "obj_splint": 1,
+            "obj_chemical": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_wood_plank",
+        "name": "wood_plank",
+        "category": "material",
+        "usage": "craft",
+        "value": 3,
+        "size": 1,
+        "description": "A flat plank ripped from a hospital door frame.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_log": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 1,
+        "areas": [
+          "area_hospital_ward",
+          "area_hospital_rooftop"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_wood_stake",
+        "name": "wood_stake",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "A sharpened wooden stake, crude but effective.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_plank": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_pipe_handle",
+        "name": "pipe_handle",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "attack": 5,
+        "description": "A short section of pipe wrapped in tape for a better grip.",
+        "craft": {
+          "ingredients": {
+            "obj_scrap_metal": 1,
+            "obj_duct_tape": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_shiv",
+        "name": "shiv",
+        "category": "material",
+        "usage": "craft",
+        "value": 5,
+        "size": 1,
+        "description": "A glass shard wrapped in tape to form a crude stabbing tool.",
+        "craft": {
+          "ingredients": {
+            "obj_glass_shard": 1,
+            "obj_duct_tape": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_metal_plate",
+        "name": "metal_plate",
+        "category": "material",
+        "usage": "craft",
+        "value": 6,
+        "size": 2,
+        "description": "A hammered sheet of scrap metal, flat enough for armor plating.",
+        "craft": {
+          "ingredients": {
+            "obj_scrap_metal": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_metal_strip",
+        "name": "metal_strip",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "A narrow strip of metal cut for reinforcement and binding.",
+        "craft": {
+          "ingredients": {
+            "obj_metal_plate": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_padded_vest",
+        "name": "padded_vest",
+        "category": "material",
+        "usage": "craft",
+        "value": 8,
+        "size": 3,
+        "description": "Layered rags stitched into a crude protective vest lining.",
+        "craft": {
+          "ingredients": {
+            "obj_rag": 3,
+            "obj_duct_tape": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_reinforced_plate",
+        "name": "reinforced_plate",
+        "category": "material",
+        "usage": "craft",
+        "value": 10,
+        "size": 3,
+        "description": "A metal plate reinforced with welded strips for extra durability.",
+        "craft": {
+          "ingredients": {
+            "obj_metal_plate": 1,
+            "obj_metal_strip": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_sheet",
+        "name": "iron_sheet",
+        "category": "material",
+        "usage": "craft",
+        "value": 10,
+        "size": 3,
+        "description": "A hammered iron sheet for cutting and shaping into armor segments.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 2
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_scale",
+        "name": "iron_scale",
+        "category": "material",
+        "usage": "craft",
+        "value": 4,
+        "size": 1,
+        "description": "A single iron scale cut to overlap cleanly with others.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_sheet": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_scale_bundle",
+        "name": "scale_bundle",
+        "category": "material",
+        "usage": "craft",
+        "value": 22,
+        "size": 6,
+        "description": "A bundled set of iron scales wired together for assembly.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_scale": 6,
+            "obj_duct_tape": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_forged_blade",
+        "name": "forged_blade",
+        "category": "material",
+        "usage": "craft",
+        "value": 14,
+        "size": 4,
+        "description": "A crude blade forged from iron bars, needs sharpening.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_bar": 2,
+            "obj_pipe_handle": 1
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_sharpened_blade",
+        "name": "sharpened_blade",
+        "category": "material",
+        "usage": "craft",
+        "value": 18,
+        "size": 4,
+        "description": "A sharpened iron blade honed on concrete, ready for mounting.",
+        "craft": {
+          "ingredients": {
+            "obj_forged_blade": 1,
+            "obj_glass_shard": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_explosive_charge",
+        "name": "explosive_charge",
+        "category": "material",
+        "usage": "craft",
+        "value": 16,
+        "size": 2,
+        "description": "A small shaped charge packed with gunpowder and scrap.",
+        "craft": {
+          "ingredients": {
+            "obj_gunpowder": 2,
+            "obj_scrap_metal": 1,
+            "obj_duct_tape": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_detonator",
+        "name": "detonator",
+        "category": "material",
+        "usage": "craft",
+        "value": 20,
+        "size": 1,
+        "description": "An electronic detonator wired from lab components.",
+        "craft": {
+          "ingredients": {
+            "obj_circuit_board": 1,
+            "obj_chemical": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_titanium_nugget",
+        "name": "titanium_nugget",
+        "category": "material",
+        "usage": "craft",
+        "value": 12,
+        "size": 1,
+        "description": "A smelted lump of titanium alloy, incredibly dense.",
+        "craft": {
+          "ingredients": {
+            "obj_titanium_shard": 0.5
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_titanium_ingot",
+        "name": "titanium_ingot",
+        "category": "material",
+        "usage": "craft",
+        "value": 28,
+        "size": 1,
+        "description": "A refined titanium ingot, the strongest metal available.",
+        "craft": {
+          "ingredients": {
+            "obj_titanium_nugget": 2
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_titanium_blade_blank",
+        "name": "titanium_blade_blank",
+        "category": "material",
+        "usage": "craft",
+        "value": 40,
+        "size": 4,
+        "description": "A forged titanium blank that demands expert finishing.",
+        "craft": {
+          "ingredients": {
+            "obj_titanium_ingot": 2,
+            "obj_pipe_handle": 1
+          },
+          "dependencies": [
+            "obj_workbench",
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_titanium_blade",
+        "name": "titanium_blade",
+        "category": "material",
+        "usage": "craft",
+        "value": 50,
+        "size": 4,
+        "description": "A finished titanium blade with an impossibly keen edge.",
+        "craft": {
+          "ingredients": {
+            "obj_titanium_blade_blank": 1,
+            "obj_biohazard_sample": 0.5
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_mutagen_vial",
+        "name": "mutagen_vial",
+        "category": "material",
+        "usage": "craft",
+        "value": 30,
+        "size": 1,
+        "description": "A refined mutagen solution that enhances organic and metallic compounds.",
+        "craft": {
+          "ingredients": {
+            "obj_biohazard_sample": 1,
+            "obj_chemical": 2
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_titanium_plate",
+        "name": "titanium_plate",
+        "category": "material",
+        "usage": "craft",
+        "value": 35,
+        "size": 4,
+        "description": "A hammered titanium plate, nearly impervious to conventional damage.",
+        "craft": {
+          "ingredients": {
+            "obj_titanium_ingot": 2
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_titanium_scale",
+        "name": "titanium_scale",
+        "category": "material",
+        "usage": "craft",
+        "value": 15,
+        "size": 1,
+        "description": "A single titanium scale, light yet incredibly tough.",
+        "craft": {
+          "ingredients": {
+            "obj_titanium_plate": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_titanium_scale_bundle",
+        "name": "titanium_bundle",
+        "category": "material",
+        "usage": "craft",
+        "value": 55,
+        "size": 6,
+        "description": "A set of titanium scales wired and ready for armor assembly.",
+        "craft": {
+          "ingredients": {
+            "obj_titanium_scale": 4,
+            "obj_duct_tape": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_pipe_club",
+        "name": "pipe_club",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 10,
+        "size": 4,
+        "attack": 10,
+        "description": "A heavy pipe wrapped in tape. Slow but hits hard enough to crack skulls.",
+        "craft": {
+          "ingredients": {
+            "obj_pipe_handle": 1,
+            "obj_duct_tape": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_nail_bat",
+        "name": "nail_bat",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 18,
+        "size": 5,
+        "attack": 14,
+        "description": "A wooden plank studded with nails and wrapped in tape. Brutal.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_plank": 1,
+            "obj_scrap_metal": 1,
+            "obj_duct_tape": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_machete",
+        "name": "machete",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 30,
+        "size": 5,
+        "attack": 20,
+        "description": "A crude machete forged from scrap iron. Cleaves through rotting flesh.",
+        "craft": {
+          "ingredients": {
+            "obj_sharpened_blade": 1,
+            "obj_pipe_handle": 1,
+            "obj_duct_tape": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_combat_knife",
+        "name": "combat_knife",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 35,
+        "size": 3,
+        "attack": 24,
+        "description": "A well-balanced combat knife with a reinforced iron blade.",
+        "craft": {
+          "ingredients": {
+            "obj_sharpened_blade": 1,
+            "obj_metal_strip": 2,
+            "obj_duct_tape": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_pipe_bomb",
+        "name": "pipe_bomb",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 40,
+        "size": 3,
+        "attack": 28,
+        "description": "An improvised explosive packed into a pipe. One devastating hit.",
+        "craft": {
+          "ingredients": {
+            "obj_explosive_charge": 1,
+            "obj_detonator": 1,
+            "obj_pipe_handle": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_titanium_sword",
+        "name": "titanium_sword",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 65,
+        "size": 5,
+        "attack": 32,
+        "description": "A titanium blade mounted on a reinforced handle. Cuts through anything.",
+        "craft": {
+          "ingredients": {
+            "obj_titanium_blade": 1,
+            "obj_pipe_handle": 1,
+            "obj_metal_strip": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_mutant_cleaver",
+        "name": "mutant_cleaver",
+        "category": "weapon",
+        "usage": "attack",
+        "value": null,
+        "size": 5,
+        "attack": 38,
+        "description": "A horrific weapon fused with mutagen and licker tissue. Pulses with unnatural energy.",
+        "craft": {
+          "ingredients": {
+            "obj_titanium_blade": 1,
+            "obj_mutagen_vial": 1,
+            "obj_licker_tongue": 1,
+            "obj_pipe_handle": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_rag_armor",
+        "name": "rag_armor",
+        "category": "armor",
+        "usage": "defend",
+        "value": 12,
+        "size": 5,
+        "defense": 5,
+        "description": "Layers of hospital linen wrapped tight. Better than nothing.",
+        "craft": {
+          "ingredients": {
+            "obj_padded_vest": 1,
+            "obj_duct_tape": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_scrap_vest",
+        "name": "scrap_vest",
+        "category": "armor",
+        "usage": "defend",
+        "value": 22,
+        "size": 7,
+        "defense": 10,
+        "description": "A vest reinforced with scrap metal plates. Heavy but protective.",
+        "craft": {
+          "ingredients": {
+            "obj_padded_vest": 1,
+            "obj_reinforced_plate": 2,
+            "obj_metal_strip": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_scale_armor",
+        "name": "iron_scale_armor",
+        "category": "armor",
+        "usage": "defend",
+        "value": 45,
+        "size": 10,
+        "defense": 16,
+        "description": "Overlapping iron scales wired to a padded vest. Serious protection.",
+        "craft": {
+          "ingredients": {
+            "obj_scale_bundle": 1,
+            "obj_padded_vest": 1,
+            "obj_metal_strip": 3
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_riot_armor",
+        "name": "riot_armor",
+        "category": "armor",
+        "usage": "defend",
+        "value": 55,
+        "size": 10,
+        "defense": 22,
+        "description": "Improvised riot gear assembled from iron plates and hospital padding.",
+        "craft": {
+          "ingredients": {
+            "obj_iron_sheet": 2,
+            "obj_padded_vest": 2,
+            "obj_metal_strip": 4,
+            "obj_duct_tape": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_titanium_armor",
+        "name": "titanium_armor",
+        "category": "armor",
+        "usage": "defend",
+        "value": null,
+        "size": 10,
+        "defense": 28,
+        "description": "Full titanium scale armor infused with mutagen. Nearly impenetrable.",
+        "craft": {
+          "ingredients": {
+            "obj_titanium_scale_bundle": 1,
+            "obj_padded_vest": 2,
+            "obj_mutagen_vial": 1,
+            "obj_metal_strip": 2
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_master_keycard",
+        "name": "master_keycard",
+        "category": "tool",
+        "usage": "unlock",
+        "value": 25,
+        "size": 1,
+        "description": "A high-clearance electronic keycard salvaged from lab security systems. It can override the facility's emergency quarantine lockdown protocols.",
+        "craft": {
+          "ingredients": {
+            "obj_circuit_board": 1,
+            "obj_key_blank": 1,
+            "obj_chemical": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_heart_of_the_ocean",
+        "name": "heart_of_the_ocean",
+        "category": "material",
+        "usage": "craft",
+        "value": 25,
+        "size": 1,
+        "description": "A pulsing bio-luminescent organ recovered from deep within the reactor. It hums with terrible power.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_sea_salt_crystal",
+        "name": "sea_salt_crystal",
+        "category": "material",
+        "usage": "craft",
+        "value": 6,
+        "size": 1,
+        "description": "A crystallized chemical compound found in the lab's cooling systems.",
+        "craft": {
+          "ingredients": {},
+          "dependencies": []
+        },
+        "level": 1,
+        "areas": [
+          "area_lab_entrance",
+          "area_lab_chamber"
+        ]
+      },
+      {
+        "type": "object",
+        "id": "obj_brine_concentrate",
+        "name": "brine_concentrate",
+        "category": "material",
+        "usage": "craft",
+        "value": 12,
+        "size": 1,
+        "description": "A dense chemical concentrate used to temper rare alloys.",
+        "craft": {
+          "ingredients": {
+            "obj_sea_salt_crystal": 3,
+            "obj_rag": 0.1
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 2
+      },
+      {
+        "type": "object",
+        "id": "obj_tide_alloy_ingot",
+        "name": "tide_alloy_ingot",
+        "category": "material",
+        "usage": "craft",
+        "value": 40,
+        "size": 1,
+        "description": "A titanium alloy quenched in brine, shimmering with an eerie glow.",
+        "craft": {
+          "ingredients": {
+            "obj_titanium_ingot": 1,
+            "obj_brine_concentrate": 1
+          },
+          "dependencies": [
+            "obj_furnace"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_water_sword",
+        "name": "water_sword",
+        "category": "weapon",
+        "usage": "attack",
+        "value": null,
+        "size": 5,
+        "attack": 16,
+        "description": "A tide-alloy blade that resonates with a strange aquatic frequency. Devastating against bio-organic weapons.",
+        "craft": {
+          "ingredients": {
+            "obj_tide_alloy_ingot": 2,
+            "obj_nail_bat": 1,
+            "obj_heart_of_the_ocean": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_wooden_sword",
+        "name": "wooden_sword",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 24,
+        "size": 5,
+        "attack": 9,
+        "description": "A sharpened wooden stake lashed to a handle. Primitive but reliable.",
+        "craft": {
+          "ingredients": {
+            "obj_wood_plank": 1,
+            "obj_wood_stake": 1,
+            "obj_duct_tape": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 3
+      },
+      {
+        "type": "object",
+        "id": "obj_stone_sword",
+        "name": "stone_sword",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 33,
+        "size": 5,
+        "attack": 15,
+        "description": "A heavy concrete slab sharpened into a blade. Slow but punishing.",
+        "craft": {
+          "ingredients": {
+            "obj_reinforced_plate": 1,
+            "obj_pipe_handle": 1,
+            "obj_metal_strip": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 4
+      },
+      {
+        "type": "object",
+        "id": "obj_iron_sword",
+        "name": "iron_sword",
+        "category": "weapon",
+        "usage": "attack",
+        "value": 45,
+        "size": 5,
+        "attack": 21,
+        "description": "A proper iron sword forged in the makeshift furnace. A survivor's pride.",
+        "craft": {
+          "ingredients": {
+            "obj_sharpened_blade": 1,
+            "obj_pipe_handle": 1,
+            "obj_metal_strip": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      },
+      {
+        "type": "object",
+        "id": "obj_star_metal_sword",
+        "name": "star_metal_sword",
+        "category": "weapon",
+        "usage": "attack",
+        "value": null,
+        "size": 5,
+        "attack": 25,
+        "description": "A titanium-alloy sword enhanced with mutagen. Glows faintly in the dark.",
+        "craft": {
+          "ingredients": {
+            "obj_titanium_blade": 1,
+            "obj_pipe_handle": 1,
+            "obj_metal_strip": 1,
+            "obj_zombie_claw": 1
+          },
+          "dependencies": [
+            "obj_workbench"
+          ]
+        },
+        "level": 5
+      }
+    ],
+    "npcs": [
+      {
+        "type": "npc",
+        "id": "npc_nurse_chen",
+        "name": "nurse_chen",
+        "enemy": false,
+        "unique": true,
+        "description": "a haggard nurse who survived by barricading the supply room. She trades medical supplies and scavenged gear.",
+        "objects": [
+          "obj_paper",
+          "obj_pen",
+          "obj_medkit",
+          "obj_combat_knife",
+          "obj_scale_bundle"
+        ],
+        "role": "merchant"
+      },
+      {
+        "type": "npc",
+        "id": "npc_zombie",
+        "name": "zombie",
+        "enemy": true,
+        "unique": false,
+        "description": "a shambling reanimated corpse in a blood-soaked hospital gown. Slow but relentless.",
+        "role": "undead",
+        "base_attack_power": 6,
+        "slope_attack_power": 8,
+        "base_hp": 25,
+        "slope_hp": 15,
+        "combat_pattern": [
+          "attack",
+          "attack",
+          "wait",
+          "attack"
+        ],
+        "objects": [
+          "obj_zombie_claw",
+          "obj_rag"
+        ]
+      },
+      {
+        "type": "npc",
+        "id": "npc_licker",
+        "name": "licker",
+        "enemy": true,
+        "unique": false,
+        "description": "a skinless abomination that crawls on walls and ceilings. Its barbed tongue can strike from across the room.",
+        "role": "mutant",
+        "base_attack_power": 18,
+        "slope_attack_power": 12,
+        "base_hp": 60,
+        "slope_hp": 25,
+        "combat_pattern": [
+          "attack",
+          "attack",
+          "defend",
+          "attack",
+          "attack",
+          "wait"
+        ],
+        "objects": [
+          "obj_licker_tongue",
+          "obj_chemical"
+        ]
+      },
+      {
+        "type": "npc",
+        "id": "npc_tyrant",
+        "name": "tyrant",
+        "enemy": true,
+        "unique": false,
+        "description": "a towering bio-weapon in a tattered trenchcoat. Each footstep shakes the floor.",
+        "role": "bioweapon",
+        "base_attack_power": 28,
+        "slope_attack_power": 15,
+        "base_hp": 120,
+        "slope_hp": 40,
+        "combat_pattern": [
+          "attack",
+          "attack",
+          "attack",
+          "defend",
+          "attack",
+          "wait",
+          "attack"
+        ],
+        "objects": [
+          "obj_biohazard_sample",
+          "obj_scrap_metal"
+        ]
+      }
+    ]
+  },
+  "initializations": {
+    "spawn": {
+      "area": "area_hospital_lobby",
+      "npcs": {},
+      "objects": {
+        "obj_coin": 10,
+        "obj_key": 2,
+        "obj_small_bag": 1,
+        "obj_paper": 1,
+        "obj_pen": 1,
+        "obj_workbench": 1,
+        "obj_lantern": 1
+      }
+    },
+    "undistributable_objects": [
+      "obj_zombie_claw",
+      "obj_licker_tongue",
+      "obj_heart_of_the_ocean"
+    ]
+  },
+  "graph": {
+    "connections": [
+      {
+        "from": "area_hospital_lobby",
+        "to": "area_hospital_ward",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_hospital_lobby",
+        "to": "area_hospital_rooftop",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_hospital_ward",
+        "to": "area_hospital_morgue",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_hospital_ward",
+        "to": "area_hospital_rooftop",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_hospital_morgue",
+        "to": "area_hospital_rooftop",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_hospital_morgue",
+        "to": "area_lab_entrance",
+        "locked": true,
+        "key": "obj_key"
+      },
+      {
+        "from": "area_lab_entrance",
+        "to": "area_lab_chamber",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_lab_entrance",
+        "to": "area_lab_reactor",
+        "locked": false,
+        "key": null
+      },
+      {
+        "from": "area_lab_chamber",
+        "to": "area_lab_reactor",
+        "locked": false,
+        "key": null
+      }
+    ]
+  },
+  "custom_events": [
+    "main_quest",
+    "side_quest",
+    "tutorial"
+  ],
+  "features": {
+    "online_expansion": true,
+    "expansion_model": "gpt-5-mini"
+  }
+}

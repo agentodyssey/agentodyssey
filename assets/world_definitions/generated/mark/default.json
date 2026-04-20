@@ -1,0 +1,189 @@
+{
+  "entities": 
+  {
+    "places": [
+      {
+        "type": "place",
+        "id": "place_old_castle",
+        "name": "Old Castle",
+        "unlocked": false,
+        "areas": [
+          {"type":"area", "id": "area_castle_hall", "name": "hall", "level": 1, "light": true},
+          {"type":"area", "id": "area_castle_armory", "name": "armory", "level": 2, "light": true},
+          {"type":"area", "id": "area_castle_library", "name": "library", "level": 1, "light": true}
+        ]
+      },
+      {
+        "type": "place",
+        "id": "place_oakheart_woods",
+        "name": "Oakheart Woods",
+        "unlocked": true,
+        "areas": [
+          {"type":"area", "id": "area_woods_glade", "name": "glade", "level": 1, "light": true},
+          {"type":"area", "id": "area_woods_creek", "name": "creek", "level": 1, "light": false},
+          {"type":"area", "id": "area_woods_ridge", "name": "ridge", "level": 2, "light": true}
+        ]
+      },
+      {
+        "type": "place",
+        "id": "place_copper_flats",
+        "name": "Copper Flats",
+        "unlocked": true,
+        "areas": [
+          {"type":"area", "id": "area_flats_verge", "name": "verge", "level": 2, "light": true},
+          {"type":"area", "id": "area_flats_farm", "name": "farm", "level": 1, "light": true},
+          {"type":"area", "id": "area_flats_copse", "name": "copse", "level": 3, "light": true}
+        ]
+      },
+      {
+        "type": "place",
+        "id": "place_glimmer_mines",
+        "name": "Glimmer Mines",
+        "unlocked": false,
+        "areas": [
+          {"type":"area", "id": "area_mines_gate", "name": "gate", "level": 2, "light": true},
+          {"type":"area", "id": "area_mines_shafts", "name": "shafts", "level": 3, "light": false},
+          {"type":"area", "id": "area_mines_crystal_grotto", "name": "crystal_grotto", "level": 1, "light": false}
+        ]
+      },
+      {
+        "type": "place",
+        "id": "place_night_market",
+        "name": "Night Market",
+        "unlocked": false,
+        "areas": [
+          {"type":"area", "id": "area_market_stalls", "name": "stalls", "level": 2, "light": true},
+          {"type":"area", "id": "area_market_backstreets", "name": "backstreets", "level": 3, "light": false}
+        ]
+      }
+    ],
+
+    "objects": [
+      {"type": "object", "id": "obj_coin", "name": "coin", "category": "currency", "usage": "exchange", "value": null, "size": 0, "description": "A common trade coin.", "craft": {"ingredients": {}, "dependencies": []}, "level": 1},
+
+      {"type": "object", "id": "obj_workbench", "name": "workbench", "category": "station", "usage": "craft", "value": null, "size": null, "description": "A simple bench for shaping wood, cloth, and small parts.", "craft": {"ingredients": {"obj_oak_log": 4, "obj_stone": 4}, "dependencies": []}, "level": 1},
+      {"type": "object", "id": "obj_furnace", "name": "furnace", "category": "station", "usage": "craft", "value": null, "size": null, "description": "A compact stone furnace for smelting ore into usable bars.", "craft": {"ingredients": {"obj_stone": 5}, "dependencies": ["obj_workbench"]}, "level": 2},
+
+      {"type": "object", "id": "obj_oak_log", "name": "oak_log", "category": "material", "usage": "craft", "value": 2, "size": 1, "description": "A sturdy oak log.", "craft": {"ingredients": {}, "dependencies": []}, "level": 1, "areas": ["area_woods_glade", "area_woods_creek", "area_woods_ridge", "area_castle_library", "area_castle_armory", "area_market_stalls"]},
+      {"type": "object", "id": "obj_oak_rod", "name": "oak_rod", "category": "material", "usage": "craft", "value": 4, "size": 1, "attack": 3, "description": "A straight oak rod useful as a handle or shaft.", "craft": {"ingredients": {"obj_oak_log": 0.5}, "dependencies": ["obj_workbench"]}, "level": 1},
+
+      {"type": "object", "id": "obj_stone", "name": "stone", "category": "material", "usage": "craft", "value": 2, "size": 1, "description": "A solid chunk of stone.", "craft": {"ingredients": {}, "dependencies": []}, "level": 1, "areas": ["area_woods_ridge", "area_mines_gate", "area_castle_armory", "area_mines_crystal_grotto"]},
+
+      {"type": "object", "id": "obj_fiber_bundle", "name": "fiber_bundle", "category": "material", "usage": "craft", "value": 2, "size": 1, "description": "A bundle of plant fiber for twisting and weaving.", "craft": {"ingredients": {}, "dependencies": []}, "level": 1, "areas": ["area_flats_verge", "area_flats_farm", "area_flats_copse", "area_castle_library", "area_market_stalls", "area_market_backstreets", "area_castle_armory"]},
+      {"type": "object", "id": "obj_thread", "name": "thread", "category": "material", "usage": "craft", "value": 2, "size": 1, "description": "Twisted thread for stitching and binding.", "craft": {"ingredients": {"obj_fiber_bundle": 1}, "dependencies": ["obj_workbench"]}, "level": 1},
+      {"type": "object", "id": "obj_cloth", "name": "cloth", "category": "material", "usage": "craft", "value": 3, "size": 1, "description": "Woven cloth cut from fiber bundles.", "craft": {"ingredients": {"obj_fiber_bundle": 2}, "dependencies": ["obj_workbench"]}, "level": 1},
+
+      {"type": "object", "id": "obj_resin_clump", "name": "resin_clump", "category": "material", "usage": "craft", "value": 3, "size": 1, "description": "Sticky resin useful for sealing and binding.", "craft": {"ingredients": {}, "dependencies": []}, "level": 1, "areas": ["area_woods_glade", "area_woods_creek", "area_castle_library"]},
+      {"type": "object", "id": "obj_ink_sap", "name": "ink_sap", "category": "material", "usage": "craft", "value": 4, "size": 1, "description": "Dark sap that stains well—useful for quick inks.", "craft": {"ingredients": {}, "dependencies": []}, "level": 1, "areas": ["area_woods_creek", "area_market_stalls"]},
+
+      {"type": "object", "id": "obj_meadow_herb", "name": "meadow_herb", "category": "material", "usage": "craft", "value": 2, "size": 1, "description": "A mild herb used for simple remedies and warm drinks.", "craft": {"ingredients": {}, "dependencies": []}, "level": 1, "areas": ["area_flats_verge", "area_flats_copse", "area_market_stalls", "area_woods_ridge", "area_woods_creek"]},
+
+      {"type": "object", "id": "obj_berry", "name": "berry", "category": "food", "usage": "consume", "value": 2, "size": 1, "description": "A handful of tart berries. Restores a bit of health.", "craft": {"ingredients": {}, "dependencies": []}, "level": 1, "hp_restore": 6, "areas": ["area_woods_glade", "area_flats_copse", "area_woods_creek"]},
+      {"type": "object", "id": "obj_grain", "name": "grain", "category": "material", "usage": "craft", "value": 2, "size": 1, "description": "Dry grain gathered from fields, useful for simple meals.", "craft": {"ingredients": {}, "dependencies": []}, "level": 1, "areas": ["area_flats_farm", "area_flats_verge", "area_market_stalls"]},
+
+      {"type": "object", "id": "obj_quartz_chunk", "name": "quartz_chunk", "category": "material", "usage": "craft", "value": 3, "size": 1, "description": "A cloudy quartz chunk that can be fused into glass.", "craft": {"ingredients": {}, "dependencies": []}, "level": 2, "areas": ["area_mines_gate", "area_mines_crystal_grotto"]},
+      {"type": "object", "id": "obj_glass_shard", "name": "glass_shard", "category": "material", "usage": "craft", "value": 5, "size": 1, "description": "A fused glass shard, smooth enough to shape.", "craft": {"ingredients": {"obj_quartz_chunk": 1}, "dependencies": ["obj_furnace"]}, "level": 2},
+      {"type": "object", "id": "obj_cave_salt", "name": "cave_salt", "category": "material", "usage": "craft", "value": 2, "size": 1, "description": "Mineral salt scraped from cave walls.", "craft": {"ingredients": {}, "dependencies": []}, "level": 2, "areas": ["area_mines_gate", "area_mines_shafts", "area_market_backstreets", "area_mines_crystal_grotto"]},
+
+      {"type": "object", "id": "obj_copper_ore", "name": "copper_ore", "category": "material", "usage": "craft", "value": 4, "size": 1, "description": "Raw copper ore ready for smelting.", "craft": {"ingredients": {}, "dependencies": []}, "level": 1, "areas": ["area_mines_gate", "area_woods_ridge", "area_mines_crystal_grotto"]},
+      {"type": "object", "id": "obj_copper_bar", "name": "copper_bar", "category": "material", "usage": "craft", "value": 6, "size": 1, "description": "A smelted copper bar used for simple tools and keys.", "craft": {"ingredients": {"obj_copper_ore": 1}, "dependencies": ["obj_furnace"]}, "areas": ["area_castle_armory", "area_mines_crystal_grotto", "area_market_backstreets"], "level": 2},
+
+      {"type": "object", "id": "obj_iron_ore", "name": "iron_ore", "category": "material", "usage": "craft", "value": 5, "size": 1, "description": "Raw iron ore that needs smelting.", "craft": {"ingredients": {}, "dependencies": []}, "level": 2, "areas": ["area_mines_shafts", "area_castle_armory", "area_mines_crystal_grotto"]},
+      {"type": "object", "id": "obj_iron_bar", "name": "iron_bar", "category": "material", "usage": "craft", "value": 7, "size": 1, "description": "A smelted iron bar ready for stronger work.", "craft": {"ingredients": {"obj_iron_ore": 1}, "dependencies": ["obj_furnace"]}, "areas": ["area_castle_armory", "area_market_backstreets"], "level": 2},
+
+      {"type": "object", "id": "obj_coal_chunk", "name": "coal_chunk", "category": "material", "usage": "craft", "value": 4, "size": 1, "description": "Dense coal for hotter fires and better metal.", "craft": {"ingredients": {}, "dependencies": []}, "level": 2, "areas": ["area_mines_shafts", "area_castle_armory"]},
+      {"type": "object", "id": "obj_steel_ingot", "name": "steel_ingot", "category": "material", "usage": "craft", "value": 10, "size": 1, "description": "A steel ingot—cleaner, tougher metal than iron.", "craft": {"ingredients": {"obj_iron_bar": 1, "obj_coal_chunk": 1}, "dependencies": ["obj_furnace"]}, "level": 3},
+
+      {"type": "object", "id": "obj_hide_scrap", "name": "hide_scrap", "category": "material", "usage": "craft", "value": 3, "size": 1, "description": "Tough scraps of hide taken from defeated creatures.", "craft": {"ingredients": {}, "dependencies": []}, "level": 2},
+      {"type": "object", "id": "obj_leather_strip", "name": "leather_strip", "category": "material", "usage": "craft", "value": 4, "size": 1, "description": "A cut leather strip for straps, wraps, and fastenings.", "craft": {"ingredients": {"obj_hide_scrap": 1}, "dependencies": ["obj_workbench"]}, "level": 2},
+
+      {"type": "object", "id": "obj_paper", "name": "paper", "category": "tool", "usage": "writable", "value": 4, "size": 1, "text": "", "max_text_length": 200, "description": "A clean sheet meant to hold short messages.", "craft": {"ingredients": {"obj_fiber_bundle": 1}, "dependencies": ["obj_workbench"]}, "level": 1},
+      {"type": "object", "id": "obj_journal", "name": "journal", "category": "tool", "usage": "writable", "value": 12, "size": 4, "text": "", "max_text_length": 900, "description": "A bound journal with enough pages for longer notes.", "craft": {"ingredients": {"obj_paper": 3, "obj_thread": 1}, "dependencies": ["obj_workbench"]}, "level": 2},
+      {"type": "object", "id": "obj_travel_map", "name": "travel_map", "category": "tool", "usage": "writable", "value": 10, "size": 1, "text": "", "max_text_length": 400, "description": "A blank map sheet for quick marks and routes.", "craft": {"ingredients": {"obj_paper": 1, "obj_ink_sap": 1}, "dependencies": ["obj_workbench"]}, "level": 1},
+      {"type": "object", "id": "obj_pen", "name": "pen", "category": "tool", "usage": "write", "value": 4, "size": 1, "description": "A compact pen that writes cleanly with dark sap ink.", "craft": {"ingredients": {"obj_oak_rod": 1, "obj_ink_sap": 0.5}, "dependencies": ["obj_workbench"]}, "level": 1},
+
+      {"type": "object", "id": "obj_torch", "name": "torch", "category": "tool", "usage": "light", "value": 6, "size": 1, "description": "A simple torch for dark corridors and caves.", "craft": {"ingredients": {"obj_oak_rod": 1, "obj_coal_chunk": 1}, "dependencies": ["obj_workbench"]}, "level": 1},
+      {"type": "object", "id": "obj_lantern", "name": "lantern", "category": "tool", "usage": "light", "value": 18, "size": 3, "description": "A lantern that brightens dark areas when carried.", "craft": {"ingredients": {"obj_copper_bar": 1, "obj_glass_shard": 1, "obj_thread": 1}, "dependencies": ["obj_workbench"]}, "level": 2},
+
+      {"type": "object", "id": "obj_key", "name": "key", "category": "tool", "usage": "unlock", "value": 8, "size": 1, "description": "A simple copper key cut for common locks.", "craft": {"ingredients": {"obj_copper_bar": 1, "obj_fiber_bundle": 1}, "dependencies": ["obj_workbench"]}, "level": 1},
+
+      {"type": "object", "id": "obj_small_pouch", "name": "small_pouch", "category": "container", "usage": "store", "value": 10, "size": 2, "capacity": 10, "description": "A small pouch for a few essentials.", "craft": {"ingredients": {"obj_cloth": 1, "obj_thread": 1}, "dependencies": ["obj_workbench"]}, "level": 1},
+      {"type": "object", "id": "obj_travel_satchel", "name": "travel_satchel", "category": "container", "usage": "store", "value": 18, "size": 3, "capacity": 15, "description": "A roomy satchel reinforced with rope and leather.", "craft": {"ingredients": {"obj_cloth": 2, "obj_thread": 2, "obj_leather_strip": 1}, "dependencies": ["obj_workbench"]}, "level": 2},
+
+      {"type": "object", "id": "obj_bread", "name": "bread", "category": "food", "usage": "consume", "value": 4, "size": 1, "description": "Simple baked bread. Restores health.", "craft": {"ingredients": {"obj_grain": 1, "obj_cave_salt": 0.2}, "dependencies": ["obj_furnace"]}, "level": 2, "hp_restore": 12, "areas": ["area_flats_farm", "area_market_stalls", "area_castle_library"]},
+      {"type": "object", "id": "obj_herb_tea", "name": "herb_tea", "category": "food", "usage": "consume", "value": 5, "size": 1, "description": "A warm herbal drink that settles the body. Restores health.", "craft": {"ingredients": {"obj_meadow_herb": 1}, "dependencies": ["obj_workbench"]}, "level": 2, "hp_restore": 14},
+      {"type": "object", "id": "obj_bandage", "name": "bandage", "category": "tool", "usage": "consume", "value": 6, "size": 1, "description": "A clean wrap infused with herbs. Restores health.", "craft": {"ingredients": {"obj_cloth": 1, "obj_meadow_herb": 1}, "dependencies": ["obj_workbench"]}, "level": 2, "hp_restore": 16},
+
+      {"type": "object", "id": "obj_oak_dagger", "name": "oak_dagger", "category": "weapon", "usage": "attack", "value": 10, "size": 3, "attack": 6, "description": "A small oak dagger—light, quick, and modestly sharp.", "craft": {"ingredients": {"obj_oak_rod": 1, "obj_resin_clump": 1}, "dependencies": ["obj_workbench"]}, "level": 1},
+      {"type": "object", "id": "obj_oak_sword", "name": "oak_sword", "category": "weapon", "usage": "attack", "value": 14, "size": 4, "attack": 7, "description": "A balanced oak sword for reliable travel fights.", "craft": {"ingredients": {"obj_oak_log": 1, "obj_oak_rod": 1}, "dependencies": ["obj_workbench"]}, "level": 1},
+      {"type": "object", "id": "obj_copper_sword", "name": "copper_sword", "category": "weapon", "usage": "attack", "value": 18, "size": 5, "attack": 12, "description": "A copper sword balanced for reliable travel fights.", "craft": {"ingredients": {"obj_copper_bar": 1, "obj_oak_rod": 1}, "dependencies": ["obj_workbench"]}, "level": 2},
+      {"type": "object", "id": "obj_steel_sword", "name": "steel_sword", "category": "weapon", "usage": "attack", "value": 28, "size": 5, "attack": 18, "description": "A steel sword that holds a truer edge and bites deeper.", "craft": {"ingredients": {"obj_steel_ingot": 1, "obj_oak_rod": 1}, "dependencies": ["obj_workbench"]}, "level": 3},
+      {"type": "object", "id": "obj_goblin_sword", "name": "goblin_sword", "category": "weapon", "usage": "attack", "value": 22, "size": 4, "attack": 15, "description": "A crude sword taken from goblins—balanced for quick, vicious strikes.", "craft": {"ingredients": {"obj_copper_bar": 1, "obj_oak_rod": 1, "obj_goblin_token": 1}, "dependencies": ["obj_workbench"]}, "level": 3},
+
+      {"type": "object", "id": "obj_cloth_tunic", "name": "cloth_tunic", "category": "armor", "usage": "defend", "value": 10, "size": 5, "defense": 4, "description": "A simple tunic that blunts minor hits.", "craft": {"ingredients": {"obj_cloth": 2, "obj_thread": 1}, "dependencies": ["obj_workbench"]}, "level": 1},
+      {"type": "object", "id": "obj_leather_vest", "name": "leather_vest", "category": "armor", "usage": "defend", "value": 16, "size": 6, "defense": 8, "description": "A leather vest with better bite-resistance than cloth.", "craft": {"ingredients": {"obj_leather_strip": 2, "obj_thread": 1}, "dependencies": ["obj_workbench"]}, "level": 2},
+      {"type": "object", "id": "obj_copper_mail", "name": "copper_mail", "category": "armor", "usage": "defend", "value": 22, "size": 8, "defense": 12, "description": "Copper rings and leather straps—solid coverage without full weight.", "craft": {"ingredients": {"obj_copper_bar": 2, "obj_leather_strip": 2, "obj_thread": 1}, "dependencies": ["obj_workbench"]}, "level": 2},
+      {"type": "object", "id": "obj_steel_plate_armor", "name": "steel_plate_armor", "category": "armor", "usage": "defend", "value": 34, "size": 10, "defense": 18, "description": "Steel plates strapped tight—heavy armor for hard fights.", "craft": {"ingredients": {"obj_steel_ingot": 2, "obj_leather_strip": 2, "obj_thread": 2}, "dependencies": ["obj_workbench"]}, "level": 3},
+      {"type": "object", "id": "obj_wooden_buckler", "name": "wooden_buckler", "category": "armor", "usage": "defend", "value": 8, "size": 4, "defense": 3, "description": "A small buckler—cheap protection that still turns a strike.", "craft": {"ingredients": {"obj_oak_plank": 2, "obj_leather_strip": 1}, "dependencies": ["obj_workbench"]}, "level": 1},
+
+      {"type": "object", "id": "obj_goblin_token", "name": "goblin_token", "category": "material", "usage": "craft", "value": null, "size": 1, "description": "A crude token taken from goblins—kept for barter and grudges.", "craft": {"ingredients": {}, "dependencies": []}, "level": 3}
+    ],
+  
+    "npcs": [
+      {"type": "npc", "id": "npc_harper_stone", "name": "harper_stone", "enemy": false, "unique": true, "role": "merchant", "description": "a gruff armorer who fits oak, copper, and steel into dependable travel gear.", "objects": ["obj_oak_dagger", "obj_oak_sword", "obj_copper_sword", "obj_steel_sword", "obj_cloth_tunic", "obj_leather_vest", "obj_copper_mail", "obj_steel_plate_armor", "obj_iron_bar"]},
+      {"type": "npc", "id": "npc_maya_wells", "name": "maya_wells", "enemy": false, "unique": true, "role": "merchant", "description": "an apothecary who trades careful cures brewed from meadow herb and salt.", "objects": ["obj_meadow_herb", "obj_bandage", "obj_herb_tea", "obj_cloth"]},
+      {"type": "npc", "id": "npc_oliver_hart", "name": "oliver_hart", "enemy": false, "unique": true, "role": "merchant", "description": "a mapmaker who trades blank sheets, ink, and routes between distant places.", "objects": ["obj_paper", "obj_journal", "obj_travel_map", "obj_pen", "obj_ink_sap", "obj_lantern", "obj_thread"]},
+      {"type": "npc", "id": "npc_nora_bennett", "name": "nora_bennett", "enemy": false, "unique": true, "role": "merchant", "description": "a roadside provisioner who trades simple food, torches, and spare satchels to anyone heading out.", "objects": ["obj_bread", "obj_berry", "obj_small_pouch", "obj_travel_satchel", "obj_hide_scrap"]},
+      {"type": "npc", "id": "npc_caleb_foster", "name": "caleb_foster", "enemy": false, "unique": true, "role": "merchant", "description": "a quiet artificer who trades copper parts, glass bits, and the tools to slip past old locks.", "objects": ["obj_copper_ore", "obj_copper_bar", "obj_iron_bar", "obj_steel_ingot", "obj_glass_shard", "obj_key"]},
+
+      {"type": "npc", "id": "npc_lydia_rowe", "name": "lydia_rowe", "enemy": false, "unique": true, "description": "a cautious scout who knows routes, rumors, and what to avoid.", "role": "scout"},
+      {"type": "npc", "id": "npc_gideon_brick", "name": "gideon_brick", "enemy": false, "unique": true, "role": "craftsman", "description": "a retired builder who still knows which stones hold and which ones crack under weight.", "objects": ["obj_stone", "obj_oak_plank", "obj_workbench", "obj_furnace"]},
+      {"type": "npc", "id": "npc_commoner", "name": "commoner", "enemy": false, "unique": false, "role": "villager", "description": "a local commoner going about daily tasks, half-curious and half-wary of wanderers.", "objects": ["obj_berry", "obj_bread"]},
+
+      {"type": "npc", "id": "npc_scrap_goblin", "name": "scrap_goblin", "enemy": true, "unique": false, "description": "a feral goblin fighter who hits harder and lasts longer in tougher areas.", "role": "goblin", "base_attack_power": 10, "slope_attack_power": 3, "base_hp": 18, "slope_hp": 8, "objects": ["obj_goblin_token", "obj_hide_scrap", "obj_cloth"], "combat_pattern": ["attack", "attack", "wait", "defend"]},
+      {"type": "npc", "id": "npc_fen_cutthroat", "name": "fen_cutthroat", "enemy": true, "unique": false, "role": "bandit", "description": "a mud-slick raider who strikes from reeds and vanishes back into the murk.", "base_attack_power": 13, "base_hp": 16, "slope_hp": 6, "slope_attack_power": 6, "objects": ["obj_hide_scrap", "obj_cloth"], "combat_pattern": ["attack", "defend", "attack", "wait"]},
+      {"type": "npc", "id": "npc_cave_chitter", "name": "cave_chitter", "enemy": true, "unique": false, "role": "beast", "description": "a low, skittering thing that clings to cave walls and lunges from the dark.", "base_attack_power": 9, "base_hp": 22, "slope_hp": 7, "slope_attack_power": 5, "objects": ["obj_quartz_chunk", "obj_cave_salt", "obj_hide_scrap"], "combat_pattern": ["wait", "attack", "attack", "attack"]},
+      {"type": "npc", "id": "npc_ridge_kite", "name": "ridge_kite", "enemy": true, "unique": false, "role": "beast", "description": "a scavenger that circles above and dives for the weak and unwary.", "base_attack_power": 6, "base_hp": 18, "slope_hp": 5, "slope_attack_power": 7, "objects": ["obj_resin_clump", "obj_meadow_herb", "obj_hide_scrap"], "combat_pattern": ["attack", "wait", "attack", "defend"]}
+    ]
+  },
+
+  "initializations": {
+    "spawn": {
+      "area": "area_castle_hall",
+      "npcs": {},
+      "objects": {
+        "obj_coin": 5,
+        "obj_key": 1,
+        "obj_small_pouch": 2,
+        "obj_paper": 1,
+        "obj_pen": 1,
+        "obj_berry": 2,
+        "obj_workbench": 1
+      }
+    },
+    "undistributable_objects": [
+      "obj_goblin_token",
+      "obj_hide_scrap"
+    ]
+  },
+
+  "graph": {
+    "connections": [
+      {"from": "area_castle_hall", "to": "area_castle_armory", "locked": true, "key": "obj_key"},
+      {"from": "area_castle_hall", "to": "area_castle_library", "locked": false, "key": null},
+      {"from": "area_castle_armory", "to": "area_market_stalls", "locked": true, "key": "obj_key"},
+      {"from": "area_woods_glade", "to": "area_woods_ridge", "locked": false, "key": null},
+      {"from": "area_woods_creek", "to": "area_woods_ridge", "locked": false, "key": null},
+      {"from": "area_woods_creek", "to": "area_flats_farm", "locked": false, "key": null},
+      {"from": "area_woods_ridge", "to": "area_mines_crystal_grotto", "locked": false, "key": null},
+      {"from": "area_flats_verge", "to": "area_flats_farm", "locked": false, "key": null},
+      {"from": "area_flats_farm", "to": "area_flats_copse", "locked": false, "key": null},
+      {"from": "area_mines_gate", "to": "area_mines_crystal_grotto", "locked": false, "key": null},
+      {"from": "area_mines_shafts", "to": "area_mines_crystal_grotto", "locked": false, "key": null},
+      {"from": "area_market_stalls", "to": "area_market_backstreets", "locked": false, "key": null},
+      {"from": "area_market_backstreets", "to": "area_mines_crystal_grotto", "locked": false, "key": null}
+    ]
+  },
+
+  "custom_events": ["main_quest", "tutorial"]
+}

@@ -1,0 +1,8 @@
+{
+    "step": 0,
+    "curr_time": "0001-01-01 08:00:00",
+    "curr_agents_state": {"area": {}, "areas_visited": {}, "objects_crafted": {}, "npcs_killed": {}, "objects_acquired": {}, "objects_traded": {}, "unique_npcs_killed": {}, "pacified_npcs": {}, "objection_skip_turn": {}, "appeal_verdict_used": {}, "pending_death": {}, "nightly_law_rewrite": {"last_night_step": 0, "night_count": 0}, "legal_paradox": {}, "contempt_of_court": {}, "binding_precedents": {"area_precedents": {}, "overturned_types": {}, "weakened_npcs": {}, "boosted_npcs": {}}, "contraband_suspicion": {}, "trial_proceedings": {}},
+    "scores": {},
+    "world": {},
+    "agents": []
+}

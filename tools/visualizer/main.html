@@ -1,0 +1,2039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgentOdyssey - Trajectory Visualizer</title>
+    <script>
+        (function() {
+            var script = document.createElement('script');
+            script.src = 'preloaded_data.js';
+            script.onerror = function() {
+                console.log('No preloaded data found - use file upload or run trajectory_visualizer.py');
+                window.PRELOADED_DATA = null;
+            };
+            document.head.appendChild(script);
+        })();
+    </script>
+    <style>
+        :root {
+            --bg-primary: #faf4e8;
+            --bg-secondary: #f3e9d3;
+            --bg-tertiary: #e8dabb;
+            --text-primary: #2c3644;
+            --text-secondary: #4d5e73;
+            --text-muted: #7a889b;
+            --accent: #b8860b;
+            --accent-light: #d4a017;
+            --accent-dark: #8b6914;
+            --success: #3da56b;
+            --warning: #c69028;
+            --danger: #c55252;
+            --border: #d8cdb5;
+            --node-area: #6E3C14;
+            --node-area-active: #d4a017;
+            --edge-locked: #c87070;
+            --edge-unlocked: #a0aec0;
+            --trajectory: #3da56b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
+            gap: 0;
+            background: var(--bg-primary);
+        }
+
+        /* ========== Header ========== */
+        .header {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #2c1810 0%, #5c3a1e 30%, #8b6914 60%, #d4a017 100%);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(0,0,0,0.18);
+            box-shadow: 0 2px 8px rgba(44, 24, 16, 0.18);
+            position: relative;
+        }
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-logo {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(245, 230, 200, 0.35));
+            flex-shrink: 0;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            font-family: 'Space Grotesk', 'Inter', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f5e6c8 0%, #d4a017 25%, #ffffff 50%, #d4a017 75%, #f5e6c8 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: headerGradientShift 6s ease infinite;
+            filter: drop-shadow(0 0 12px rgba(212, 160, 23, 0.25));
+        }
+        @keyframes headerGradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50%      { background-position: 100% 50%; }
+        }
+        .header-label {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Space Grotesk', 'Inter', 'Segoe UI', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            color: #f5e6c8;
+            padding: 5px 14px;
+            border-radius: 999px;
+            background: rgba(44, 24, 16, 0.35);
+            border: 1px solid rgba(245, 230, 200, 0.25);
+            backdrop-filter: blur(6px);
+            text-shadow: 0 1px 3px rgba(44, 24, 16, 0.4);
+            white-space: nowrap;
+            pointer-events: none;
+        }
+        .header-info { display: flex; gap: 24px; align-items: center; }
+        .header-stat { display: flex; flex-direction: column; align-items: center; }
+        .header-stat-label {
+            font-size: 0.7rem; color: rgba(245, 230, 200, 0.7);
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .header-stat-value { font-size: 1.1rem; font-weight: 600; color: #f5e6c8; }
+
+        /* ========== Side panels ========== */
+        .left-panel, .right-panel {
+            background: var(--bg-secondary);
+            padding: 16px;
+            overflow-y: auto;
+            border-right: 1px solid rgba(0,0,0,0.05);
+        }
+        .right-panel {
+            border-right: none;
+            border-left: 1px solid rgba(0,0,0,0.05);
+        }
+        .panel-section { margin-bottom: 20px; }
+        .panel-title {
+            font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);
+            text-transform: uppercase; letter-spacing: 0.5px;
+            margin-bottom: 10px; padding-bottom: 6px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+        .info-row {
+            display: flex; justify-content: space-between;
+            padding: 6px 0; border-bottom: 1px solid rgba(31, 42, 55, 0.08);
+        }
+        .info-label { color: var(--text-muted); font-size: 0.85rem; }
+        .info-value { color: var(--text-primary); font-weight: 500; font-size: 0.85rem; }
+
+        .stat-bar-container { margin: 6px 0; }
+        .stat-bar-label { display: flex; justify-content: space-between; margin-bottom: 3px; font-size: 0.78rem; }
+        .stat-bar { height: 6px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden; }
+        .stat-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+        .stat-bar-fill.hp { background: linear-gradient(90deg, #3da56b, #5ac085); }
+        .stat-bar-fill.xp { background: linear-gradient(90deg, #7c5cbf, #9d7fd6); }
+
+        .items-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+        .item-tag {
+            background: var(--bg-tertiary); padding: 3px 7px;
+            border-radius: 4px; font-size: 0.72rem; color: var(--text-secondary);
+        }
+
+        .entity-item {
+            display: flex; align-items: center; gap: 8px;
+            padding: 6px 8px; background: var(--bg-tertiary);
+            border-radius: 6px; margin-bottom: 4px; transition: all 0.2s;
+        }
+        .entity-item:hover { background: rgba(184, 134, 11, 0.14); transform: translateX(3px); }
+        .entity-icon {
+            width: 28px; height: 28px; border-radius: 5px;
+            object-fit: cover; flex-shrink: 0; background: var(--bg-primary);
+        }
+        .entity-name { font-size: 0.8rem; color: var(--text-secondary); flex: 1; }
+
+        .observation-text {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.75rem; line-height: 1.5; color: var(--text-secondary);
+            white-space: pre-wrap; background: var(--bg-tertiary);
+            padding: 10px; border-radius: 6px; max-height: 240px; overflow-y: auto;
+        }
+        .action-display {
+            background: linear-gradient(135deg, var(--accent-dark), var(--node-area));
+            padding: 10px 14px; border-radius: 6px; margin-bottom: 12px;
+        }
+        .action-label { font-size: 0.7rem; color: rgba(255,255,255,0.7); margin-bottom: 3px; }
+        .action-text { font-size: 0.95rem; font-weight: 600; color: white; }
+
+        .reward-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 8px; }
+        .reward-item {
+            background: var(--bg-tertiary); padding: 6px;
+            border-radius: 5px; text-align: center;
+        }
+        .reward-item.positive {
+            background: rgba(61, 165, 107, 0.1); border: 1px solid rgba(61, 165, 107, 0.2);
+        }
+        .reward-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; }
+        .reward-value { font-size: 0.9rem; font-weight: 600; }
+
+        /* ========== Graph Canvas ========== */
+        .main-canvas {
+            background: var(--bg-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .graph-viewport {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            overflow: hidden;
+        }
+
+        .graph-world {
+            position: absolute;
+            top: 0; left: 0;
+            transform-origin: 0 0;
+        }
+
+        .graph-edges-svg {
+            position: absolute;
+            top: 0; left: 0;
+            pointer-events: none;
+            overflow: visible;
+        }
+
+        /* ---- Node (circular) ---- */
+        .graph-node {
+            position: absolute;
+            pointer-events: auto;
+            cursor: pointer;
+            z-index: 1;
+            transition: z-index 0s 0.35s;
+        }
+        .graph-node:hover, .graph-node.expanded {
+            z-index: 100;
+            transition: z-index 0s 0s;
+        }
+
+        .node-circle {
+            position: relative;
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            overflow: hidden;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgba(0,0,0,0.10);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.04);
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                        height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                        border-color 0.3s,
+                        box-shadow 0.3s;
+        }
+
+        .graph-node:hover .node-circle,
+        .graph-node.expanded .node-circle {
+            width: 450px;
+            height: 450px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.06);
+        }
+
+        .node-circle.status-current {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.22), 0 2px 8px rgba(0,0,0,0.10);
+        }
+        .graph-node:hover .node-circle.status-current,
+        .graph-node.expanded .node-circle.status-current {
+            box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.28), 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .node-circle.status-visited {
+            border-color: var(--success);
+            box-shadow: 0 0 0 3px rgba(61, 165, 107, 0.14), 0 2px 8px rgba(0,0,0,0.10);
+        }
+
+        .node-bg-img {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        .node-bg-fallback {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-primary));
+        }
+
+        /* Overlay visible on hover */
+        .node-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(31, 42, 55, 0.72) 0%, rgba(31, 42, 55, 0.84) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 55px 80px 40px 80px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            overflow-y: auto;
+        }
+        .graph-node:hover .node-overlay,
+        .graph-node.expanded .node-overlay {
+            opacity: 1;
+        }
+
+        .node-overlay-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 2px;
+            text-shadow: 0 1px 4px rgba(31, 42, 55, 0.55);
+            text-align: center;
+            width: 100%;
+        }
+        .node-overlay-place {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .node-detail-section {
+            margin-bottom: 8px;
+            width: 100%;
+        }
+        .node-detail-label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.45);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+            text-align: center;
+        }
+        .node-detail-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
+        }
+        .node-detail-tag {
+            background: rgba(255,255,255,0.12);
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.85);
+            white-space: nowrap;
+        }
+        .node-detail-tag.npc { border-left: 2px solid #d47070; }
+        .node-detail-tag.obj { border-left: 2px solid var(--accent-light); }
+
+        /* Label below node (visible when small) */
+        .node-name-label {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-align: center;
+            text-shadow: 0 0 4px var(--bg-primary), 0 0 8px var(--bg-primary);
+            transition: opacity 0.25s;
+            pointer-events: none;
+        }
+        .graph-node:hover .node-name-label,
+        .graph-node.expanded .node-name-label {
+            opacity: 0;
+        }
+        .node-place-sublabel {
+            display: block;
+            font-size: 9px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Agent marker (sits inside the circle, hidden behind expanded nodes) */
+        .agent-marker {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            pointer-events: none;
+            transition: left 0.5s ease, top 0.5s ease;
+        }
+        .agent-marker-inner {
+            width: 26px; height: 26px;
+            background: var(--accent);
+            border: 2px solid white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(212, 160, 23, 0.4);
+            animation: agentPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes agentPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 2px 10px rgba(212, 160, 23, 0.4); }
+            50% { transform: scale(1.15); box-shadow: 0 2px 16px rgba(212, 160, 23, 0.55); }
+        }
+
+        /* ========== Edge styles (SVG) ========== */
+        .edge-line {
+            stroke: var(--edge-unlocked);
+            stroke-width: 2;
+            fill: none;
+            opacity: 0.45;
+        }
+        .edge-line.locked {
+            stroke: var(--edge-locked);
+            stroke-dasharray: 6, 4;
+            opacity: 0.55;
+        }
+        .edge-line.trajectory-edge {
+            stroke: var(--trajectory);
+            stroke-width: 3.5;
+            opacity: 0.8;
+            stroke-linecap: round;
+            filter: none;
+        }
+        .trajectory-arrow {
+            fill: var(--trajectory);
+            opacity: 0.8;
+        }
+
+        /* ========== Legend ========== */
+        .legend {
+            position: absolute;
+            bottom: 16px; left: 16px;
+            background: rgba(243, 233, 211, 0.85);
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(0,0,0,0.06);
+            z-index: 50;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: opacity 0.25s, transform 0.25s;
+        }
+        .legend.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(8px);
+        }
+        .legend-toggle {
+            position: absolute;
+            bottom: 16px; left: 16px;
+            z-index: 51;
+            width: 28px; height: 28px;
+            border-radius: 7px;
+            border: 1px solid rgba(0,0,0,0.08);
+            background: rgba(243, 233, 211, 0.85);
+            backdrop-filter: blur(12px);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            color: var(--text-muted);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: background 0.2s;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .legend.hidden ~ .legend-toggle {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .legend-toggle:hover {
+            background: rgba(243, 233, 211, 1);
+        }
+        .legend-title {
+            font-size: 0.7rem; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .legend-close {
+            cursor: pointer; font-size: 14px; color: var(--text-muted);
+            background: none; border: none; padding: 0 0 0 8px; line-height: 1;
+            transition: color 0.2s;
+        }
+        .legend-close:hover { color: var(--text-primary); }
+        .legend-item { display: flex; align-items: center; gap: 8px; margin: 3px 0; font-size: 0.75rem; color: var(--text-secondary); }
+        .legend-circle { width: 14px; height: 14px; border-radius: 50%; border: 2px solid; }
+        .legend-line { width: 22px; height: 2px; border-radius: 1px; }
+
+        /* ========== Timeline ========== */
+        .timeline-container {
+            grid-column: 1 / -1;
+            background: var(--bg-secondary);
+            padding: 12px 24px;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+        .timeline-controls { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+
+        .play-btn {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: var(--accent); border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .play-btn:hover { background: var(--accent-light); transform: scale(1.05); }
+        .play-btn svg { fill: white; width: 18px; height: 18px; }
+
+        .timeline-slider-container { flex: 1; }
+        .timeline-slider {
+            width: 100%; height: 6px;
+            -webkit-appearance: none; appearance: none;
+            background: var(--bg-tertiary); border-radius: 3px; outline: none; cursor: pointer;
+        }
+        .timeline-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: var(--accent); cursor: pointer;
+            box-shadow: 0 2px 6px rgba(184, 134, 11, 0.28);
+        }
+        .timeline-slider::-moz-range-thumb {
+            width: 16px; height: 16px; border-radius: 50%;
+            background: var(--accent); cursor: pointer; border: none;
+        }
+
+        .speed-control { display: flex; align-items: center; gap: 6px; }
+        .speed-btn {
+            padding: 5px 10px; background: var(--bg-tertiary);
+            border: 1px solid rgba(0,0,0,0.08); color: var(--text-secondary);
+            border-radius: 5px; cursor: pointer; font-size: 0.78rem; transition: all 0.2s;
+        }
+        .speed-btn:hover, .speed-btn.active {
+            background: var(--accent); color: white; border-color: var(--accent);
+        }
+        .step-info {
+            display: flex; gap: 20px; font-size: 0.82rem; color: var(--text-secondary);
+        }
+
+        /* ========== File Upload Overlay ========== */
+        .file-input-container {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(232, 218, 187, 0.95);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 1001;
+        }
+        .file-drop-zone {
+            width: 380px; height: 260px;
+            border: 2px dashed rgba(0,0,0,0.12); border-radius: 16px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .file-drop-zone:hover, .file-drop-zone.drag-over {
+            border-color: var(--accent); background: rgba(184, 134, 11, 0.12);
+        }
+        .file-drop-zone svg { width: 56px; height: 56px; fill: var(--text-muted); margin-bottom: 12px; }
+        .file-drop-text { color: var(--text-secondary); font-size: 1rem; }
+        .file-drop-hint { color: var(--text-muted); font-size: 0.78rem; margin-top: 6px; }
+
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(232, 218, 187, 0.9);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 1000;
+        }
+        .loading-spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--bg-tertiary); border-top-color: var(--accent);
+            border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 14px; color: var(--text-secondary); }
+
+        .toast {
+            position: fixed; bottom: 90px; left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 10px 20px; border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.08); color: var(--text-primary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            z-index: 1002; animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(16px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+    <!-- File upload -->
+    <div class="file-input-container" id="fileInputContainer">
+        <div class="file-drop-zone" id="dropZone">
+            <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+            <div class="file-drop-text">Drop agent_log.jsonl here</div>
+            <div class="file-drop-hint">or click to browse</div>
+        </div>
+        <input type="file" id="fileInput" accept=".jsonl,.json" style="display: none;">
+        <div style="margin-top: 20px; text-align: center;">
+            <div class="file-drop-hint">Optionally load world definition and config:</div>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button class="speed-btn" onclick="document.getElementById('worldDefInput').click()">Load World Def</button>
+                <button class="speed-btn" onclick="document.getElementById('configInput').click()">Load Config</button>
+            </div>
+            <input type="file" id="worldDefInput" accept=".json" style="display: none;">
+            <input type="file" id="configInput" accept=".json,.jsonl" style="display: none;">
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading trajectory data...</div>
+    </div>
+
+    <!-- Main App -->
+    <div class="container" id="mainContainer" style="display: none;">
+        <header class="header">
+            <div class="header-brand">
+                <img src="/assets/logo.png" class="header-logo" alt="AgentOdyssey logo"
+                     onerror="this.onerror=null; this.src='logo.png';">
+                <h1>AgentOdyssey Visualizer</h1>
+            </div>
+            <div class="header-label" id="headerLabel">Long Context Agent w/ GPT-5</div>
+            <div class="header-info">
+                <div class="header-stat">
+                    <span class="header-stat-label">Step</span>
+                    <span class="header-stat-value" id="headerStep">0</span>
+                </div>
+                <div class="header-stat">
+                    <span class="header-stat-label">Time</span>
+                    <span class="header-stat-value" id="headerTime">--:--</span>
+                </div>
+                <div class="header-stat">
+                    <span class="header-stat-label">Location</span>
+                    <span class="header-stat-value" id="headerLocation">---</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Left panel: Agent Status -->
+        <aside class="left-panel">
+            <div class="panel-section">
+                <h3 class="panel-title">Agent Status</h3>
+                <div class="stat-bar-container">
+                    <div class="stat-bar-label"><span>Health</span><span id="hpValue">100/100</span></div>
+                    <div class="stat-bar"><div class="stat-bar-fill hp" id="hpBar" style="width: 100%"></div></div>
+                </div>
+                <div class="stat-bar-container">
+                    <div class="stat-bar-label"><span>Experience</span><span id="xpValue">0</span></div>
+                    <div class="stat-bar"><div class="stat-bar-fill xp" id="xpBar" style="width: 0%"></div></div>
+                </div>
+                <div class="info-row"><span class="info-label">Level</span><span class="info-value" id="levelValue">1</span></div>
+                <div class="info-row"><span class="info-label">Attack</span><span class="info-value" id="attackValue">10</span></div>
+                <div class="info-row"><span class="info-label">Defense</span><span class="info-value" id="defenseValue">0</span></div>
+            </div>
+            <div class="panel-section">
+                <h3 class="panel-title">Inventory</h3>
+                <div class="items-list" id="handItems"><span class="item-tag">Empty</span></div>
+            </div>
+            <div class="panel-section">
+                <h3 class="panel-title">Equipped</h3>
+                <div class="items-list" id="equippedItems"><span class="item-tag">None</span></div>
+            </div>
+            <div class="panel-section">
+                <h3 class="panel-title">Nearby Objects</h3>
+                <div class="items-list" id="nearbyObjects"><span class="item-tag">None</span></div>
+            </div>
+            <div class="panel-section">
+                <h3 class="panel-title">Nearby NPCs</h3>
+                <div class="items-list" id="nearbyNpcs"><span class="item-tag">None</span></div>
+            </div>
+        </aside>
+
+        <!-- Center: Graph -->
+        <main class="main-canvas" id="mainCanvas">
+            <div class="graph-viewport" id="graphViewport">
+                <div class="graph-world" id="graphWorld">
+                    <svg class="graph-edges-svg" id="graphEdgesSvg"></svg>
+                    <div id="graphNodesContainer"></div>
+                    <div class="agent-marker" id="agentMarker" style="display:none;">
+                        <div class="agent-marker-inner">&#129489;</div>
+                    </div>
+                </div>
+            </div>
+            <div class="legend" id="legendPanel">
+                <div class="legend-title">
+                    <span>Legend</span>
+                    <button class="legend-close" id="legendClose" title="Hide legend">&times;</button>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-circle" style="background: rgba(212, 160, 23, 0.2); border-color: var(--accent);"></div>
+                    <span>Current Location</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-circle" style="background: rgba(61, 165, 107, 0.15); border-color: var(--success);"></div>
+                    <span>Visited Area</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-line" style="background: var(--trajectory); height: 3px;"></div>
+                    <span>Agent Trajectory</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-line" style="background: var(--edge-unlocked); opacity: 0.5;"></div>
+                    <span>Unlocked Path</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-line" style="background: var(--edge-locked); opacity: 0.6; background-image: repeating-linear-gradient(90deg, var(--edge-locked) 0px, var(--edge-locked) 6px, transparent 6px, transparent 10px);background-color:transparent;"></div>
+                    <span>Locked Path</span>
+                </div>
+            </div>
+            <button class="legend-toggle" id="legendToggle" title="Show legend">&#9432;</button>
+        </main>
+
+        <!-- Right panel: Action / Observation -->
+        <aside class="right-panel">
+            <div class="panel-section">
+                <h3 class="panel-title">Current Action</h3>
+                <div class="action-display">
+                    <div class="action-label">Action Taken</div>
+                    <div class="action-text" id="actionText">---</div>
+                </div>
+                <div class="info-row"><span class="info-label">Decision Time</span><span class="info-value" id="decisionTime">0.00s</span></div>
+                <div class="info-row"><span class="info-label">Valid Action</span><span class="info-value" id="validAction">&#10003;</span></div>
+            </div>
+            <div class="panel-section">
+                <h3 class="panel-title">Rewards</h3>
+                <div class="reward-grid" id="rewardGrid"></div>
+            </div>
+            <div class="panel-section">
+                <h3 class="panel-title">Observation</h3>
+                <div class="observation-text" id="observationText">Loading...</div>
+            </div>
+        </aside>
+
+        <!-- Timeline -->
+        <footer class="timeline-container">
+            <div class="timeline-controls">
+                <button class="play-btn" id="playBtn" title="Play/Pause">
+                    <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <svg id="pauseIcon" viewBox="0 0 24 24" style="display: none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+                <button class="speed-btn" id="prevBtn" title="Previous Step">&#9664; Prev</button>
+                <button class="speed-btn" id="nextBtn" title="Next Step">Next &#9654;</button>
+                <div class="timeline-slider-container">
+                    <input type="range" class="timeline-slider" id="timelineSlider" min="0" max="100" value="0">
+                </div>
+                <div class="speed-control">
+                    <span style="color: var(--text-muted); font-size: 0.78rem;">Speed:</span>
+                    <button class="speed-btn active" data-speed="1">1x</button>
+                    <button class="speed-btn" data-speed="4">4x</button>
+                    <button class="speed-btn" data-speed="16">16x</button>
+                    <button class="speed-btn" data-speed="32">32x</button>
+                </div>
+            </div>
+            <div class="step-info">
+                <span>Step: <strong id="currentStep">0</strong> / <strong id="totalSteps">0</strong></span>
+                <span>Areas Visited: <strong id="areasVisited">0</strong></span>
+                <span>Total Reward: <strong id="totalReward">0</strong></span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+    /* ===========================================================
+       STATE
+    =========================================================== */
+    let trajectoryData = [];
+    let worldDefinition = null;
+    let configData = null;
+    let currentStep = 0;
+    let isPlaying = false;
+    let playInterval = null;
+    let playSpeed = 1;
+    let visitedAreas = new Set();
+    let trajectoryPath = [];
+    let worldGraph = null;
+    let iconsData = {};
+    let iconsBasePath = '';
+
+    // Per-area known contents (updated as agent moves through trajectory)
+    let areaContents = {};  // areaId -> { npcs: [...], objects: [...] }
+
+    // Node positions for rendering edges and agent marker
+    let nodePositions = new Map();  // areaId -> {x, y}
+
+    // Pan / zoom state
+    let panX = 0, panY = 0, zoomLevel = 1;
+    let isPanning = false, panStartX = 0, panStartY = 0;
+
+    /* ===========================================================
+       ICON HELPERS
+    =========================================================== */
+    function getIconUrl(entityName, entityType) {
+        if (!iconsData || Object.keys(iconsData).length === 0) return null;
+        const norm = entityName.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+        const keys = [
+            `${entityType}/${norm}`, norm, entityName,
+            `${entityType}/${entityName.toLowerCase()}`
+        ];
+        for (const k of keys) { if (iconsData[k]) return iconsData[k]; }
+        for (const [k, p] of Object.entries(iconsData)) {
+            if (k.includes(norm) || norm.includes(k.split('/').pop())) return p;
+        }
+        return null;
+    }
+
+    function getAreaIconUrl(areaId) {
+        // Try the area id directly (e.g. "area_castle_hall")
+        const idNorm = areaId.replace(/[^a-z0-9_]/g, '');
+        for (const [k, p] of Object.entries(iconsData)) {
+            const kNorm = k.replace(/[^a-z0-9_]/g, '');
+            if (kNorm === idNorm || k === idNorm) return p;
+        }
+        // Fallback: try constructing the world-definition style area id
+        const area = worldGraph && worldGraph.areas.get(areaId);
+        if (area) {
+            const nameNorm = area.name.toLowerCase().replace(/\s+/g, '_');
+            const placePart = (area.placeName || '').toLowerCase().replace(/\s+/g, '_');
+            const result = getIconUrl(nameNorm, 'areas');
+            if (result) return result;
+            if (placePart) {
+                return getIconUrl(`area_${placePart}_${nameNorm}`, 'areas');
+            }
+        }
+        return null;
+    }
+
+    function hasGraphConnection(fromId, toId) {
+        if (!worldGraph || !worldGraph.areas || !worldGraph.edges) return false;
+        if (!worldGraph.areas.has(fromId) || !worldGraph.areas.has(toId)) return false;
+
+        const edgeKey = [fromId, toId].sort().join('|');
+        return worldGraph.edges.has(edgeKey);
+    }
+
+    /**
+     * Check whether a straight edge between two points passes through any
+     * intermediate node circle.  If so, return an SVG path "d" string for a
+     * quadratic Bézier that curves around the obstruction.  Otherwise return
+     * null (caller should use a straight line).
+     *
+     * @param {Object} pA       {x,y} start
+     * @param {Object} pB       {x,y} end
+     * @param {string} idA      area-id of start node (excluded from hit-test)
+     * @param {string} idB      area-id of end node   (excluded from hit-test)
+     * @param {number} radius   node radius to avoid (default 40, slightly > visual 36)
+     * @returns {string|null}   SVG path "d" attribute, or null for a straight line
+     */
+    function computeCurvedEdge(pA, pB, idA, idB, radius) {
+        if (!radius) radius = 42;
+        // Find the closest obstructing node
+        let worstDist = Infinity, worstNode = null;
+        const dx = pB.x - pA.x, dy = pB.y - pA.y;
+        const lenSq = dx * dx + dy * dy;
+        if (lenSq === 0) return null;
+        const len = Math.sqrt(lenSq);
+
+        nodePositions.forEach((pos, id) => {
+            if (id === idA || id === idB) return;
+            // Project pos onto line segment A→B
+            const t = ((pos.x - pA.x) * dx + (pos.y - pA.y) * dy) / lenSq;
+            if (t < 0.05 || t > 0.95) return; // only care about interior
+            const closestX = pA.x + t * dx, closestY = pA.y + t * dy;
+            const distX = pos.x - closestX, distY = pos.y - closestY;
+            const dist = Math.sqrt(distX * distX + distY * distY);
+            if (dist < radius && dist < worstDist) {
+                worstDist = dist;
+                worstNode = { x: pos.x, y: pos.y, t: t };
+            }
+        });
+
+        if (!worstNode) return null;
+
+        // Compute a control point that pushes the curve away from the obstruction
+        // Perpendicular direction to the edge
+        const nx = -dy / len, ny = dx / len;
+        // Determine which side to push toward (away from obstructing node)
+        const midX = pA.x + worstNode.t * dx, midY = pA.y + worstNode.t * dy;
+        const toNodeX = worstNode.x - midX, toNodeY = worstNode.y - midY;
+        const side = (toNodeX * nx + toNodeY * ny) > 0 ? -1 : 1;
+        // Push distance: enough to clear the node
+        const pushDist = radius + 40;
+        const cpX = midX + nx * side * pushDist;
+        const cpY = midY + ny * side * pushDist;
+
+        return `M ${pA.x} ${pA.y} Q ${cpX} ${cpY} ${pB.x} ${pB.y}`;
+    }
+
+    /** Create an SVG edge element (line or curved path) that avoids obstructing nodes. */
+    function createEdgeElement(pA, pB, idA, idB, cssClass) {
+        const curved = computeCurvedEdge(pA, pB, idA, idB);
+        if (curved) {
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', curved);
+            path.setAttribute('class', cssClass);
+            return path;
+        }
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', pA.x); line.setAttribute('y1', pA.y);
+        line.setAttribute('x2', pB.x); line.setAttribute('y2', pB.y);
+        line.setAttribute('class', cssClass);
+        return line;
+    }
+
+    /* ===========================================================
+       DATA LOADING (same mechanisms as before)
+    =========================================================== */
+    const fileInputContainer = document.getElementById('fileInputContainer');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const mainContainer = document.getElementById('mainContainer');
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const worldDefInput = document.getElementById('worldDefInput');
+    const configInput = document.getElementById('configInput');
+    const timelineSlider = document.getElementById('timelineSlider');
+    const playBtn = document.getElementById('playBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const playIcon = document.getElementById('playIcon');
+    const pauseIcon = document.getElementById('pauseIcon');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('drag-over'); });
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault(); dropZone.classList.remove('drag-over');
+        const file = e.dataTransfer.files[0]; if (file) handleFile(file);
+    });
+    fileInput.addEventListener('change', (e) => { const f = e.target.files[0]; if (f) handleFile(f); });
+    worldDefInput.addEventListener('change', (e) => {
+        const f = e.target.files[0]; if (!f) return;
+        const r = new FileReader();
+        r.onload = (ev) => { try { worldDefinition = JSON.parse(ev.target.result); showToast('World definition loaded!'); } catch(err) { showToast('Error parsing world definition'); } };
+        r.readAsText(f);
+    });
+    configInput.addEventListener('change', (e) => {
+        const f = e.target.files[0]; if (!f) return;
+        const r = new FileReader();
+        r.onload = (ev) => {
+            try {
+                const c = ev.target.result;
+                if (f.name.endsWith('.jsonl')) { const lines = c.trim().split('\n'); configData = JSON.parse(lines[lines.length - 1]); }
+                else configData = JSON.parse(c);
+                showToast('Config loaded!');
+            } catch(err) { showToast('Error parsing config'); }
+        };
+        r.readAsText(f);
+    });
+
+    // Auto-load preloaded data
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            if (window.PRELOADED_DATA && window.PRELOADED_DATA.headerLabel) {
+                const headerLabelEl = document.getElementById('headerLabel');
+                if (headerLabelEl) headerLabelEl.textContent = window.PRELOADED_DATA.headerLabel;
+            }
+            if (window.PRELOADED_DATA && window.PRELOADED_DATA.trajectoryData && window.PRELOADED_DATA.trajectoryData.length > 0) {
+                loadingOverlay.style.display = 'flex';
+                fileInputContainer.style.display = 'none';
+                trajectoryData = window.PRELOADED_DATA.trajectoryData;
+                worldDefinition = window.PRELOADED_DATA.worldDefinition;
+                configData = window.PRELOADED_DATA.configData;
+                if (window.PRELOADED_DATA.icons) iconsData = window.PRELOADED_DATA.icons;
+                if (window.PRELOADED_DATA.iconsBasePath) iconsBasePath = window.PRELOADED_DATA.iconsBasePath;
+                if (window.PRELOADED_DATA.worldGraph) {
+                    const pg = window.PRELOADED_DATA.worldGraph;
+                    worldGraph = {
+                        areas: new Map(Object.entries(pg.areas || {})),
+                        places: new Map(Object.entries(pg.places || {})),
+                        edges: new Map(Object.entries(pg.edges || {}))
+                    };
+                    worldGraph.areas.forEach((a) => {
+                        a.neighbors = new Set(a.neighbors || []);
+                        if (!a.placeName && a.place) a.placeName = a.place;
+                    });
+                }
+                if (window.PRELOADED_DATA.areaContents) {
+                    areaContents = window.PRELOADED_DATA.areaContents;
+                }
+                initializeVisualizer();
+                showToast('Loaded trajectory data');
+            }
+        }, 100);
+    });
+
+    function handleFile(file) {
+        loadingOverlay.style.display = 'flex';
+        fileInputContainer.style.display = 'none';
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            try {
+                trajectoryData = ev.target.result.trim().split('\n').map(l => JSON.parse(l));
+                if (trajectoryData.length > 0) initializeVisualizer();
+                else throw new Error('No data');
+            } catch (err) {
+                showToast('Error: ' + err.message);
+                fileInputContainer.style.display = 'flex';
+                loadingOverlay.style.display = 'none';
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    /* ===========================================================
+       INITIALIZE
+    =========================================================== */
+    function initializeVisualizer() {
+        if (!worldGraph || worldGraph.areas.size === 0) buildWorldGraph();
+        timelineSlider.max = trajectoryData.length - 1;
+        document.getElementById('totalSteps').textContent = trajectoryData.length - 1;
+        loadingOverlay.style.display = 'none';
+        mainContainer.style.display = 'grid';
+        // Delay first render so the grid layout has time to compute dimensions
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                renderStep(0);
+                setupPanZoom();
+            });
+        });
+    }
+
+    /* ===========================================================
+       BUILD WORLD GRAPH (from world definition + config)
+    =========================================================== */
+    function buildWorldGraph() {
+        worldGraph = { areas: new Map(), places: new Map(), edges: new Map() };
+
+        // If preloaded worldGraph already exists (built by Python from config), use it
+        if (window.PRELOADED_DATA && window.PRELOADED_DATA.worldGraph) return;
+
+        // Fallback: build from worldDefinition + configData loaded in browser
+        if (!worldDefinition || !worldDefinition.entities) return;
+
+        const entities = worldDefinition.entities;
+
+        // Build places and areas from world definition
+        (entities.places || []).forEach(place => {
+            const placeName = place.name;
+            worldGraph.places.set(placeName, { name: placeName, areas: [] });
+            (place.areas || []).forEach(areaDef => {
+                const areaId = areaDef.id;
+                worldGraph.areas.set(areaId, {
+                    id: areaId, name: areaDef.name, placeName: placeName,
+                    neighbors: new Set()
+                });
+                worldGraph.places.get(placeName).areas.push(areaId);
+            });
+        });
+
+        // Check for tutorial in custom_events
+        const customEvents = (configData && configData.custom_events) || worldDefinition.custom_events || [];
+        if (customEvents.includes('tutorial')) {
+            const tutPlace = 'Tutorial';
+            const tutAreaId = 'area_tutorial_room';
+            worldGraph.places.set(tutPlace, { name: tutPlace, areas: [tutAreaId] });
+            worldGraph.areas.set(tutAreaId, {
+                id: tutAreaId, name: 'room', placeName: tutPlace, neighbors: new Set()
+            });
+        }
+
+        // Build ID-to-name lookups from world definition
+        const npcIdToName = {};
+        (entities.npcs || []).forEach(npc => { npcIdToName[npc.id] = npc.name; });
+        const objIdToName = {};
+        (entities.objects || []).forEach(obj => { objIdToName[obj.id] = obj.name; });
+
+        // Access config nested under "world" key
+        const worldConfig = (configData && configData.world) || {};
+        const areaInstances = worldConfig.area_instances || {};
+
+        // Build edges from config area_instances (with lock info)
+        Object.entries(areaInstances).forEach(([areaId, areaInst]) => {
+            const neighbors = areaInst.neighbors || {};
+            Object.entries(neighbors).forEach(([neighborId, edgeInfo]) => {
+                if (worldGraph.areas.has(areaId) && worldGraph.areas.has(neighborId)) {
+                    worldGraph.areas.get(areaId).neighbors.add(neighborId);
+                    worldGraph.areas.get(neighborId).neighbors.add(areaId);
+                    const edgeKey = [areaId, neighborId].sort().join('|');
+                    const isLocked = edgeInfo && edgeInfo.locked;
+                    const existing = worldGraph.edges.get(edgeKey);
+                    worldGraph.edges.set(edgeKey, { locked: isLocked || (existing && existing.locked) });
+                }
+            });
+        });
+
+        // Build area contents from config area_instances
+        Object.entries(areaInstances).forEach(([areaId, areaInst]) => {
+            const npcs = (areaInst.npcs || []).map(npcInstId => {
+                // Try exact match, then strip instance suffix (e.g., npc_swamp_raider_0 -> npc_swamp_raider)
+                let name = npcIdToName[npcInstId];
+                if (!name) {
+                    const baseId = npcInstId.replace(/_\d+$/, '');
+                    name = npcIdToName[baseId] || npcInstId;
+                }
+                return name;
+            });
+            const objects = Object.entries(areaInst.objects || {}).map(([objId, amount]) => {
+                const name = objIdToName[objId] || objId;
+                return { name, amount };
+            });
+            areaContents[areaId] = { npcs, objects };
+        });
+    }
+
+    /* ===========================================================
+       GRAPH LAYOUT (force-directed)
+    =========================================================== */
+    function computeLayout(width, height) {
+        const positions = new Map();
+        const areas = Array.from(worldGraph.areas.keys());
+        const n = areas.length;
+        if (n === 0) return positions;
+
+        // Group by place for initial positioning
+        const placeGroups = new Map();
+        worldGraph.areas.forEach((a, id) => {
+            if (!placeGroups.has(a.placeName)) placeGroups.set(a.placeName, []);
+            placeGroups.get(a.placeName).push(id);
+        });
+
+        const places = Array.from(placeGroups.keys());
+
+        // Circular initial placement — avoids rectangular bias from grid seeding
+        const placeCX = width / 2, placeCY = height / 2;
+        const placeRadius = Math.min(width, height) * 0.28;
+
+        places.forEach((pName, idx) => {
+            const angle = (2 * Math.PI * idx / places.length) - Math.PI / 2;
+            const cx = placeCX + placeRadius * Math.cos(angle);
+            const cy = placeCY + placeRadius * Math.sin(angle);
+            const areaIds = placeGroups.get(pName);
+            const clusterR = 55;
+            areaIds.forEach((aId, aIdx) => {
+                if (areaIds.length === 1) {
+                    positions.set(aId, { x: cx, y: cy, vx: 0, vy: 0 });
+                } else {
+                    const a2 = (2 * Math.PI * aIdx / areaIds.length) - Math.PI / 2;
+                    positions.set(aId, { x: cx + clusterR * Math.cos(a2), y: cy + clusterR * Math.sin(a2), vx: 0, vy: 0 });
+                }
+            });
+        });
+
+        // Force simulation
+        const iterations = 180;
+        const repulsion = 22000;
+        const attraction = 0.015;
+        const damping = 0.82;
+        const centerGravity = 0.02;
+        const centerX = width / 2, centerY = height / 2;
+
+        for (let iter = 0; iter < iterations; iter++) {
+            const cooling = 1 - (iter / iterations) * 0.5;
+
+            // Repulsion between all pairs
+            const minNodeDist = 90; // minimum distance between node centers (72px circles + some clearance)
+            for (let i = 0; i < areas.length; i++) {
+                for (let j = i + 1; j < areas.length; j++) {
+                    const a = positions.get(areas[i]);
+                    const b = positions.get(areas[j]);
+                    let dx = a.x - b.x, dy = a.y - b.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                    let force = repulsion / (dist * dist);
+                    // Extra push when closer than minimum distance
+                    if (dist < minNodeDist) {
+                        force += (minNodeDist - dist) * 1.5 * cooling;
+                    }
+                    let fx = (dx / dist) * force * cooling;
+                    let fy = (dy / dist) * force * cooling;
+                    a.vx += fx; a.vy += fy;
+                    b.vx -= fx; b.vy -= fy;
+                }
+            }
+
+            // Attraction on edges
+            worldGraph.edges.forEach((edgeInfo, edgeKey) => {
+                const [aId, bId] = edgeKey.split('|');
+                const a = positions.get(aId), b = positions.get(bId);
+                if (!a || !b) return;
+                let dx = b.x - a.x, dy = b.y - a.y;
+                let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                let force = dist * attraction * cooling;
+                let fx = (dx / dist) * force;
+                let fy = (dy / dist) * force;
+                a.vx += fx; a.vy += fy;
+                b.vx -= fx; b.vy -= fy;
+            });
+
+            // Pull tutorial room toward spawn area (area_castle_hall)
+            const tutPos = positions.get('area_tutorial_room');
+            const spawnPos = positions.get('area_castle_hall');
+            if (tutPos && spawnPos) {
+                let dx = spawnPos.x - tutPos.x, dy = spawnPos.y - tutPos.y;
+                let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                let force = dist * attraction * 2 * cooling;
+                tutPos.vx += (dx / dist) * force;
+                tutPos.vy += (dy / dist) * force;
+            }
+
+            // Same-place clustering
+            placeGroups.forEach((areaIds) => {
+                if (areaIds.length <= 1) return;
+                let avgX = 0, avgY = 0;
+                areaIds.forEach(id => { const p = positions.get(id); avgX += p.x; avgY += p.y; });
+                avgX /= areaIds.length; avgY /= areaIds.length;
+                areaIds.forEach(id => {
+                    const p = positions.get(id);
+                    p.vx += (avgX - p.x) * 0.02 * cooling;
+                    p.vy += (avgY - p.y) * 0.02 * cooling;
+                });
+            });
+
+            // Cross-place repulsion: push nodes away from other places' bounding boxes
+            const bboxMargin = 82; // matches visual bbox (70px node extent + 10 pad + 2 buffer)
+            const labelHeight = 52;
+            const bboxPad = 10;
+            placeGroups.forEach((areaIds, pName) => {
+                if (areaIds.length < 2) return;
+                let bMinX = Infinity, bMaxX = -Infinity, bMinY = Infinity, bMaxY = -Infinity;
+                areaIds.forEach(id => {
+                    const p = positions.get(id);
+                    bMinX = Math.min(bMinX, p.x - bboxMargin); bMaxX = Math.max(bMaxX, p.x + bboxMargin);
+                    bMinY = Math.min(bMinY, p.y - bboxMargin); bMaxY = Math.max(bMaxY, p.y + bboxMargin);
+                });
+                bMinX -= bboxPad; bMaxX += bboxPad;
+                bMinY -= labelHeight; bMaxY += bboxPad;
+
+                // Push foreign nodes out of this bbox
+                positions.forEach((p, id) => {
+                    const nodePlace = worldGraph.areas.get(id).placeName;
+                    if (nodePlace === pName) return;
+                    const nodeR = 45; // node radius clearance
+                    // Check if node footprint overlaps with this bbox
+                    const closestX = Math.max(bMinX, Math.min(bMaxX, p.x));
+                    const closestY = Math.max(bMinY, Math.min(bMaxY, p.y));
+                    const dx = p.x - closestX, dy = p.y - closestY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < nodeR) {
+                        // Node overlaps — push it outward
+                        const push = (nodeR - dist + 8) * 0.35 * cooling;
+                        if (dist > 0.1) {
+                            p.vx += (dx / dist) * push;
+                            p.vy += (dy / dist) * push;
+                        } else {
+                            // Dead center — push toward nearest edge
+                            const toLeft = p.x - bMinX, toRight = bMaxX - p.x;
+                            const toTop = p.y - bMinY, toBottom = bMaxY - p.y;
+                            const minD = Math.min(toLeft, toRight, toTop, toBottom);
+                            if (minD === toLeft) p.vx -= push;
+                            else if (minD === toRight) p.vx += push;
+                            else if (minD === toTop) p.vy -= push;
+                            else p.vy += push;
+                        }
+                    }
+                });
+            });
+
+            // Center gravity
+            positions.forEach(p => {
+                p.vx += (centerX - p.x) * centerGravity * cooling;
+                p.vy += (centerY - p.y) * centerGravity * cooling;
+            });
+
+            // Update positions — soft circular boundary
+            const padding = 60;
+            positions.forEach(p => {
+                p.vx *= damping; p.vy *= damping;
+                p.x += p.vx; p.y += p.vy;
+                // Soft elliptical boundary: allow up to edges but push back gently
+                const ex = (p.x - centerX) / (width / 2 - padding);
+                const ey = (p.y - centerY) / (height / 2 - padding);
+                const edist = ex * ex + ey * ey;
+                if (edist > 1) {
+                    const scale = 1 / Math.sqrt(edist);
+                    p.x = centerX + (p.x - centerX) * scale;
+                    p.y = centerY + (p.y - centerY) * scale;
+                }
+                // Hard clamp as safety
+                p.x = Math.max(padding, Math.min(width - padding, p.x));
+                p.y = Math.max(padding, Math.min(height - padding, p.y));
+            });
+        }
+
+        // Post-process: resolve any remaining node-vs-bbox overlaps
+        const postPadding = 60;
+        for (let pass = 0; pass < 25; pass++) {
+            let anyOverlap = false;
+            const bboxMarginPost = 82, labelHPost = 52, padPost = 10;
+            placeGroups.forEach((areaIds, pName) => {
+                if (areaIds.length < 2) return;
+                let bMinX = Infinity, bMaxX = -Infinity, bMinY = Infinity, bMaxY = -Infinity;
+                areaIds.forEach(id => {
+                    const p = positions.get(id);
+                    bMinX = Math.min(bMinX, p.x - bboxMarginPost); bMaxX = Math.max(bMaxX, p.x + bboxMarginPost);
+                    bMinY = Math.min(bMinY, p.y - bboxMarginPost); bMaxY = Math.max(bMaxY, p.y + bboxMarginPost);
+                });
+                bMinX -= padPost; bMaxX += padPost;
+                bMinY -= labelHPost; bMaxY += padPost;
+
+                positions.forEach((p, id) => {
+                    const nodePlace = worldGraph.areas.get(id).placeName;
+                    if (nodePlace === pName) return;
+                    const nodeR = 45; // node circle clearance
+                    const closestX = Math.max(bMinX, Math.min(bMaxX, p.x));
+                    const closestY = Math.max(bMinY, Math.min(bMaxY, p.y));
+                    const ddx = p.x - closestX, ddy = p.y - closestY;
+                    const dist = Math.sqrt(ddx * ddx + ddy * ddy);
+                    if (dist < nodeR) {
+                        anyOverlap = true;
+                        const push = nodeR - dist + 5;
+                        if (dist > 0.1) {
+                            p.x += (ddx / dist) * push;
+                            p.y += (ddy / dist) * push;
+                        } else {
+                            const toLeft = p.x - bMinX, toRight = bMaxX - p.x;
+                            const toTop = p.y - bMinY, toBottom = bMaxY - p.y;
+                            const minD = Math.min(toLeft, toRight, toTop, toBottom);
+                            if (minD === toLeft) p.x -= push;
+                            else if (minD === toRight) p.x += push;
+                            else if (minD === toTop) p.y -= push;
+                            else p.y += push;
+                        }
+                        p.x = Math.max(postPadding, Math.min(width - postPadding, p.x));
+                        p.y = Math.max(postPadding, Math.min(height - postPadding, p.y));
+                    }
+                });
+            });
+            if (!anyOverlap) break;
+        }
+
+        // Post-process: enforce minimum distance between every pair of nodes
+        const minDist = 88; // minimum separation (slightly more than circle diameter)
+        for (let pass = 0; pass < 12; pass++) {
+            let anyPush = false;
+            for (let i = 0; i < areas.length; i++) {
+                for (let j = i + 1; j < areas.length; j++) {
+                    const a = positions.get(areas[i]);
+                    const b = positions.get(areas[j]);
+                    let dx = a.x - b.x, dy = a.y - b.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                    if (dist < minDist) {
+                        anyPush = true;
+                        const push = (minDist - dist) / 2 + 2;
+                        const nx = dx / dist, ny = dy / dist;
+                        a.x += nx * push; a.y += ny * push;
+                        b.x -= nx * push; b.y -= ny * push;
+                        // Keep in bounds
+                        a.x = Math.max(postPadding, Math.min(width - postPadding, a.x));
+                        a.y = Math.max(postPadding, Math.min(height - postPadding, a.y));
+                        b.x = Math.max(postPadding, Math.min(width - postPadding, b.x));
+                        b.y = Math.max(postPadding, Math.min(height - postPadding, b.y));
+                    }
+                }
+            }
+            if (!anyPush) break;
+        }
+
+        // Post-process: place tutorial room in a clear region adjacent to its connecting place.
+        const tutPos = positions.get('area_tutorial_room');
+        if (tutPos) {
+            // Find connecting place via the tutorial area's actual graph neighbor
+            const tutArea = worldGraph.areas.get('area_tutorial_room');
+            let connectingAreaId = 'area_castle_hall';
+            if (tutArea && tutArea.neighbors && tutArea.neighbors.size > 0) {
+                connectingAreaId = Array.from(tutArea.neighbors)[0];
+            }
+            const spawnArea = worldGraph.areas.get(connectingAreaId);
+            const connectingPlace = spawnArea ? spawnArea.placeName : null;
+
+            // Build bounding boxes for all drawn place outlines (matching buildGraph's rect + label dimensions)
+            const placeBBoxes = new Map();
+            placeGroups.forEach((areaIds, pName) => {
+                if (areaIds.length < 2) return;
+                let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+                areaIds.forEach(id => {
+                    const p = positions.get(id);
+                    if (!p) return;
+                    minX = Math.min(minX, p.x - 70); maxX = Math.max(maxX, p.x + 70);
+                    minY = Math.min(minY, p.y - 70); maxY = Math.max(maxY, p.y + 80);
+                });
+                if (minX < Infinity) {
+                    // Match the drawn rect exactly: includes padding + label gap
+                    placeBBoxes.set(pName, { minX: minX - 10, maxX: maxX + 10, minY: minY - 52, maxY: maxY + 10 });
+                }
+            });
+
+            // Centroid of connecting place as the reference point to radiate from
+            let refX = width / 2, refY = height / 2;
+            const cBBox = connectingPlace ? placeBBoxes.get(connectingPlace) : null;
+            let castleCX = refX, castleCY = refY;
+            if (connectingPlace && placeGroups.has(connectingPlace)) {
+                let cx = 0, cy = 0, n = 0;
+                placeGroups.get(connectingPlace).forEach(id => {
+                    const p = positions.get(id);
+                    if (p) { cx += p.x; cy += p.y; n++; }
+                });
+                if (n > 0) { castleCX = cx / n; castleCY = cy / n; refX = castleCX; refY = castleCY; }
+            }
+
+            // Preferred direction: from the connecting place's centroid THROUGH the connecting area
+            // (area_castle_hall). This places tutorial on the "face" of the castle where castle_hall
+            // is located, so the edge doesn't visually pass through any other areas.
+            const connAreaPos = positions.get(connectingAreaId);
+            let preferAngle;
+            if (connAreaPos) {
+                // Direction from castle centroid toward the connecting area, then out
+                preferAngle = Math.atan2(connAreaPos.y - castleCY, connAreaPos.x - castleCX);
+            } else {
+                // Fallback: away from all other areas
+                let oCX = 0, oCY = 0, oCount = 0;
+                positions.forEach((p, id) => {
+                    if (id === 'area_tutorial_room') return;
+                    const area = worldGraph.areas.get(id);
+                    if (connectingPlace && area && area.placeName === connectingPlace) return;
+                    oCX += p.x; oCY += p.y; oCount++;
+                });
+                if (oCount > 0) { oCX /= oCount; oCY /= oCount; }
+                preferAngle = Math.atan2(castleCY - oCY, castleCX - oCX);
+            }
+
+            // Try 24 candidate angles sorted by closeness to preferred direction
+            const numAngles = 24;
+            const candidates = Array.from({ length: numAngles }, (_, i) => preferAngle + (i % 2 === 0 ? 1 : -1) * Math.ceil(i / 2) * (2 * Math.PI / numAngles));
+            const gap = 130;
+
+            let placed = false;
+            // Try multiple gap distances for each angle
+            for (const extraGap of [0, 60, 120]) {
+            for (const angle of candidates) {
+                const dx = Math.cos(angle), dy = Math.sin(angle);
+
+                // Distance to exit the connecting place bbox in this direction
+                let tExit = 120;
+                if (cBBox) {
+                    let t = Infinity;
+                    if (dx > 0) t = Math.min(t, (cBBox.maxX - refX) / dx);
+                    else if (dx < 0) t = Math.min(t, (cBBox.minX - refX) / dx);
+                    if (dy > 0) t = Math.min(t, (cBBox.maxY - refY) / dy);
+                    else if (dy < 0) t = Math.min(t, (cBBox.minY - refY) / dy);
+                    if (t > 0 && t < Infinity) tExit = t;
+                }
+
+                const cx = refX + dx * (tExit + gap + extraGap);
+                const cy = refY + dy * (tExit + gap + extraGap);
+
+                // Skip if out of canvas bounds
+                if (cx < 70 || cx > width - 70 || cy < 70 || cy > height - 70) continue;
+
+                // Skip if inside any place bounding box (with 70px margin for node radius + label)
+                const nodeMargin = 70;
+                let clear = true;
+                for (const [, bbox] of placeBBoxes) {
+                    if (cx > bbox.minX - nodeMargin && cx < bbox.maxX + nodeMargin && cy > bbox.minY - nodeMargin && cy < bbox.maxY + nodeMargin) {
+                        clear = false; break;
+                    }
+                }
+                if (clear) { tutPos.x = cx; tutPos.y = cy; placed = true; break; }
+            }
+            if (placed) break;
+            }
+
+            // Fallback: preferred direction with large gap, clamped
+            if (!placed) {
+                const dx = Math.cos(preferAngle), dy = Math.sin(preferAngle);
+                tutPos.x = Math.max(70, Math.min(width - 70, refX + dx * 220));
+                tutPos.y = Math.max(70, Math.min(height - 70, refY + dy * 220));
+            }
+        }
+
+        return positions;
+    }
+
+    /* ===========================================================
+       RENDER GRAPH  (split into buildGraph + updateGraph)
+    =========================================================== */
+    let graphBuilt = false;
+
+    /** Build the graph DOM once: layout, edges, node shells. */
+    function buildGraph() {
+        const viewport = document.getElementById('graphViewport');
+        const world = document.getElementById('graphWorld');
+        const edgesSvg = document.getElementById('graphEdgesSvg');
+        const nodesContainer = document.getElementById('graphNodesContainer');
+
+        const rect = viewport.getBoundingClientRect();
+        const W = rect.width || 800;
+        const H = rect.height || 600;
+
+        world.style.width = W + 'px';
+        world.style.height = H + 'px';
+        edgesSvg.setAttribute('width', W);
+        edgesSvg.setAttribute('height', H);
+        edgesSvg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+        nodePositions = computeLayout(W, H);
+
+        edgesSvg.innerHTML = '';
+        nodesContainer.innerHTML = '';
+
+        if (!worldGraph || worldGraph.areas.size === 0) return;
+
+        // ---- Place grouping outlines ----
+        const placeGroups = new Map();
+        worldGraph.areas.forEach((a, id) => {
+            const pn = a.placeName || '';
+            if (!placeGroups.has(pn)) placeGroups.set(pn, []);
+            placeGroups.get(pn).push(id);
+        });
+
+        placeGroups.forEach((areaIds, placeName) => {
+            if (areaIds.length < 2 || !placeName) return;
+            let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+            areaIds.forEach(id => {
+                const p = nodePositions.get(id);
+                if (!p) return;
+                minX = Math.min(minX, p.x - 70); maxX = Math.max(maxX, p.x + 70);
+                minY = Math.min(minY, p.y - 70); maxY = Math.max(maxY, p.y + 80);
+            });
+            if (minX < Infinity) {
+                // Extra top padding so the label clears the top-most nodes
+                const labelGap = 52;
+                const pad = 10;
+                const regionRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                regionRect.setAttribute('x', minX - pad); regionRect.setAttribute('y', minY - labelGap);
+                regionRect.setAttribute('width', maxX - minX + pad * 2); regionRect.setAttribute('height', maxY - minY + labelGap + pad);
+                regionRect.setAttribute('rx', '20');
+                regionRect.setAttribute('fill', 'rgba(0, 0, 0, 0.018)');
+                regionRect.setAttribute('stroke', 'rgba(0, 0, 0, 0.07)');
+                regionRect.setAttribute('stroke-dasharray', '4,3');
+                regionRect.setAttribute('stroke-width', '1');
+                edgesSvg.appendChild(regionRect);
+
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', (minX + maxX) / 2);
+                label.setAttribute('y', minY - labelGap + 16);
+                label.setAttribute('text-anchor', 'middle');
+                label.setAttribute('fill', 'rgba(44, 54, 68, 0.82)');
+                label.setAttribute('font-size', '12.5');
+                label.setAttribute('font-weight', '700');
+                label.setAttribute('letter-spacing', '1');
+                label.setAttribute('paint-order', 'stroke');
+                label.setAttribute('stroke', 'var(--bg-primary)');
+                label.setAttribute('stroke-width', '4');
+                label.setAttribute('stroke-linejoin', 'round');
+                label.textContent = placeName.toUpperCase();
+                edgesSvg.appendChild(label);
+            }
+        });
+
+        // ---- Static edges (with lock status) ----
+        worldGraph.edges.forEach((edgeInfo, edgeKey) => {
+            const [aId, bId] = edgeKey.split('|');
+            const pA = nodePositions.get(aId), pB = nodePositions.get(bId);
+            if (!pA || !pB) return;
+            const cls = edgeInfo && edgeInfo.locked ? 'edge-line locked' : 'edge-line';
+            edgesSvg.appendChild(createEdgeElement(pA, pB, aId, bId, cls));
+        });
+
+        // ---- Build node shells ----
+        worldGraph.areas.forEach((area, areaId) => {
+            const pos = nodePositions.get(areaId);
+            if (!pos) return;
+
+            const node = document.createElement('div');
+            node.className = 'graph-node';
+            node.style.left = pos.x + 'px';
+            node.style.top = pos.y + 'px';
+            node.dataset.areaId = areaId;
+
+            const circle = document.createElement('div');
+            circle.className = 'node-circle';
+            circle.dataset.areaId = areaId;
+
+            // Background image
+            const iconUrl = getAreaIconUrl(areaId);
+            if (iconUrl) {
+                const img = document.createElement('img');
+                img.className = 'node-bg-img';
+                img.src = iconUrl;
+                img.alt = area.name;
+                img.onerror = function() {
+                    this.style.display = 'none';
+                    const fb = document.createElement('div');
+                    fb.className = 'node-bg-fallback';
+                    fb.textContent = area.name.charAt(0).toUpperCase();
+                    circle.insertBefore(fb, circle.firstChild);
+                };
+                circle.appendChild(img);
+            } else {
+                const fb = document.createElement('div');
+                fb.className = 'node-bg-fallback';
+                fb.textContent = area.name.charAt(0).toUpperCase();
+                circle.appendChild(fb);
+            }
+
+            // Overlay (visible on hover) - content updated per step
+            const overlay = document.createElement('div');
+            overlay.className = 'node-overlay';
+            overlay.dataset.areaId = areaId;
+            circle.appendChild(overlay);
+            node.appendChild(circle);
+
+            // Name label below (visible when small)
+            const nameLabel = document.createElement('div');
+            nameLabel.className = 'node-name-label';
+            nameLabel.textContent = area.name;
+            node.appendChild(nameLabel);
+
+            nodesContainer.appendChild(node);
+        });
+
+        graphBuilt = true;
+        applyTransform();
+    }
+
+    /** Update node styles + trajectory edges + overlay contents per step. */
+    function updateGraph() {
+        if (!graphBuilt || !worldGraph) return;
+
+        const edgesSvg = document.getElementById('graphEdgesSvg');
+        const agentMarker = document.getElementById('agentMarker');
+
+        // Remove old trajectory edges and arrows (keep static edges and place outlines)
+        edgesSvg.querySelectorAll('.trajectory-edge, .trajectory-arrow').forEach(el => el.remove());
+
+        // Draw trajectory edges with directional arrows
+        if (trajectoryPath.length > 1) {
+            for (let i = 0; i < trajectoryPath.length - 1; i++) {
+                const fromId = trajectoryPath[i], toId = trajectoryPath[i + 1];
+                if (fromId === toId) continue;
+                // Ignore non-neighbor transitions (e.g., death/respawn teleports).
+                if (!hasGraphConnection(fromId, toId)) continue;
+                const pF = nodePositions.get(fromId), pT = nodePositions.get(toId);
+                if (!pF || !pT) continue;
+                edgesSvg.appendChild(createEdgeElement(pF, pT, fromId, toId, 'edge-line trajectory-edge'));
+
+                // Draw arrowhead at the curve/line midpoint
+                const curved = computeCurvedEdge(pF, pT, fromId, toId);
+                let mx, my, adx, ady;
+                if (curved) {
+                    // For a quadratic Bézier Q cpX cpY endX endY, midpoint at t=0.5
+                    // Parse control point from the d string
+                    const parts = curved.match(/[\d.e+-]+/g).map(Number);
+                    // parts: [ax, ay, cpx, cpy, bx, by]
+                    const cpx = parts[2], cpy = parts[3];
+                    mx = 0.25 * pF.x + 0.5 * cpx + 0.25 * pT.x;
+                    my = 0.25 * pF.y + 0.5 * cpy + 0.25 * pT.y;
+                    // Tangent at t=0.5: derivative of B(t)
+                    adx = (pT.x - pF.x) * 0.5 + (cpx - pF.x - (pT.x - cpx)) * 0;
+                    // Simpler: tangent = 2*(1-t)*(cp-start) + 2*t*(end-cp) at t=0.5
+                    adx = (cpx - pF.x) + (pT.x - cpx);  // = pT.x - pF.x (simplified)
+                    ady = (cpy - pF.y) + (pT.y - cpy);
+                } else {
+                    mx = (pF.x + pT.x) / 2;
+                    my = (pF.y + pT.y) / 2;
+                    adx = pT.x - pF.x;
+                    ady = pT.y - pF.y;
+                }
+                const angle = Math.atan2(ady, adx);
+                const size = 8;
+                const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                const tip = { x: mx + Math.cos(angle) * size, y: my + Math.sin(angle) * size };
+                const left = { x: mx + Math.cos(angle + 2.5) * size, y: my + Math.sin(angle + 2.5) * size };
+                const right = { x: mx + Math.cos(angle - 2.5) * size, y: my + Math.sin(angle - 2.5) * size };
+                arrow.setAttribute('points', `${tip.x},${tip.y} ${left.x},${left.y} ${right.x},${right.y}`);
+                arrow.setAttribute('class', 'trajectory-arrow');
+                edgesSvg.appendChild(arrow);
+            }
+        }
+
+        // Update node status classes + overlay contents
+        const curAreaId = getCurrentAreaId();
+
+        document.querySelectorAll('.node-circle[data-area-id]').forEach(circle => {
+            const areaId = circle.dataset.areaId;
+            circle.classList.remove('status-current', 'status-visited');
+            if (areaId === curAreaId) circle.classList.add('status-current');
+            else if (visitedAreas.has(areaId)) circle.classList.add('status-visited');
+        });
+
+        // Rebuild overlay contents (NPCs/objects change per step)
+        document.querySelectorAll('.node-overlay[data-area-id]').forEach(overlay => {
+            const areaId = overlay.dataset.areaId;
+            const area = worldGraph.areas.get(areaId);
+            if (!area) return;
+            overlay.innerHTML = '';
+
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'node-overlay-name';
+            nameDiv.textContent = area.name;
+            overlay.appendChild(nameDiv);
+
+            const pName = area.placeName || '';
+            if (pName) {
+                const placeDiv = document.createElement('div');
+                placeDiv.className = 'node-overlay-place';
+                placeDiv.textContent = pName;
+                overlay.appendChild(placeDiv);
+            }
+
+            const contents = areaContents[areaId] || { npcs: [], objects: [] };
+
+            if (contents.npcs && contents.npcs.length > 0) {
+                const sec = document.createElement('div');
+                sec.className = 'node-detail-section';
+                sec.innerHTML = '<div class="node-detail-label">NPCs</div>';
+                const items = document.createElement('div');
+                items.className = 'node-detail-items';
+                contents.npcs.slice(0, 12).forEach(npc => {
+                    const tag = document.createElement('span');
+                    tag.className = 'node-detail-tag npc';
+                    tag.textContent = npc;
+                    items.appendChild(tag);
+                });
+                if (contents.npcs.length > 12) {
+                    const m = document.createElement('span');
+                    m.className = 'node-detail-tag npc'; m.textContent = `+${contents.npcs.length - 12}`;
+                    items.appendChild(m);
+                }
+                sec.appendChild(items);
+                overlay.appendChild(sec);
+            }
+
+            if (contents.objects && contents.objects.length > 0) {
+                const sec = document.createElement('div');
+                sec.className = 'node-detail-section';
+                sec.innerHTML = '<div class="node-detail-label">Objects</div>';
+                const items = document.createElement('div');
+                items.className = 'node-detail-items';
+                contents.objects.slice(0, 12).forEach(obj => {
+                    const tag = document.createElement('span');
+                    tag.className = 'node-detail-tag obj';
+                    // Support both {name, amount} objects and plain strings
+                    if (typeof obj === 'object' && obj.name) {
+                        tag.textContent = obj.amount > 1 ? `${obj.name} x${obj.amount}` : obj.name;
+                    } else {
+                        tag.textContent = obj;
+                    }
+                    items.appendChild(tag);
+                });
+                if (contents.objects.length > 12) {
+                    const m = document.createElement('span');
+                    m.className = 'node-detail-tag obj'; m.textContent = `+${contents.objects.length - 12}`;
+                    items.appendChild(m);
+                }
+                sec.appendChild(items);
+                overlay.appendChild(sec);
+            }
+        });
+
+        // Agent marker (centered inside the circle)
+        if (curAreaId && nodePositions.has(curAreaId)) {
+            const p = nodePositions.get(curAreaId);
+            agentMarker.style.display = 'block';
+            agentMarker.style.left = p.x + 'px';
+            agentMarker.style.top = p.y + 'px';
+        } else {
+            agentMarker.style.display = 'none';
+        }
+    }
+
+    /* ===========================================================
+       PAN / ZOOM
+    =========================================================== */
+    function setupPanZoom() {
+        const viewport = document.getElementById('graphViewport');
+
+        viewport.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const delta = e.deltaY > 0 ? 0.9 : 1.1;
+            const newZoom = Math.max(0.3, Math.min(3, zoomLevel * delta));
+
+            // Zoom toward mouse position
+            const rect = viewport.getBoundingClientRect();
+            const mx = e.clientX - rect.left;
+            const my = e.clientY - rect.top;
+            panX = mx - (mx - panX) * (newZoom / zoomLevel);
+            panY = my - (my - panY) * (newZoom / zoomLevel);
+            zoomLevel = newZoom;
+            applyTransform();
+        }, { passive: false });
+
+        viewport.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return;
+            // Only start panning if not clicking a node
+            if (e.target.closest('.graph-node')) return;
+            isPanning = true;
+            panStartX = e.clientX - panX;
+            panStartY = e.clientY - panY;
+            viewport.style.cursor = 'grabbing';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isPanning) return;
+            panX = e.clientX - panStartX;
+            panY = e.clientY - panStartY;
+            applyTransform();
+        });
+
+        window.addEventListener('mouseup', () => {
+            isPanning = false;
+            const viewport = document.getElementById('graphViewport');
+            if (viewport) viewport.style.cursor = '';
+        });
+    }
+
+    function applyTransform() {
+        const world = document.getElementById('graphWorld');
+        world.style.transform = `translate(${panX}px, ${panY}px) scale(${zoomLevel})`;
+    }
+
+    /* ===========================================================
+       STEP RENDERING
+    =========================================================== */
+
+    /** Resolve a place name + area name from observation text to canonical area_id. */
+    function resolveAreaId(placeName, areaName) {
+        if (!worldGraph) return null;
+        for (const [areaId, area] of worldGraph.areas) {
+            if (area.placeName.toLowerCase() === placeName.toLowerCase() &&
+                area.name.toLowerCase() === areaName.toLowerCase()) {
+                return areaId;
+            }
+        }
+        return null;
+    }
+
+    function getAreaIdFromObs(obsText) {
+        if (!obsText) return null;
+        const m = obsText.match(/Current Location:\s*([^,]+),\s*(\w+)/);
+        if (!m) return null;
+        return resolveAreaId(m[1].trim(), m[2].trim());
+    }
+
+    function getCurrentAreaId() {
+        if (currentStep >= trajectoryData.length) return null;
+        const obs = trajectoryData[currentStep].observation;
+        if (!obs || !obs.text) return null;
+        return getAreaIdFromObs(obs.text);
+    }
+
+    function renderStep(stepIdx) {
+        if (stepIdx < 0 || stepIdx >= trajectoryData.length) return;
+        currentStep = stepIdx;
+        const step = trajectoryData[stepIdx];
+        const obs = step.observation;
+
+        // Rebuild visited areas & trajectory
+        visitedAreas.clear();
+        trajectoryPath = [];
+        for (let i = 0; i <= stepIdx; i++) {
+            const sObs = trajectoryData[i].observation;
+            if (!sObs || !sObs.text) continue;
+            const aId = getAreaIdFromObs(sObs.text);
+            if (aId) {
+                visitedAreas.add(aId);
+                if (trajectoryPath.length === 0 || trajectoryPath[trajectoryPath.length - 1] !== aId) {
+                    trajectoryPath.push(aId);
+                }
+            }
+        }
+
+        // Header stats
+        document.getElementById('headerStep').textContent = stepIdx;
+
+        if (obs && obs.text) {
+            const text = obs.text;
+            const timeMatch = text.match(/Current Time:\s*([^\n]+)/);
+            if (timeMatch) document.getElementById('headerTime').textContent = timeMatch[1].trim();
+            const locMatch = text.match(/Current Location:\s*([^\n]+)/);
+            if (locMatch) document.getElementById('headerLocation').textContent = locMatch[1].trim();
+
+            const levelMatch = text.match(/My level is (\d+)/);
+            const attackMatch = text.match(/My attack is at (\d+)/);
+            const defenseMatch = text.match(/My defense is at (\d+)/);
+            const hpMatch = text.match(/My health is at (\d+)/);
+            const xpMatch = text.match(/My experience is at (\d+)/);
+            if (levelMatch) document.getElementById('levelValue').textContent = levelMatch[1];
+            if (attackMatch) document.getElementById('attackValue').textContent = attackMatch[1];
+            if (defenseMatch) document.getElementById('defenseValue').textContent = defenseMatch[1];
+            if (hpMatch) { const hp = parseInt(hpMatch[1]); document.getElementById('hpValue').textContent = `${hp}/100`; document.getElementById('hpBar').style.width = `${hp}%`; }
+            if (xpMatch) { const xp = parseInt(xpMatch[1]); document.getElementById('xpValue').textContent = xp; document.getElementById('xpBar').style.width = `${Math.min(xp, 100)}%`; }
+
+            const holdingMatch = text.match(/I am holding ([^\n]+)\./);
+            if (holdingMatch) updateItemsList('handItems', holdingMatch[1]);
+            const equippedMatch = text.match(/I have equipped ([^\n]+)\./);
+            if (equippedMatch) updateItemsList('equippedItems', equippedMatch[1]);
+            const objectsMatch = text.match(/I see ([^\n]+) near me\./);
+            if (objectsMatch) updateItemsList('nearbyObjects', objectsMatch[1]);
+            const npcsMatch = text.match(/I see ([^\n]+) nearby\./);
+            if (npcsMatch) updateItemsList('nearbyNpcs', npcsMatch[1]);
+
+            document.getElementById('observationText').textContent = text;
+        }
+
+        document.getElementById('actionText').textContent = step.action || '---';
+        document.getElementById('decisionTime').textContent = `${(step.decision_time || 0).toFixed(2)}s`;
+        document.getElementById('validAction').textContent = step.invalid_action ? '\u2717' : '\u2713';
+        document.getElementById('validAction').style.color = step.invalid_action ? 'var(--danger)' : 'var(--success)';
+        updateRewards(step.reward);
+
+        timelineSlider.value = stepIdx;
+        document.getElementById('currentStep').textContent = stepIdx;
+        document.getElementById('areasVisited').textContent = visitedAreas.size;
+
+        let totalReward = 0;
+        trajectoryData.slice(0, stepIdx + 1).forEach(s => {
+            if (s.reward) Object.values(s.reward).forEach(v => totalReward += v);
+        });
+        document.getElementById('totalReward').textContent = totalReward;
+
+        // Update areaContents from per-step config snapshots.
+        // agent-log step 0 → config step -1 (initial state before any action)
+        // agent-log step S (S ≥ 1) → config step S (state after action S-1)
+        const areaContentsByStep = window.PRELOADED_DATA && window.PRELOADED_DATA.areaContentsByStep;
+        if (areaContentsByStep) {
+            const configStep = stepIdx >= 1 ? stepIdx : -1;
+            const snap = areaContentsByStep[configStep] || areaContentsByStep[String(configStep)];
+            if (snap) areaContents = snap;
+        }
+
+        if (!graphBuilt) buildGraph();
+        updateGraph();
+    }
+
+    function updateItemsList(elementId, text) {
+        const container = document.getElementById(elementId);
+        container.innerHTML = '';
+        let entityType = 'items';
+        if (elementId.includes('Object')) entityType = 'objects';
+        else if (elementId.includes('Npc')) entityType = 'npcs';
+
+        if (text.toLowerCase().includes('no ') || text.toLowerCase() === 'none') {
+            container.innerHTML = '<span class="item-tag">None</span>';
+            return;
+        }
+        const items = text.split(',').map(s => s.trim()).filter(s => s);
+        items.forEach(item => {
+            const el = document.createElement('div');
+            el.className = 'entity-item';
+            const iconUrl = getIconUrl(item, entityType);
+            if (iconUrl) {
+                const img = document.createElement('img');
+                img.src = iconUrl; img.className = 'entity-icon'; img.alt = item;
+                img.onerror = function() { this.style.display = 'none'; };
+                el.appendChild(img);
+            }
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'entity-name';
+            nameSpan.textContent = item;
+            el.appendChild(nameSpan);
+            container.appendChild(el);
+        });
+    }
+
+    function updateRewards(reward) {
+        const container = document.getElementById('rewardGrid');
+        container.innerHTML = '';
+        if (!reward) return;
+        const labels = { unique_kill:'Unique Kill', kill:'Kill', craft:'Craft', exploration:'Exploration', death:'Death', trade:'Trade', quest:'Quest', side_quest:'Side Quest' };
+        Object.entries(reward).forEach(([key, value]) => {
+            const div = document.createElement('div');
+            div.className = 'reward-item' + (value > 0 ? ' positive' : '');
+            div.innerHTML = `<div class="reward-label">${labels[key] || key}</div><div class="reward-value" style="color: ${value > 0 ? 'var(--success)' : 'var(--text-muted)'}">${value > 0 ? '+' : ''}${value}</div>`;
+            container.appendChild(div);
+        });
+    }
+
+    /* ===========================================================
+       LEGEND TOGGLE
+    =========================================================== */
+    document.getElementById('legendClose').addEventListener('click', () => {
+        document.getElementById('legendPanel').classList.add('hidden');
+    });
+    document.getElementById('legendToggle').addEventListener('click', () => {
+        document.getElementById('legendPanel').classList.remove('hidden');
+    });
+
+    /* ===========================================================
+       PLAYBACK CONTROLS
+    =========================================================== */
+    playBtn.addEventListener('click', togglePlay);
+    prevBtn.addEventListener('click', () => { stopPlay(); if (currentStep > 0) renderStep(currentStep - 1); });
+    nextBtn.addEventListener('click', () => { stopPlay(); if (currentStep < trajectoryData.length - 1) renderStep(currentStep + 1); });
+    timelineSlider.addEventListener('input', (e) => { stopPlay(); renderStep(parseInt(e.target.value)); });
+    document.querySelectorAll('.speed-btn[data-speed]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.speed-btn[data-speed]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            playSpeed = parseInt(btn.dataset.speed);
+            if (isPlaying) { stopPlay(); startPlay(); }
+        });
+    });
+
+    function togglePlay() { isPlaying ? stopPlay() : startPlay(); }
+    function startPlay() {
+        isPlaying = true; playIcon.style.display = 'none'; pauseIcon.style.display = 'block';
+        playInterval = setInterval(() => {
+            if (currentStep < trajectoryData.length - 1) renderStep(currentStep + 1);
+            else stopPlay();
+        }, 1000 / playSpeed);
+    }
+    function stopPlay() {
+        isPlaying = false; playIcon.style.display = 'block'; pauseIcon.style.display = 'none';
+        if (playInterval) { clearInterval(playInterval); playInterval = null; }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === ' ') { e.preventDefault(); togglePlay(); }
+        else if (e.key === 'ArrowLeft') { stopPlay(); if (currentStep > 0) renderStep(currentStep - 1); }
+        else if (e.key === 'ArrowRight') { stopPlay(); if (currentStep < trajectoryData.length - 1) renderStep(currentStep + 1); }
+    });
+
+    function showToast(message) {
+        const existing = document.querySelector('.toast');
+        if (existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.className = 'toast'; toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    window.addEventListener('resize', () => {
+        if (worldGraph) {
+            panX = 0; panY = 0; zoomLevel = 1;
+            graphBuilt = false;
+            buildGraph();
+            updateGraph();
+        }
+    });
+    </script>
+</body>
+</html>

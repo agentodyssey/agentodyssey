@@ -1,0 +1,10 @@
+gymnasium
+termcolor
+psutil
+openai
+vllm
+sentence_transformers
+accelerate
+peft
+matplotlib
+diffusers[torch]
