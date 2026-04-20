@@ -12,6 +12,8 @@
 
 </div>
 
+# AgentOdyssey
+
 **AgentOdyssey** is a lightweight interactive environment that supports both novel game generation, a unified agent interface, and multifaceted evaluation. It is designed to evaluate **test-time continual learning agents** across five key abilities: **exploration**, **world knowledge acquisition**, **episodic memory**, **skill learning**, and **long-horizon planning**. Its main features include:
 - **Open-Ended Long-Horizon Game Generation**: Generate games with entirely new and rich entities, dynamics, and storylines from a single command.
 - **Unified Agent Interface**: All LLM-based agents maximize prompt sharing via inherited classes to ensure fair comparison. Adding a new agent can be done by simplely implementing a few methods.
