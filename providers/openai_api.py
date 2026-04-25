@@ -75,7 +75,7 @@ class OpenAILanguageModel:
         self.client = OpenAIClient(*api_credentials)
         self.llm_name = llm_name
         self.type = "openai"
-        self.responses_api = llm_name in ["gpt-5", "gpt-5-mini", "gpt-5-nano"]
+        self.responses_api = llm_name.startswith("gpt-5")
         self.max_new_tokens = max_new_tokens
 
     def generate(self, user_prompt: str, system_prompt: str = None, history=None, think: bool = True):
