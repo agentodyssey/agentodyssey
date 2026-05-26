@@ -200,9 +200,9 @@ For common issues and solutions, please refer to our [Troubleshooting Guide](htt
 ✨ If you find AgentOdyssey useful, please cite our work:
 
 ```bibtex
-@inproceedings{agentodyssey2026,
-  title     = {AgentOdyssey: Open-Ended Long-Horizon Text Game Generation for Test-Time Continual Learning Agents},
-  author    = {Zhang, Zheyuan and Wen, Zehao and Zhang, Alvin and Wang, Andrew and Xie, Jianwen and Khashabi, Daniel and Shu, Tianmin},
-  year      = {2026},
+@article{zhangagentodyssey,
+  title={AgentOdyssey: Open-Ended Long-Horizon Text Game Generation for Test-Time Continual Learning Agents},
+  author={Zhang, Zheyuan and Wen, Zehao and Zhang, Alvin and Wang, Andrew and Xie, Jianwen and Khashabi, Daniel and Shu, Tianmin},
+  year={2026},
 }
 ```
