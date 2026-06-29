@@ -5,7 +5,7 @@
 ### **Open-Ended Long-Horizon Text Game Generation Engine and Evaluation Framework <br> for Test-Time Continual Learning Agents**
 <br>
 
-<a href="https://agentodyssey.github.io/paper.pdf"><img src="https://img.shields.io/badge/%F0%9F%93%84-Paper-C4841D?style=for-the-badge" alt="Paper"></a>&nbsp;
+<a href="https://arxiv.org/abs/2606.24893"><img src="https://img.shields.io/badge/%F0%9F%93%84-Paper-C4841D?style=for-the-badge" alt="Paper"></a>&nbsp;
 <a href="https://agentodyssey.github.io"><img src="https://img.shields.io/badge/%F0%9F%8C%90-Website-C4841D?style=for-the-badge" alt="Website"></a>&nbsp;
 <a href="https://agentodyssey.github.io/docs"><img src="https://img.shields.io/badge/%F0%9F%93%96-Documentation-C4841D?style=for-the-badge" alt="Documentation"></a>&nbsp;
 <a href="https://pypi.org/project/agentodyssey/"><img src="https://img.shields.io/badge/%F0%9F%93%A6-PYPI-C4841D?style=for-the-badge" alt="PYPI"></a>
@@ -146,7 +146,7 @@ The environment already implements agents spanning **6 paradigms** as shown belo
 | **Latent** | `MemoryLLMAgent`, `MPlusAgent` |
 | **RL** | *will be released* |
 
-Some agents can be augmented with three optional add-ons: reflection, summarization, and short-term memory (Please refer to the [paper](https://agentodyssey.github.io/paper.pdf) for details.)
+Some agents can be augmented with three optional add-ons: reflection, summarization, and short-term memory (Please refer to the [paper](https://arxiv.org/abs/2606.24893) for details.)
 
 > [!NOTE]
 > **See detailed descriptions of each paradigm &rarr; [Agent Paradigms](http://agentodyssey.github.io/docs/agent/agent-paradigms)**
@@ -200,9 +200,10 @@ For common issues and solutions, please refer to our [Troubleshooting Guide](htt
 ✨ If you find AgentOdyssey useful, please cite our work:
 
 ```bibtex
-@article{zhangagentodyssey,
+@article{zhang2026agentodyssey,
   title={AgentOdyssey: Open-Ended Long-Horizon Text Game Generation for Test-Time Continual Learning Agents},
   author={Zhang, Zheyuan and Wen, Zehao and Zhang, Alvin and Wang, Andrew and Xie, Jianwen and Khashabi, Daniel and Shu, Tianmin},
-  year={2026},
+  journal={arXiv preprint arXiv:2606.24893},
+  year={2026}
 }
 ```
