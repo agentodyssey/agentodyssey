@@ -1214,9 +1214,22 @@ class MainQuestStepRule(BaseStepRule):
                     want_npc = self._generated.get(npc_key) if npc_key else None
                     if want_npc and d.get("npc_id") != want_npc:
                         continue
-                    want_obj = cond.get("obj_id")
-                    if want_obj and d.get("obj_id") != want_obj:
+                    want_objs = self._wanted_base_objs(cond)
+                    if want_objs and get_def_id(str(d.get("obj_id", ""))) not in want_objs:
                         continue
+                    return True
+
+                if etype == "object_crafted":
+                    # CraftRule: data={"obj_id": base_id, "amount": count, ...}
+                    got_obj = get_def_id(str(d.get("obj_id", "")))
+                    want_objs = self._wanted_base_objs(cond)
+                    if want_objs and got_obj not in want_objs:
+                        continue
+                    want_category = cond.get("category")
+                    if want_category:
+                        obj_def = world.objects.get(got_obj)
+                        if obj_def is None or getattr(obj_def, "category", None) != want_category:
+                            continue
                     return True
 
                 return True
@@ -1255,7 +1268,11 @@ class MainQuestStepRule(BaseStepRule):
                 target = str(self._generated.get(text_key, "")).strip().lower()
                 if not target:
                     return False
-                current_area_id = env.curr_agents_state["area"][agent.id]
+                # an explicit area_key pins the check to that area; without one
+                # it applies wherever the agent currently stands
+                area_key = cond.get("area_key")
+                target_area_id = self._generated.get(area_key) if area_key else None
+                current_area_id = target_area_id or env.curr_agents_state["area"][agent.id]
                 area = world.area_instances.get(current_area_id)
                 if not area:
                     return False
@@ -1276,6 +1293,65 @@ class MainQuestStepRule(BaseStepRule):
                 if not isinstance(base_objs, list) or not base_objs:
                     return False
                 return any(self._count_base_item(world, agent, b) > 0 for b in base_objs)
+
+            if stype == "equipped_any_of":
+                base_objs = cond.get("base_objs", [])
+                if not isinstance(base_objs, list) or not base_objs:
+                    return False
+                equipped = getattr(agent, "equipped_items_in_limb", {}) or {}
+                equipped_bases = {get_def_id(oid) for oid in equipped}
+                return any(str(b) in equipped_bases for b in base_objs)
+
+            if stype == "has_category":
+                category = cond.get("category")
+                if not category:
+                    return False
+                for oid in self._iter_agent_item_ids(world, agent):
+                    obj_def = world.objects.get(get_def_id(oid))
+                    if obj_def is not None and getattr(obj_def, "category", None) == category:
+                        return True
+                return False
+
+            if stype == "has_item_count":
+                base_obj_id = self._resolve_key(cond.get("base_obj_key"), cond.get("base_obj"))
+                if not base_obj_id:
+                    return False
+                required = self._resolve_int(cond.get("count_key"), cond.get("count"), default=1)
+                return self._count_base_item(world, agent, str(base_obj_id)) >= required
+
+            if stype in ("paper_text_equals_in_hands", "writable_text_equals_in_inventory"):
+                # both mean "the agent carries a writable bearing this text" and
+                # differ only in where the planner imagined it being stowed, so
+                # accept anything carried rather than strand the stage
+                target = str(self._generated.get(cond.get("text_key"), "")).strip().lower()
+                if not target:
+                    return False
+                for oid in self._iter_agent_item_ids(world, agent):
+                    writable = world.writable_instances.get(oid)
+                    if writable is None:
+                        continue
+                    if str(getattr(writable, "text", "")).strip().lower() == target:
+                        return True
+                return False
+
+            if stype == "killed_n_enemies":
+                n = self._resolve_int(cond.get("n_key"), cond.get("n"), default=1)
+                killed = env.curr_agents_state.get("npcs_killed", {}).get(agent.id, []) or []
+                return len(killed) >= n
+
+            if stype == "killed_one_of_each":
+                npc_keys = cond.get("npc_keys", [])
+                if not isinstance(npc_keys, list) or not npc_keys:
+                    return False
+                killed = env.curr_agents_state.get("npcs_killed", {}).get(agent.id, []) or []
+                killed_ids = {str(k) for k in killed}
+                killed_bases = {get_def_id(str(k)) for k in killed}
+                for npc_key in npc_keys:
+                    # keys resolve to spawned instance IDs; literal base IDs also work
+                    want = str(self._resolve_key(npc_key))
+                    if want not in killed_ids and get_def_id(want) not in killed_bases:
+                        return False
+                return True
 
         if kind == "custom":
             ctype = cond.get("type")
@@ -1383,6 +1459,66 @@ class MainQuestStepRule(BaseStepRule):
         area.objects[obj_id] = area.objects.get(obj_id, 0) + count
         res.track_spawn(agent_id, obj_id, count, dst=res.tloc("area", area_id))
         res.events.append(Event(type="quest_spawn", agent_id=agent_id, data={"obj_id": obj_id, "count": count, "area_id": area_id}))
+
+    @staticmethod
+    def _wanted_base_objs(cond: dict) -> Set[str]:
+        # a condition may name its object as a single "obj_id" or a "base_objs"
+        # list; an empty result means the condition accepts any object
+        wanted: Set[str] = set()
+        single = cond.get("obj_id")
+        if single:
+            wanted.add(str(single))
+        listed = cond.get("base_objs")
+        if isinstance(listed, list):
+            wanted.update(str(o) for o in listed if o)
+        return wanted
+
+    def _resolve_key(self, key: Optional[str], fallback: Any = None) -> Any:
+        # quest specs reference bootstrap values indirectly ("ch1_gem_obj"),
+        # but may also inline the literal value
+        if not key:
+            return fallback
+        if key in self._generated:
+            return self._generated[key]
+        return fallback if fallback is not None else key
+
+    def _resolve_int(self, key: Optional[str], fallback: Any = None, default: int = 1) -> int:
+        value = self._resolve_key(key, fallback)
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return default
+
+    def _iter_agent_item_ids(self, world, agent) -> List[str]:
+        # every object instance the agent carries: hands, equipped slots, the
+        # equipped inventory container, and containers held in hand
+        item_ids: List[str] = []
+        seen: Set[str] = set()
+
+        def _add(oid: str) -> None:
+            if oid and oid not in seen:
+                seen.add(oid)
+                item_ids.append(oid)
+
+        items_in_hands = getattr(agent, "items_in_hands", {}) or {}
+        for oid in list(items_in_hands):
+            _add(oid)
+        for oid in list(getattr(agent, "equipped_items_in_limb", {}) or {}):
+            _add(oid)
+
+        inv = getattr(agent, "inventory", None)
+        if inv is not None and getattr(inv, "container", None):
+            for oid in list(getattr(inv, "items", {}) or {}):
+                _add(oid)
+
+        for hand_oid in list(items_in_hands):
+            container = getattr(world, "container_instances", {}).get(hand_oid)
+            if container is None:
+                continue
+            for oid in list(container.inventory or {}):
+                _add(oid)
+
+        return item_ids
 
     def _count_base_item(self, world, agent, base_obj_id: str) -> int:
         total = 0
