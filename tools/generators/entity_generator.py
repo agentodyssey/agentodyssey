@@ -914,6 +914,7 @@ def generate_entities(
     description: str | None = None,
     llm=None,
     generate_graph: bool = False,
+    max_retries: int = 3,
 ) -> Dict[str, Any]:
     # generate entities using llm with rules-awareness
     if llm is None:
@@ -943,18 +944,43 @@ def generate_entities(
         generate_graph=generate_graph,
     )
 
-    response = llm.generate(user_prompt=user_prompt, system_prompt=SYSTEM_PROMPT)
-    print(response["response"])
-    new_entities = extract_json_from_response(response["response"])
-    
-    print("\nValidating generated entities...")
-    valid, errors = validate_entities(new_entities, world_data, rules_info)
-    if not valid:
+    # a single malformed response should not end the run — feed the errors back
+    last_error = None
+    for attempt in range(max_retries):
+        attempt_prompt = user_prompt
+        if attempt > 0:
+            print(f"\nEntity generation retry {attempt + 1}/{max_retries}...")
+            attempt_prompt = (
+                user_prompt
+                + f"\n\n[RETRY — your previous response was rejected. Problems found: "
+                + f"{last_error}. Fix exactly these problems and return the FULL "
+                + "corrected JSON object, nothing else.]"
+            )
+
+        response = llm.generate(user_prompt=attempt_prompt, system_prompt=SYSTEM_PROMPT)
+        print(response["response"])
+
+        try:
+            new_entities = extract_json_from_response(response["response"])
+        except ValueError as e:  # includes json.JSONDecodeError
+            last_error = f"the response was not valid JSON ({e})"
+            print(f"  Attempt {attempt + 1} failed: {last_error}")
+            continue
+
+        print("\nValidating generated entities...")
+        valid, errors = validate_entities(new_entities, world_data, rules_info)
+        if valid:
+            break
+
+        last_error = "; ".join(errors)
         print("Validation errors found:")
         for error in errors:
             print(f"  Error: {error}")
-        raise ValueError(f"Generated entities failed validation: {errors}")
-    
+    else:
+        raise ValueError(
+            f"Generated entities failed validation after {max_retries} attempts: {last_error}"
+        )
+
     print("Checking difficulty balance...")
     balanced, issues = check_difficulty_balance(new_entities, max_level)
     if not balanced:
