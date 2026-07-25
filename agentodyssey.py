@@ -287,7 +287,7 @@ class AgentOdyssey:
             print(f"{'='*60}\n")
 
         if verbose:
-            print("[1/4] Initiating generated game…")
+            print("[1/5] Initiating generated game…")
         game_dir, assets_dir = ensure_generated_game(game_name, overwrite=overwrite)
         ensure_generated_assets(game_name, overwrite=overwrite)
 
@@ -302,7 +302,7 @@ class AgentOdyssey:
         }
 
         if verbose:
-            print(f"[2/4] Generating entities ({num_places} places, {num_objects} objects, {num_npcs} NPCs)...")
+            print(f"[2/5] Generating entities ({num_places} places, {num_objects} objects, {num_npcs} NPCs)...")
 
         if backend == "aider":
             success, msg = generate_entities_aider(
@@ -384,7 +384,7 @@ class AgentOdyssey:
             from tools.generators.rule_generator import suggest_novel_rule
             all_suggested: list[str] = []  # track everything suggested so far
             if verbose and num_action_rules > 0:
-                print(f"[3/4] Auto-suggesting {num_action_rules} action rule(s)...")
+                print(f"[3/5] Auto-suggesting {num_action_rules} action rule(s)...")
             for _ in range(num_action_rules):
                 suggested = suggest_novel_rule("action", llm_name, game_name, already_suggested=all_suggested, game_description=description, llm=_get_llm(llm_provider, llm_name))
                 if verbose:
@@ -392,7 +392,7 @@ class AgentOdyssey:
                 action_rule_descs.append(suggested)
                 all_suggested.append(suggested)
             if verbose and num_step_rules > 0:
-                print(f"[3/4] Auto-suggesting {num_step_rules} step rule(s)...")
+                print(f"[3/5] Auto-suggesting {num_step_rules} step rule(s)...")
             for _ in range(num_step_rules):
                 suggested = suggest_novel_rule("step", llm_name, game_name, already_suggested=all_suggested, game_description=description, llm=_get_llm(llm_provider, llm_name))
                 if verbose:
@@ -403,7 +403,7 @@ class AgentOdyssey:
         total_rules = len(action_rule_descs) + len(step_rule_descs)
         if total_rules > 0:
             if verbose:
-                print(f"[3/4] Implementing {total_rules} rule(s)...")
+                print(f"[3/5] Implementing {total_rules} rule(s)...")
             from tools.generators.rule_generator import generate_rule, suggest_novel_rule as _suggest
 
             max_retries_per_rule = 2   # re-suggest up to 2 times on failure
@@ -477,11 +477,11 @@ class AgentOdyssey:
         else:
             _gen_report["stages"]["rules"] = {"requested_action": 0, "requested_step": 0, "succeeded": [], "failed": []}
             if verbose:
-                print("[3/4] No rules requested — skipping.")
+                print("[3/5] No rules requested — skipping.")
 
         if num_quest_chapters > 0:
             if verbose:
-                print(f"[4/4] Generating {num_quest_chapters} quest chapter(s)...")
+                print(f"[4/5] Generating {num_quest_chapters} quest chapter(s)...")
             from tools.generators.quest_generator import generate_quest
             q_desc = quest_description or description
             quest_ok, quest_msg = generate_quest(
@@ -500,12 +500,12 @@ class AgentOdyssey:
         else:
             _gen_report["stages"]["quest"] = {"status": "skipped"}
             if verbose:
-                print("[4/4] No quest chapters requested — skipping.")
+                print("[4/5] No quest chapters requested — skipping.")
 
         smoke_ok = True
         if not skip_test:
             if verbose:
-                print("\nRunning smoke test…")
+                print("\n[5/5] Running smoke test…")
             smoke_ok, smoke_output = test_game_entities(game_name, world_definition_path, timeout=120)
             _gen_report["stages"]["smoke_test"] = {"status": "ok" if smoke_ok else "failed", "output": smoke_output[-500:] if not smoke_ok else ""}
             if smoke_ok:
@@ -541,7 +541,8 @@ class AgentOdyssey:
             # Stage 1 — Entities
             ent = _gen_report["stages"].get("entities", {})
             ent_status = ent.get("status", "unknown")
-            print(f"  [1/4] Entities: {'✓' if ent_status == 'ok' else '✗'} ({num_places} places, {num_objects} objects, {num_npcs} NPCs requested)")
+            print(f"  [1/5] Scaffold: ✓ (game code + assets initialised)")
+            print(f"  [2/5] Entities: {'✓' if ent_status == 'ok' else '✗'} ({num_places} places, {num_objects} objects, {num_npcs} NPCs requested)")
 
             # Stage 2 — Rules
             rules = _gen_report["stages"].get("rules", {})
@@ -555,8 +556,8 @@ class AgentOdyssey:
             fail_step = sum(1 for t, _ in fail_rules if t == "step")
 
             if req_action + req_step > 0:
-                print(f"  [2/4] Action rules: {ok_action}/{req_action} succeeded" + (f" ({fail_action} failed)" if fail_action else ""))
-                print(f"         Step rules : {ok_step}/{req_step} succeeded" + (f" ({fail_step} failed)" if fail_step else ""))
+                print(f"  [3/5] Action rules: {ok_action}/{req_action} succeeded" + (f" ({fail_action} failed)" if fail_action else ""))
+                print(f"        Step rules : {ok_step}/{req_step} succeeded" + (f" ({fail_step} failed)" if fail_step else ""))
                 if ok_rules:
                     print(f"         Succeeded:")
                     for rtype, rd in ok_rules:
@@ -566,25 +567,25 @@ class AgentOdyssey:
                     for rtype, rd in fail_rules:
                         print(f"           ✗ [{rtype}] {rd[:70]}{'…' if len(rd) > 70 else ''}")
             else:
-                print(f"  [2/4] Rules: skipped (none requested)")
+                print(f"  [3/5] Rules: skipped (none requested)")
 
             # Stage 3 — Quest
             quest = _gen_report["stages"].get("quest", {})
             quest_status = quest.get("status", "skipped")
             if quest_status == "skipped":
-                print(f"  [3/4] Quest: skipped (none requested)")
+                print(f"  [4/5] Quest: skipped (none requested)")
             else:
                 ch_req = quest.get("chapters_requested", 0)
                 q_msg = quest.get("message", "")
-                print(f"  [3/4] Quest: {'✓' if quest_status == 'ok' else '✗'} ({ch_req} chapters requested) — {q_msg[:60]}")
+                print(f"  [4/5] Quest: {'✓' if quest_status == 'ok' else '✗'} ({ch_req} chapters requested) — {q_msg[:60]}")
 
             # Stage 4 — Smoke test
             smoke = _gen_report["stages"].get("smoke_test", {})
             smoke_status = smoke.get("status", "skipped")
             if smoke_status == "skipped":
-                print(f"  [4/4] Smoke test: skipped")
+                print(f"  [5/5] Smoke test: skipped")
             else:
-                print(f"  [4/4] Smoke test: {'✓ passed' if smoke_status == 'ok' else '✗ FAILED'}")
+                print(f"  [5/5] Smoke test: {'✓ passed' if smoke_status == 'ok' else '✗ FAILED'}")
 
             print()
 
