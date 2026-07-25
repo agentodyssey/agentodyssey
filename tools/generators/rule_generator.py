@@ -142,8 +142,8 @@ FILES TO READ FOR CONTEXT:
 - {game_root}/rule.py - Base classes (BaseActionRule, BaseStepRule, RuleContext, RuleResult)
 - {game_root}/world.py - World state, Object, NPC, Area, Container classes
 - {game_root}/rules/action_rules.py - Existing action rules (player actions)
-- {game_root}/rules/step_rules.py - Existing step rules (environment rules)
-- {game_root}/env.py - Environment with get_obs_valid_actions() method
+- {game_root}/rules/step_rules/general.py - Existing step rules (environment rules)
+- {game_root}/env.py - Environment with get_all_valid_actions() method
 
 FILES THAT MUST BE EDITED:
 
@@ -155,7 +155,7 @@ FILES THAT MUST BE EDITED:
    - Use res.add_feedback() for text output, res.events.append() for events
 
 2. {game_root}/env.py (REQUIRED)
-   - Update get_obs_valid_actions() method to generate valid action strings for this new action
+   - Update get_all_valid_actions() method to generate valid action strings for this new action
    - Follow patterns of existing actions (enter, pick up, drop, etc.)
    - May also need to modify other parts of env.py if the action requires special handling
 
@@ -167,7 +167,7 @@ FILES THAT MAY NEED EDITING (if the action requires new entities or world change
 
 4. {game_root}/world.py - Modify world state or add new properties/methods if needed
 
-5. {game_root}/rules/step_rules.py - Update TutorialRoomStepRule if the action should be taught
+5. {game_root}/rules/step_rules/tutorial.py - Update TutorialRoomStepRule if the action should be taught
 
 REQUIREMENTS:
 - Follow the exact same patterns as existing rules in the codebase
@@ -303,39 +303,40 @@ def _count_classes(file_path: str) -> int:
     except (OSError, SyntaxError):
         return -1
 
-def _check_action_rule_in_env(game_name: str, baseline_class_counts: dict) -> str | None:
+def _extract_action_verbs(file_path: str) -> list[str]:
+    # verbs declared by the rule classes, in source order
     import ast as _ast
 
-    action_rules_path = f"games/generated/{game_name}/rules/action_rules.py"
-    env_path = f"games/generated/{game_name}/env.py"
-    abs_ar = os.path.join(current_directory, action_rules_path)
-    abs_env = os.path.join(current_directory, env_path)
-
+    full = os.path.join(current_directory, file_path)
     try:
-        with open(abs_ar, "r", encoding="utf-8") as f:
-            ar_tree = _ast.parse(f.read())
+        with open(full, "r", encoding="utf-8") as f:
+            tree = _ast.parse(f.read())
     except (OSError, SyntaxError):
-        return None
+        return []
 
     verbs: list[str] = []
-    has_get_valid_actions: list[bool] = []
-    for node in _ast.iter_child_nodes(ar_tree):
+    for node in _ast.iter_child_nodes(tree):
         if not isinstance(node, _ast.ClassDef):
             continue
-        verb_val = None
-        has_gva = False
         for item in node.body:
-            if isinstance(item, _ast.Assign):
-                for target in item.targets:
-                    if isinstance(target, _ast.Name) and target.id == "verb":
-                        if isinstance(item.value, _ast.Constant) and isinstance(item.value.value, str):
-                            verb_val = item.value.value
-            if isinstance(item, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
-                if item.name == "get_valid_actions":
-                    has_gva = True
-        if verb_val is not None:
-            verbs.append(verb_val)
-            has_get_valid_actions.append(has_gva)
+            if not isinstance(item, _ast.Assign):
+                continue
+            for target in item.targets:
+                if isinstance(target, _ast.Name) and target.id == "verb":
+                    if isinstance(item.value, _ast.Constant) and isinstance(item.value.value, str):
+                        verbs.append(item.value.value)
+    return verbs
+
+def _check_action_rule_in_env(game_name: str, baseline_verb_count: int) -> str | None:
+    action_rules_path = f"games/generated/{game_name}/rules/action_rules.py"
+    env_path = f"games/generated/{game_name}/env.py"
+    abs_env = os.path.join(current_directory, env_path)
+
+    # index by verb count, not class count: a non-rule helper class in
+    # action_rules.py would otherwise shift the slice and check the wrong verbs
+    verbs = _extract_action_verbs(action_rules_path)
+    if not verbs or baseline_verb_count <= 0:
+        return None
 
     try:
         with open(abs_env, "r", encoding="utf-8") as f:
@@ -343,15 +344,8 @@ def _check_action_rule_in_env(game_name: str, baseline_class_counts: dict) -> st
     except OSError:
         return None
 
-    baseline = baseline_class_counts.get(action_rules_path, 0)
-    if baseline <= 0:
-        return None
-
-    new_verbs = verbs[baseline:]
-    new_has_gva = has_get_valid_actions[baseline:]
-    for i, verb in enumerate(new_verbs):
-        if i < len(new_has_gva) and new_has_gva[i]:
-            continue
+    new_verbs = verbs[baseline_verb_count:]
+    for verb in new_verbs:
         verb_token = verb.replace(" ", "_")
         patterns = [
             f'actions["{verb}"]',
@@ -449,7 +443,9 @@ def generate_with_aider(
     }
     for ccf in _class_count_files:
         _class_count_files[ccf] = _count_classes(ccf)
+    _baseline_verb_count = len(_extract_action_verbs(f"{game_root}/rules/action_rules.py"))
     print(f"Baseline class counts: { {os.path.basename(k): v for k, v in _class_count_files.items()} }")
+    print(f"Baseline action verbs: {_baseline_verb_count}")
 
     # Pretty-print the world-definition JSON before aider sees it.
     # Aider's search/replace fails on long single-line JSON entries;
@@ -521,30 +517,30 @@ def generate_with_aider(
         
         if success:
             if rule_type == "action":
-                missing_verb = _check_action_rule_in_env(game_name, _class_count_files)
+                missing_verb = _check_action_rule_in_env(game_name, _baseline_verb_count)
                 if missing_verb:
                     print(f"\n⚠ Action rule '{missing_verb}' has no valid_actions integration.")
-                    # Try the runtime check — maybe the registry handles it
+                    # the static check only reads env.py; confirm against a live env
                     if not _runtime_check_verb_in_valid_actions(game_name, world_definition_path, missing_verb):
-                        print("  Asking aider to add get_valid_actions() classmethod...")
+                        print("  Asking aider to wire the verb into get_all_valid_actions()...")
                         cmd[cmd.index("--message") + 1] = (
                             f"The new action rule with verb '{missing_verb}' was added to action_rules.py "
                             f"but the agent cannot use this action because no valid action strings "
                             f"are generated for it.\n\n"
-                            f"Add a get_valid_actions() classmethod to the new rule class. Example:\n\n"
-                            f"    @classmethod\n"
-                            f"    def get_valid_actions(cls, env, world, agent):\n"
-                            f"        actions = {{}}\n"
-                            f"        curr_area = world.area_instances[env.curr_agents_state['area'][agent.id]]\n"
-                            f"        # Build valid action strings for '{missing_verb}'\n"
-                            f"        actions['{missing_verb}'] = [...]  # fill with valid action strings\n"
-                            f"        return actions\n\n"
-                            f"The environment calls this automatically. Do NOT edit env.py.\n\n"
+                            f"Extend the get_all_valid_actions() method in {game_root}/env.py so it emits "
+                            f"every currently-valid '{missing_verb}' action string, following the pattern "
+                            f"the existing verbs use in that method. For example:\n\n"
+                            f"    curr_area = self.world.area_instances[self.curr_agents_state['area'][agent.id]]\n"
+                            f"    for obj_id in curr_area.objects:\n"
+                            f"        actions['{missing_verb}'].append(f\"{missing_verb} {{obj_id_to_name[obj_id]}}\")\n\n"
+                            f"The dict keys are verbs and the values must be complete, directly "
+                            f"executable action strings. There is no automatic registry — an action "
+                            f"missing from get_all_valid_actions() is invisible to the agent.\n\n"
                             f"TEST AFTER CHANGES:\n{get_test_command(game_name, world_definition_path)}"
                         )
                         continue
                     else:
-                        print("  ✓ Runtime check confirmed verb is available via registry.")
+                        print("  ✓ Runtime check confirmed the verb is available.")
             # For step rules, verify a new class was actually added
             if rule_type == "step":
                 step_file = f"{game_root}/rules/step_rules/general.py"
