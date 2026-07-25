@@ -444,6 +444,140 @@ def summarize_topology(world_definition: dict) -> str:
     return "\n".join(lines)
 
 
+# Condition primitives of the quest DSL.  The planner is only ever shown the
+# ones the target game's MainQuestStepRule actually implements: the compiler
+# rewrites QUEST_CONFIG but never _cond_true, so advertising a primitive the
+# engine cannot evaluate compiles a stage that silently never completes.
+EVENT_CONDITION_DOCS: dict[str, tuple[str, str]] = {
+    "npc_killed": (
+        "a specific NPC was killed",
+        '{"kind": "event", "type": "npc_killed", "npc_key": "<key>"}',
+    ),
+    "object_bought": (
+        "an object was bought, optionally from a specific merchant",
+        '{"kind": "event", "type": "object_bought", "npc_key": "<key>", "obj_id": "obj_id"}',
+    ),
+    "object_crafted": (
+        "an object of a given id or category was crafted",
+        '{"kind": "event", "type": "object_crafted", "category": "weapon"}',
+    ),
+}
+
+STATE_CONDITION_DOCS: dict[str, tuple[str, str]] = {
+    "in_area": (
+        "player is in a specific area",
+        '{"kind": "state", "type": "in_area", "area_key": "<key>"}',
+    ),
+    "in_area_with_npc": (
+        "player is in the same area as an NPC",
+        '{"kind": "state", "type": "in_area_with_npc", "npc_key": "<key>"}',
+    ),
+    "visited_k_of_area_set": (
+        "visited K out of N candidate areas",
+        '{"kind": "state", "type": "visited_k_of_area_set", "area_set_key": "<key>", "k_key": "<key>"}',
+    ),
+    "has_any_of": (
+        "player has at least one of the listed items",
+        '{"kind": "state", "type": "has_any_of", "base_objs": ["obj_id1", "obj_id2"]}',
+    ),
+    "equipped_any_of": (
+        "player has equipped one of the listed items (armor / containers only)",
+        '{"kind": "state", "type": "equipped_any_of", "base_objs": ["obj_id"]}',
+    ),
+    "has_category": (
+        "player carries any item of a category",
+        '{"kind": "state", "type": "has_category", "category": "weapon"}',
+    ),
+    "has_item_count": (
+        "player carries N copies of an item",
+        '{"kind": "state", "type": "has_item_count", "base_obj_key": "<key>", "count_key": "<key>"}',
+    ),
+    "paper_text_equals_in_area": (
+        "a writable bearing <text> is lying in <area> (omit area_key for the player's current area)",
+        '{"kind": "state", "type": "paper_text_equals_in_area", "text_key": "<key>", "area_key": "<key>"}',
+    ),
+    "paper_text_equals_in_hands": (
+        "player carries a writable bearing <text> (any area)",
+        '{"kind": "state", "type": "paper_text_equals_in_hands", "text_key": "<key>"}',
+    ),
+    "writable_text_equals_in_inventory": (
+        "player carries a writable bearing <text> (any area)",
+        '{"kind": "state", "type": "writable_text_equals_in_inventory", "text_key": "<key>"}',
+    ),
+    "boss_already_defeated": (
+        "a boss NPC is already dead",
+        '{"kind": "state", "type": "boss_already_defeated", "npc_key": "<key>"}',
+    ),
+    "killed_n_enemies": (
+        "killed at least N NPCs in total",
+        '{"kind": "state", "type": "killed_n_enemies", "n_key": "<key>"}',
+    ),
+    "killed_one_of_each": (
+        "killed the NPC behind each of the listed keys",
+        '{"kind": "state", "type": "killed_one_of_each", "npc_keys": ["<key1>", "<key2>"]}',
+    ),
+    "lit_k_dark_areas": (
+        "illuminated K dark areas",
+        '{"kind": "state", "type": "lit_k_dark_areas", "k_key": "<key>"}',
+    ),
+}
+
+
+def discover_condition_types(game_name: str) -> tuple[set[str], set[str]]:
+    """Return the (event, state) condition types the game's engine implements.
+
+    Parsed straight out of the target ``MainQuestStepRule._cond_true`` so the
+    planner prompt, the validator and the runtime can never drift apart.
+    """
+    path = os.path.join(
+        current_directory, f"games/generated/{game_name}/rules/step_rules/main_quest.py"
+    )
+    if not os.path.exists(path):
+        path = os.path.join(current_directory, "games/base/rules/step_rules/main_quest.py")
+
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            source = f.read()
+    except OSError:
+        return set(EVENT_CONDITION_DOCS), set(STATE_CONDITION_DOCS)
+
+    events = set(_re.findall(r'etype\s*==\s*["\']([a-z_0-9]+)["\']', source))
+    states = set(_re.findall(r'stype\s*==\s*["\']([a-z_0-9]+)["\']', source))
+    # one branch may cover several types: `stype in ("a", "b")`
+    for group in _re.findall(r'stype\s+in\s*\(([^)]*)\)', source):
+        states.update(_re.findall(r'["\']([a-z_0-9]+)["\']', group))
+
+    if not events and not states:  # unparsable — fall back to the documented set
+        return set(EVENT_CONDITION_DOCS), set(STATE_CONDITION_DOCS)
+    return events, states
+
+
+def format_condition_primitives(event_types: set[str], state_types: set[str]) -> str:
+    def _section(header: str, docs: dict, implemented: set[str]) -> list[str]:
+        lines = [header]
+        for ctype in sorted(implemented):
+            summary, example = docs.get(ctype, ("", ""))
+            if summary:
+                lines.append(f'  - "{ctype}" : {summary}')
+                lines.append(f"      {example}")
+            else:
+                lines.append(f'  - "{ctype}"')
+        return lines
+
+    out = _section(
+        'Event conditions ("kind": "event") — triggered once when an action happens:',
+        EVENT_CONDITION_DOCS,
+        event_types,
+    )
+    out.append("")
+    out += _section(
+        'State conditions ("kind": "state") — continuously checked each step:',
+        STATE_CONDITION_DOCS,
+        state_types,
+    )
+    return "\n".join(out)
+
+
 # STEP 1: LLM PLANNER — generates a structured quest spec (JSON)
 def build_planner_prompt(
     description: str,
@@ -454,10 +588,18 @@ def build_planner_prompt(
     branching_factor: int = 1,
     step_rules_summary: str = "",
     action_constraints_summary: str = "",
+    condition_primitives: str = "",
 ) -> str:
     """Build a prompt for the LLM planner to output a structured quest spec."""
     entities_str = json.dumps(entities_summary, indent=2)
     actions_str = _format_actions_str(available_actions)
+
+    if not condition_primitives:
+        condition_primitives = format_condition_primitives(
+            set(EVENT_CONDITION_DOCS), set(STATE_CONDITION_DOCS)
+        )
+    # keep the injected block indented like the template so dedent() still works
+    condition_primitives_block = textwrap.indent(condition_primitives, "    ")
 
     dag_instructions = ""
     if branching_factor >= 2:
@@ -577,42 +719,12 @@ def build_planner_prompt(
     - Scale the NUMBER of stages per chapter upward as well (e.g. 3-4 stages
       early, 6-10+ stages in later chapters).
 
-    EXAMPLE CONDITION PRIMITIVES (these are already implemented):
+    CONDITION PRIMITIVES IMPLEMENTED BY THIS GAME'S ENGINE:
+    These are the ONLY "event" and "state" types available. Any other type
+    will never evaluate true and would leave the quest permanently stuck —
+    if you need something not listed here, express it as a custom condition.
 
-    Event conditions ("kind": "event") — triggered once when an action happens:
-      - "npc_killed"    : {{"kind": "event", "type": "npc_killed", "npc_key": "<key>"}}
-      - "object_bought"  : {{"kind": "event", "type": "object_bought", "base_objs": ["obj_id"]}}
-      - "object_crafted" : {{"kind": "event", "type": "object_crafted", "category": "weapon"}}
-
-    State conditions ("kind": "state") — continuously checked each step:
-      - "in_area"                        : player is in a specific area
-          {{"kind": "state", "type": "in_area", "area_key": "<key>"}}
-      - "in_area_with_npc"               : player is in the same area as an NPC
-          {{"kind": "state", "type": "in_area_with_npc", "npc_key": "<key>"}}
-      - "visited_k_of_area_set"          : visited K out of N candidate areas
-          {{"kind": "state", "type": "visited_k_of_area_set", "area_set_key": "<key>", "k_key": "<key>"}}
-      - "has_any_of"                     : player has at least one of the listed items
-          {{"kind": "state", "type": "has_any_of", "base_objs": ["obj_id1", "obj_id2"]}}
-      - "equipped_any_of"                : player has equipped one of the listed items
-          {{"kind": "state", "type": "equipped_any_of", "base_objs": ["obj_id"]}}
-      - "has_category"                   : player has any item of a category
-          {{"kind": "state", "type": "has_category", "category": "weapon"}}
-      - "has_item_count"                 : player has N copies of an item
-          {{"kind": "state", "type": "has_item_count", "base_obj_key": "<key>", "count_key": "<key>"}}
-      - "paper_text_equals_in_area"      : player is in <area> holding paper with <text>
-          {{"kind": "state", "type": "paper_text_equals_in_area", "text_key": "<key>", "area_key": "<key>"}}
-      - "paper_text_equals_in_hands"     : player holds paper with <text> (any area)
-          {{"kind": "state", "type": "paper_text_equals_in_hands", "text_key": "<key>"}}
-      - "writable_text_equals_in_inventory": writable item in inventory has <text>
-          {{"kind": "state", "type": "writable_text_equals_in_inventory", "text_key": "<key>"}}
-      - "boss_already_defeated"          : a boss NPC is already dead
-          {{"kind": "state", "type": "boss_already_defeated", "npc_key": "<key>"}}
-      - "killed_n_enemies"               : killed at least N enemy NPCs total
-          {{"kind": "state", "type": "killed_n_enemies", "n_key": "<key>"}}
-      - "killed_one_of_each"             : killed at least one of each listed NPC type
-          {{"kind": "state", "type": "killed_one_of_each", "npc_keys": ["<key1>", "<key2>"]}}
-      - "lit_k_dark_areas"               : illuminated K dark areas
-          {{"kind": "state", "type": "lit_k_dark_areas", "k_key": "<key>"}}
+{condition_primitives_block}
 
     Custom conditions ("kind": "custom") — REQUIRED for most leaf stages:
       Custom conditions are the PRIMARY way to create interesting tasks.
@@ -889,6 +1001,7 @@ def plan_quest(
     max_retries: int = 3,
     step_rules_summary: str = "",
     action_constraints_summary: str = "",
+    condition_primitives: str = "",
 ) -> dict:
     quest_output_token_budget = 32768
     prompt = build_planner_prompt(
@@ -900,6 +1013,7 @@ def plan_quest(
         branching_factor=branching_factor,
         step_rules_summary=step_rules_summary,
         action_constraints_summary=action_constraints_summary,
+        condition_primitives=condition_primitives,
     )
 
     if llm is None:
@@ -996,13 +1110,31 @@ def _extract_json(raw: str) -> dict:
     raise ValueError(f"Could not extract valid JSON from LLM response (length={len(raw)}): {raw[:200]}...")
 
 # STEP 2: VALIDATOR — checks the quest spec for correctness
+def _collect_generated_keys(spec: dict) -> set[str]:
+    """Every key the compiled _bootstrap() will populate in self._generated."""
+    keys: set[str] = set(spec.get("generated_values", {}) or {})
+    for chapter in spec.get("chapters", []):
+        for stage in chapter.get("stages", []):
+            for key, key_spec in (stage.get("bootstrap_keys", {}) or {}).items():
+                keys.add(key)
+                # a spawned NPC also records "<key>_name" for text rendering
+                if isinstance(key_spec, dict) and "spawn_npc" in key_spec:
+                    keys.add(key.replace("_npc", "_name"))
+    return keys
+
+
 def validate_quest_spec(
     spec: dict,
     entities_summary: dict,
     branching_factor: int = 1,
     available_actions: list | None = None,
+    valid_event_types: set[str] | None = None,
+    valid_state_types: set[str] | None = None,
 ) -> list[str]:
     errors: list[str] = []
+
+    valid_event_types = set(valid_event_types) if valid_event_types else set(EVENT_CONDITION_DOCS)
+    valid_state_types = set(valid_state_types) if valid_state_types else set(STATE_CONDITION_DOCS)
 
     if "title" not in spec:
         errors.append("Missing 'title' field.")
@@ -1213,16 +1345,7 @@ def validate_quest_spec(
                 if not has_quest_complete_here:
                     errors.append(f"{ch_id}: Final chapter missing 'quest_complete' stage.")
 
-        # check condition validity (shared by both modes)
-        valid_event_types = {"npc_killed", "object_bought", "object_crafted"}
-        valid_state_types = {
-            "in_area", "in_area_with_npc", "visited_k_of_area_set",
-            "paper_text_equals_in_area", "paper_text_equals_in_hands",
-            "writable_text_equals_in_inventory", "boss_already_defeated",
-            "has_any_of", "equipped_any_of", "killed_n_enemies",
-            "killed_one_of_each", "lit_k_dark_areas", "has_category",
-            "has_item_count",
-        }
+        # check condition validity against what this game's engine implements
         for stage in stages:
             sid = stage.get("id", "")
             conds = stage.get("done_any", []) + stage.get("done_all", [])
@@ -1236,9 +1359,17 @@ def validate_quest_spec(
                     if not cond.get("description"):
                         errors.append(f"{ch_id}/{sid}: Custom condition '{ctype}' missing 'description' field.")
                 elif kind == "event" and ctype not in valid_event_types:
-                    errors.append(f"{ch_id}/{sid}: Unknown event condition type '{ctype}'.")
+                    errors.append(
+                        f"{ch_id}/{sid}: Event condition '{ctype}' is not implemented by "
+                        f"this game's engine (available: {', '.join(sorted(valid_event_types))}). "
+                        f"It would never complete."
+                    )
                 elif kind == "state" and ctype not in valid_state_types:
-                    errors.append(f"{ch_id}/{sid}: Unknown state condition type '{ctype}'.")
+                    errors.append(
+                        f"{ch_id}/{sid}: State condition '{ctype}' is not implemented by "
+                        f"this game's engine (available: {', '.join(sorted(valid_state_types))}). "
+                        f"It would never complete."
+                    )
 
         # Achievability checks: verify referenced entities exist
         for stage in stages:
@@ -1259,6 +1390,30 @@ def validate_quest_spec(
                         base_npc = bspec["spawn_npc"]
                         if base_npc not in all_npc_ids:
                             errors.append(f"{ch_id}/{sid}: spawns_boss_key references NPC '{base_npc}' not found in entities or required_npcs.")
+
+    # every *_key a condition dereferences must be produced by _bootstrap(),
+    # otherwise it resolves to nothing at runtime and the stage never completes
+    defined_keys = _collect_generated_keys(spec)
+    for chapter in spec["chapters"]:
+        ch_id = chapter.get("id", "?")
+        for stage in chapter.get("stages", []):
+            sid = stage.get("id", "?")
+            referenced: list[str] = []
+            for cond in stage.get("done_any", []) + stage.get("done_all", []):
+                for field, value in cond.items():
+                    if field.endswith("_key") and isinstance(value, str):
+                        referenced.append(value)
+                    elif field.endswith("_keys") and isinstance(value, list):
+                        referenced.extend(v for v in value if isinstance(v, str))
+            boss_key = stage.get("spawns_boss_key")
+            if isinstance(boss_key, str):
+                referenced.append(boss_key)
+            for key in referenced:
+                if key not in defined_keys:
+                    errors.append(
+                        f"WARNING: {ch_id}/{sid}: references key '{key}' which no "
+                        f"bootstrap_keys or generated_values entry defines."
+                    )
 
     if not has_quest_complete:
         errors.append("No stage has 'quest_complete': true across all chapters.")
@@ -1869,10 +2024,13 @@ def generate_two_step(
     topology_summary = summarize_topology(world_definition)
     step_rules_summary = summarize_step_rules(game_name)
     action_constraints_summary = summarize_action_constraints(game_name)
+    event_types, state_types = discover_condition_types(game_name)
+    condition_primitives = format_condition_primitives(event_types, state_types)
 
     print(f"\n{'='*60}")
     print(f"Two-step quest generation ({num_chapters} chapters, branching_factor={branching_factor})")
     print(f"{'='*60}\n")
+    print(f"  Engine implements {len(event_types)} event and {len(state_types)} state condition(s)")
 
     # Step 1: Plan
     print("[Step 1/3] Planning quest with LLM...")
@@ -1888,6 +2046,7 @@ def generate_two_step(
             llm_provider=llm_provider,
             step_rules_summary=step_rules_summary,
             action_constraints_summary=action_constraints_summary,
+            condition_primitives=condition_primitives,
         )
     except (json.JSONDecodeError, Exception) as e:
         print(f"  Planner failed: {e}")
@@ -1906,7 +2065,14 @@ def generate_two_step(
 
     # Step 2: Validate
     print("[Step 2/3] Validating quest spec...")
-    all_issues = validate_quest_spec(spec, entities_summary, branching_factor, available_actions=available_actions)
+    all_issues = validate_quest_spec(
+        spec,
+        entities_summary,
+        branching_factor,
+        available_actions=available_actions,
+        valid_event_types=event_types,
+        valid_state_types=state_types,
+    )
     val_errors, val_warnings = split_validation_results(all_issues)
     if val_warnings:
         print(f"  {len(val_warnings)} warning(s):")
@@ -2092,7 +2258,12 @@ def build_quest_prompt(
     branching_factor: int = 1,
     step_rules_summary: str = "",
     action_constraints_summary: str = "",
+    condition_primitives: str = "",
 ) -> str:
+    if not condition_primitives:
+        condition_primitives = format_condition_primitives(
+            *discover_condition_types(game_name)
+        )
     editable_files, context_files = get_files_for_quest_generation(game_name, world_definition_path)
     game_root = f"games/generated/{game_name}"
     test_command = get_test_command(game_name, world_definition_path)
@@ -2183,30 +2354,14 @@ FILES TO EDIT:
 1. {game_root}/rules/step_rules/main_quest.py (REQUIRED)
 2. {world_definition_path} (IF NEEDED — add new quest entities)
 
-AVAILABLE CONDITION PRIMITIVES (build stages from these freely):
+CONDITION PRIMITIVES CURRENTLY IMPLEMENTED BY _cond_true:
 
-Event conditions ("kind": "event") — triggered once when an action happens:
-  - "npc_killed"     : {{"kind": "event", "type": "npc_killed", "npc_key": "<key>"}}
-  - "object_bought"  : {{"kind": "event", "type": "object_bought", "base_objs": ["obj_id"]}}
-  - "object_crafted" : {{"kind": "event", "type": "object_crafted", "category": "weapon"}}
-
-State conditions ("kind": "state") — continuously checked each step:
-  - "in_area"                         : {{"kind": "state", "type": "in_area", "area_key": "<key>"}}
-  - "in_area_with_npc"                : {{"kind": "state", "type": "in_area_with_npc", "npc_key": "<key>"}}
-  - "visited_k_of_area_set"           : {{"kind": "state", "type": "visited_k_of_area_set", "area_set_key": "<key>", "k_key": "<key>"}}
-  - "has_any_of"                      : {{"kind": "state", "type": "has_any_of", "base_objs": ["obj_id1"]}}
-  - "equipped_any_of"                 : {{"kind": "state", "type": "equipped_any_of", "base_objs": ["obj_id"]}}
-  - "has_category"                    : {{"kind": "state", "type": "has_category", "category": "weapon"}}
-  - "has_item_count"                  : {{"kind": "state", "type": "has_item_count", "base_obj_key": "<key>", "count_key": "<key>"}}
-  - "paper_text_equals_in_area"       : {{"kind": "state", "type": "paper_text_equals_in_area", "text_key": "<key>", "area_key": "<key>"}}
-  - "paper_text_equals_in_hands"      : {{"kind": "state", "type": "paper_text_equals_in_hands", "text_key": "<key>"}}
-  - "writable_text_equals_in_inventory": {{"kind": "state", "type": "writable_text_equals_in_inventory", "text_key": "<key>"}}
-  - "boss_already_defeated"           : {{"kind": "state", "type": "boss_already_defeated", "npc_key": "<key>"}}
-  - "killed_n_enemies"                : {{"kind": "state", "type": "killed_n_enemies", "n_key": "<key>"}}
-  - "killed_one_of_each"              : {{"kind": "state", "type": "killed_one_of_each", "npc_keys": ["<key1>", "<key2>"]}}
-  - "lit_k_dark_areas"                : {{"kind": "state", "type": "lit_k_dark_areas", "k_key": "<key>"}}
+{condition_primitives}
 
 Use "done_any" (OR) or "done_all" (AND) to combine primitives freely.
+If a stage needs a primitive that is NOT in the list above, you MUST also add
+a handler for it inside `_cond_true` in the same file — a condition type with
+no handler returns False forever and leaves the quest permanently stuck.
 
 _BOOTSTRAP() REQUIREMENTS (CRITICAL):
 The existing _bootstrap() uses BFS progressive picking to assign areas.
