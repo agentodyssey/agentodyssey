@@ -174,6 +174,31 @@ AgentOdyssey evaluates agents along multifaceted axes:
 > [!NOTE]
 > **See metric definitions and how to run diagnostic evaluation &rarr; [Evaluation Metrics](http://agentodyssey.github.io/docs/evaluation-metrics)**
 
+## TTCL Challenge Evaluation
+
+AgentOdyssey hosts the community challenge of the **[NeurIPS 2026 Workshop on Towards Test-Time Continual Learning Agents (TTCL)](https://ttcl-agents.github.io/)**. Final rankings are computed over three ranking games — `remnant`, `mark`, and `metropolis` — as the unweighted arithmetic mean of the raw **main quest rewards**, with the mean total **supplementary reward** (side quests completed, areas explored, *unique* objects crafted, and *unique* NPCs defeated) as the tiebreaker. See the [challenge rules on the workshop website](https://ttcl-agents.github.io/#challenge) for the full requirements (allowed backbones, no pre-training on AgentOdyssey-generated games, reset between games, and reporting rules).
+
+`challenge_eval.py` is the **official evaluator** that aggregates your run results into the official challenge scores. You are **not required** to use it — you may compute the same numbers yourself — but you are welcome to use it to produce the scores you report in your Challenge Track paper.
+
+**1. Evaluate your agent on each ranking game** (memory and learned state must be reset before each game, and `max_steps` must be 500):
+
+```bash
+python eval.py --game_name remnant    --agent <YourAgent> --llm_provider <provider> --llm_name <Qwen3-4B or Qwen3.5-4B> --max_steps 500
+python eval.py --game_name mark       --agent <YourAgent> --llm_provider <provider> --llm_name <Qwen3-4B or Qwen3.5-4B> --max_steps 500
+python eval.py --game_name metropolis --agent <YourAgent> --llm_provider <provider> --llm_name <Qwen3-4B or Qwen3.5-4B> --max_steps 500
+```
+
+**2. Aggregate the runs into the official challenge scores**, passing each game's run directory (the directory containing `config.json`, printed as the run's output path):
+
+```bash
+python challenge_eval.py \
+    --remnant    output/game_remnant/<...>/<run_dir> \
+    --mark       output/game_mark/<...>/<run_dir> \
+    --metropolis output/game_metropolis/<...>/<run_dir>
+```
+
+Each flag accepts several run directories; multiple runs of a game are averaged (selecting the best run is not allowed). The script reports the per-game main quest and supplementary rewards — include these in your paper alongside the three-game means — and prints warnings for runs that violate the challenge protocol (e.g. more than 500 steps). Use `--json` for machine-readable output and see `python challenge_eval.py --help` for all options.
+
 ## Additional Dependencies
 
 The base `requirements.txt` covers most functionality, but certain agents and providers need extra packages:

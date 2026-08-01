@@ -650,6 +650,7 @@ class MainQuestStepRule(BaseStepRule):
 
             aevents = [e for e in res.events if getattr(e, "agent_id", None) == aid]
             self._update_metrics_from_events(world, prog, aevents)
+            self._update_lit_dark_areas(env, world, agent, prog)
 
             self._reset_boss_hp_if_needed(world, aevents)
             self._ensure_bosses_for_progress(env, world, prog)
@@ -1174,6 +1175,21 @@ class MainQuestStepRule(BaseStepRule):
             "mq_guide_area": None,
             "mq_stage_key": None,
         }
+
+    def _update_lit_dark_areas(self, env, world, agent: Agent, prog: Dict[str, Any]) -> None:
+        # The env appends the "area_lighted" event only after step rules have
+        # run, into a per-step RuleResult, so it is never visible here; check
+        # the lighting condition (dark area made visible by a held torch)
+        # directly instead.
+        area_id = env.curr_agents_state["area"].get(agent.id)
+        area = world.area_instances.get(area_id) if area_id else None
+        if area is None or bool(getattr(area, "light", True)):
+            return
+        if self._count_base_in_hands(agent, "obj_torch") <= 0:
+            return
+        lit = prog.setdefault("mq_lit_dark_areas", [])
+        if area_id not in lit:
+            lit.append(area_id)
 
     def _update_metrics_from_events(self, world, prog: Dict[str, Any], events: list) -> None:
         if not events:
