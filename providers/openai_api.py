@@ -31,8 +31,10 @@ class OpenAIClient:
         response_ = {}
         if responses_api:
             reasoning_config = {"summary": reasoning_summary} if reasoning_summary else {}
-            if reasoning_effort:
-                reasoning_config["effort"] = reasoning_effort
+            # if reasoning_effort:
+            # reasoning_config["effort"] = reasoning_effort
+            reasoning_config["effort"] = "high"
+            print("reasoning effort:", reasoning_config["effort"])
             prompt_kwargs = dict(
                 model=model,
                 input=chat_history,
@@ -41,6 +43,7 @@ class OpenAIClient:
             if max_new_tokens:
                 prompt_kwargs["max_output_tokens"] = max_new_tokens
             response = self.client.responses.create(**prompt_kwargs)
+            print("Raw response:", response)
             response_["num_input_tokens"] = response.usage.input_tokens
             response_["num_output_tokens"] = response.usage.output_tokens
             reasoning_summary_items = [item for item in response.output if item.type == "reasoning"]
