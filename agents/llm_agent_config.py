@@ -11,7 +11,7 @@ class LLMAgentConfig:
     llm_name: str = "Qwen/Qwen3-4B"
     llm_provider: str = None
     embed_name: str = "Qwen/Qwen3-Embedding-0.6B"
-    max_new_tokens: int = 4096 # Do not set to None, as None lead to different behaviors in different model providers
+    max_new_tokens: int = 99999 # Do not set to None, as None lead to different behaviors in different model providers
     temperature: float = 0.7
     presence_penalty: float = 1.5
     top_p: float = 0.8

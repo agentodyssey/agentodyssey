@@ -128,7 +128,7 @@ if __name__ == "__main__":
     parser.add_argument("--save_dep_graph_steps", type=int, default=None, help="Number of steps before a new dependency graph will be saved; if None, dependency tracking will be disabled")
 
     parser.add_argument("--memory_dir", type=str, default="memory", help="Directory to save agent memory checkpoints under run_dir")
-    parser.add_argument("--agent_memory_save_frequency", type=int, default=5,
+    parser.add_argument("--agent_memory_save_frequency", type=int, default=1,
                         help="Save agent memory every N environment steps. If None, disabled.")
     args = parser.parse_args()
 
