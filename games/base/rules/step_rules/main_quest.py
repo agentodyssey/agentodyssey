@@ -186,7 +186,10 @@ class MainQuestStepRule(BaseStepRule):
                         "objective": "Find the tide-merchant and leave with the Heart of the Ocean close at hand.",
                         "done_all": [
                             {"kind": "state", "type": "in_area_with_npc", "npc_key": "ch2_merchant_npc"},
-                            {"kind": "event", "type": "object_bought", "npc_key": "ch2_merchant_npc", "obj_id": "obj_heart_of_the_ocean"},
+                            {"kind": "any_of", "conditions": [
+                                {"kind": "event", "type": "object_bought", "npc_key": "ch2_merchant_npc", "obj_id": "obj_heart_of_the_ocean"},
+                                {"kind": "state", "type": "has_any_of", "base_objs": ["obj_heart_of_the_ocean"]},
+                            ]},
                         ],
                         "on_complete_feedback": (
                             "{ch2_merchant_name} says:\n"
@@ -1191,6 +1194,12 @@ class MainQuestStepRule(BaseStepRule):
 
     def _cond_true(self, env, world, agent, cond: dict, events: list, prog: dict) -> bool:
         kind = cond.get("kind")
+
+        if kind == "any_of":
+            return any(
+                self._cond_true(env, world, agent, nested, events, prog)
+                for nested in cond.get("conditions", [])
+            )
 
         if kind == "event":
             etype = cond.get("type")
