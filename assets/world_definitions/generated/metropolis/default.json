@@ -1173,7 +1173,7 @@
     "side_quest"
   ],
   "features": {
-    "online_expansion": true,
+    "online_expansion": false,
     "expansion_model": "gpt-5-mini"
   },
   "graph": {
