@@ -538,31 +538,12 @@ class TutorialRoomStepRule(BaseStepRule):
                 self._exit_area_id = self._spawn_area_id
                 self._exit_area_name = world.area_instances[self._spawn_area_id].name
 
-                area = world.area_instances[self._tutorial_area_id]
-                if self._bag_inst_id is None:
-                    for oid in area.objects.keys():
-                        if oid in world.container_instances and get_def_id(oid) == "obj_small_bag":
-                            self._bag_inst_id = oid
-                            self._bag_name = world.container_instances[oid].name
-                            break
-                if self._bag_inst_id is None:
-                    for oid, inst in world.container_instances.items():
-                        if get_def_id(oid) == "obj_small_bag":
-                            self._bag_inst_id = oid
-                            self._bag_name = inst.name
-                            break
-                if self._writable_inst_id is None:
-                    for oid in area.objects.keys():
-                        if oid in world.writable_instances and get_def_id(oid) == "obj_paper":
-                            self._writable_inst_id = oid
-                            self._writable_name = world.writable_instances[oid].name
-                            break
-                if self._writable_inst_id is None:
-                    for oid, inst in world.writable_instances.items():
-                        if get_def_id(oid) == "obj_paper":
-                            self._writable_inst_id = oid
-                            self._writable_name = inst.name
-                            break
+                self._bag_inst_id, self._bag_name = self._restore_instance(
+                    env, world, "bag_inst_id", "obj_small_bag", world.container_instances,
+                )
+                self._writable_inst_id, self._writable_name = self._restore_instance(
+                    env, world, "writable_inst_id", "obj_paper", world.writable_instances,
+                )
 
                 self._initialized = True
             else:
@@ -694,9 +675,41 @@ class TutorialRoomStepRule(BaseStepRule):
         world.auxiliary["tutorial_room"].update({
             "place_id": self._tutorial_place_id,
             "area_id": self._tutorial_area_id,
+            "bag_inst_id": self._bag_inst_id,
+            "writable_inst_id": self._writable_inst_id,
         })
 
         self._initialized = True
+
+    def _restore_instance(self, env, world, key: str, base_id: str, instances: dict) -> tuple[Optional[str], Optional[str]]:
+        tutorial = world.auxiliary["tutorial_room"]
+        inst_id = tutorial.get(key)
+        if inst_id not in instances or get_def_id(inst_id) != base_id:
+            # Older checkpoints lack IDs. Only recover items inside the tutorial.
+            candidates = list(world.area_instances[self._tutorial_area_id].objects)
+            for agent in env.agents:
+                if env.curr_agents_state["area"].get(agent.id) != self._tutorial_area_id:
+                    continue
+                candidates.extend(agent.items_in_hands)
+                candidates.extend(agent.equipped_items_in_limb)
+                if agent.inventory.container is not None:
+                    candidates.append(agent.inventory.container.id)
+                    candidates.extend(agent.inventory.items)
+            for oid in list(candidates):
+                if oid in world.container_instances:
+                    candidates.extend(world.container_instances[oid].inventory)
+            inst_id = next((
+                oid for oid in candidates if oid in instances and get_def_id(oid) == base_id
+            ), None)
+
+        if inst_id is None:
+            inst_id, name = self._create_instance(world, base_id)
+        else:
+            name = instances[inst_id].name
+        if inst_id:
+            tutorial[key] = inst_id
+            self._tutorial_obj_ids.add(inst_id)
+        return inst_id, name
 
     def _ensure_tutorial_room(self, world) -> tuple[Optional[str], Optional[str]]:
         if self._tutorial_place_id and self._tutorial_area_id:
@@ -1608,4 +1621,3 @@ class TutorialRoomStepRule(BaseStepRule):
             if any(cnt > 0 and get_def_id(oid) == base_obj_id for oid, cnt in area.objects.items()):
                 return True
         return False
-
