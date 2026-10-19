@@ -343,8 +343,8 @@ class CollectUnattendedStepRule(BaseStepRule):
 
     def __init__(self) -> None:
         super().__init__()
-        self._min_idle = 20
-        self._max_idle = 35
+        self._min_idle = 45
+        self._max_idle = 65
         self._collect_frac = 0.35  # fraction of each stack to remove
 
     def _ensure_state(self, world) -> dict:
@@ -381,11 +381,19 @@ class CollectUnattendedStepRule(BaseStepRule):
         tutorial_room = world.auxiliary.get("tutorial_room") or {}
         tutorial_active = bool(tutorial_room) and not bool(tutorial_room.get("removed", False))
         tutorial_area = tutorial_room.get("area_id")
+        # The spawn area holds the starting kit (bag, workbench, pen, paper) and
+        # is named "hall", so it falls inside OPEN_SALT_AREAS. The tutorial keeps
+        # the agent away from it for ~28 steps, longer than the idle threshold,
+        # so without this exemption the kit is always harvested before the agent
+        # can ever reach it. Exempt it the same way the tutorial room is.
+        spawn_area_id = ((env.world_definition.get("initializations") or {}).get("spawn") or {}).get("area")
 
         for area_id, area in world.area_instances.items():
             if not self._is_open_salt(area):
                 continue
             if tutorial_active and area_id == tutorial_area:
+                continue
+            if spawn_area_id and area_id == spawn_area_id:
                 continue
             if self._has_merchant(world, area):
                 continue
@@ -415,7 +423,11 @@ class CollectUnattendedStepRule(BaseStepRule):
                 base = get_def_id(oid)
                 if base in world.objects and getattr(world.objects[base], "quest", False):
                     continue
-                remove = max(1, int(math.floor(cnt * self._collect_frac)))
+                # Plain floor, with no max(1, ...): a unique item (stack of 1)
+                # must decay to nothing rather than vanish on the first tick.
+                remove = int(math.floor(cnt * self._collect_frac))
+                if remove <= 0:
+                    continue
                 objs[oid] = cnt - remove
                 if objs[oid] <= 0:
                     del objs[oid]

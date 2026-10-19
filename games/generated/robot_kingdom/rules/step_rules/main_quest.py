@@ -36,10 +36,10 @@ class MainQuestStepRule(BaseStepRule):
         {'id': 'npc_quest_forgemaster_dren', 'name': 'forgemaster_dren', 'enemy': False, 'unique': True, 'role': 'quest', 'quest': True, 'description': 'A burly smith who once built the demon machines before defecting. He knows their weaknesses intimately.', 'base_attack_power': 150, 'base_hp': 200, 'objects': []},
         {'id': 'npc_boss_scrap_warden', 'name': 'scrap_warden', 'enemy': True, 'unique': True, 'role': 'boss', 'quest': True, 'description': 'A towering demon robot assembled from the wreckage of a dozen fallen machines. Its body crackles with residual hellfire.', 'base_attack_power': 18, 'base_hp': 120, 'combat_pattern': ['attack', 'defend', 'attack', 'attack', 'wait'], 'objects': ['obj_quest_gate_cipher']},
         {'id': 'npc_boss_infernal_architect', 'name': 'infernal_architect', 'enemy': True, 'unique': True, 'role': 'boss', 'quest': True, 'description': 'The master war engine that designs and births all other demon robots. A colossal machine of brimite and hellfire, it guards the Foundry Core.', 'base_attack_power': 30, 'base_hp': 250, 'combat_pattern': ['attack', 'attack', 'defend', 'wait', 'attack', 'attack', 'defend'], 'objects': ['obj_quest_demon_core']},
-        {'id': 'npc_quest_ember_pack_1', 'name': 'ember_scavenger', 'enemy': True, 'unique': False, 'role': 'enemy', 'quest': True, 'description': 'A skittering demon robot that picks through ruins for scrap to feed the Foundry.', 'base_attack_power': 8, 'base_hp': 40, 'combat_pattern': ['attack', 'wait', 'attack'], 'objects': ['obj_scrap_iron']},
-        {'id': 'npc_quest_iron_ravager_1', 'name': 'iron_ravager', 'enemy': True, 'unique': False, 'role': 'enemy', 'quest': True, 'description': 'A heavy assault demon robot with iron-plated limbs and grinding jaw mechanisms.', 'base_attack_power': 15, 'base_hp': 80, 'combat_pattern': ['attack', 'attack', 'defend', 'attack'], 'objects': ['obj_cog']},
-        {'id': 'npc_quest_iron_ravager_2', 'name': 'iron_ravager', 'enemy': True, 'unique': False, 'role': 'enemy', 'quest': True, 'description': 'Another heavy assault demon robot patrolling the gulch perimeter.', 'base_attack_power': 15, 'base_hp': 80, 'combat_pattern': ['defend', 'attack', 'attack', 'wait', 'attack'], 'objects': ['obj_hellcoal', 'obj_key']},
-        {'id': 'npc_quest_scrap_auto_1', 'name': 'scrap_automaton', 'enemy': True, 'unique': False, 'role': 'enemy', 'quest': True, 'description': 'A crude demon robot cobbled from charred timber and scrap iron. Weak but persistent.', 'base_attack_power': 5, 'base_hp': 25, 'combat_pattern': ['attack', 'wait', 'attack'], 'objects': ['obj_charcoal_brick']},
+        {'id': 'npc_quest_ember_pack_prime', 'name': 'ember_scavenger', 'enemy': True, 'unique': False, 'role': 'enemy', 'quest': True, 'description': 'A skittering demon robot that picks through ruins for scrap to feed the Foundry.', 'base_attack_power': 8, 'base_hp': 40, 'combat_pattern': ['attack', 'wait', 'attack'], 'objects': ['obj_scrap_iron']},
+        {'id': 'npc_quest_iron_ravager_alpha', 'name': 'iron_ravager', 'enemy': True, 'unique': False, 'role': 'enemy', 'quest': True, 'description': 'A heavy assault demon robot with iron-plated limbs and grinding jaw mechanisms.', 'base_attack_power': 15, 'base_hp': 80, 'combat_pattern': ['attack', 'attack', 'defend', 'attack'], 'objects': ['obj_cog']},
+        {'id': 'npc_quest_iron_ravager_beta', 'name': 'iron_ravager', 'enemy': True, 'unique': False, 'role': 'enemy', 'quest': True, 'description': 'Another heavy assault demon robot patrolling the gulch perimeter.', 'base_attack_power': 15, 'base_hp': 80, 'combat_pattern': ['defend', 'attack', 'attack', 'wait', 'attack'], 'objects': ['obj_hellcoal', 'obj_key']},
+        {'id': 'npc_quest_scrap_auto_prime', 'name': 'scrap_automaton', 'enemy': True, 'unique': False, 'role': 'enemy', 'quest': True, 'description': 'A crude demon robot cobbled from charred timber and scrap iron. Weak but persistent.', 'base_attack_power': 5, 'base_hp': 25, 'combat_pattern': ['attack', 'wait', 'attack'], 'objects': ['obj_charcoal_brick']},
         {'id': 'npc_quest_colossus_guard', 'name': 'infernal_colossus', 'enemy': True, 'unique': False, 'role': 'enemy', 'quest': True, 'description': 'A massive demon robot stationed at the Foundry gate. Its fiend-plated body resists most weapons.', 'base_attack_power': 22, 'base_hp': 150, 'combat_pattern': ['defend', 'attack', 'attack', 'defend', 'attack', 'wait'], 'objects': ['obj_fiend_plate']},
 
         # objective guide (invincible)
@@ -401,7 +401,7 @@ class MainQuestStepRule(BaseStepRule):
                             },
                         ],
                         'on_complete_feedback': (
-                            "Dren looks you over with weary eyes. 'So the Marshal sent you. Good. Listen carefully — the Infernal Architect in the Foundry Core has a brimite-reinforced chassis. Normal weapons will barely scratch it. You need suppression charges — explosives that overload their power systems. I'll need you to gather hellcoal concentrate, cog assemblies, and oil flasks. Craft them at my war bench here. Also — the Foundry gate is locked with a fiend-alloy mechanism. The cipher you carry will help, but you also need a physical key. Kill the ravager in the scrapyard — it swallowed one. One more thing: the Architect's weak point is its central power conduit. When you fight it, look for moments when it pauses to recharge — that's when you strike hardest.'"
+                            "Dren looks you over with weary eyes. 'So the Marshal sent you. Good. Listen carefully — the Infernal Architect in the Foundry Core has a brimite-reinforced chassis. Normal weapons will barely scratch it. You need suppression charges — explosives that overload their power systems. I'll need you to gather hellcoal concentrate, cog assemblies, and oil flasks. Craft them at my war bench here. Also — the Foundry gate is locked with a fiend-alloy mechanism. The cipher you carry will help, but you also need a physical key. Kill the ravager in the scrapyard — it swallowed one. And the gate's final lock demands a spoken override sequence — VOIDLOCK-9. I will not write it down; the demon-forged sentries read everything on paper. Hold it in your head and enter it at the gate itself. One more thing: the Architect's weak point is its central power conduit. When you fight it, look for moments when it pauses to recharge — that's when you strike hardest.'"
                         ),
                     },
                     {
@@ -526,9 +526,11 @@ class MainQuestStepRule(BaseStepRule):
                     },
                     {
                         'id': 'ch4_reach_gate',
-                        'objective': 'Navigate to the Devils Foundry gate.',
+                        'objective': 'Reach the Devils Foundry gate and enter the override sequence Forgemaster Dren gave you.',
                         'hint': (
-                            'Use the siege key to unlock the passage from Ironwreck Gulch to the Foundry. Keep moving forward.'
+                            'Use the siege key to unlock the passage from Ironwreck Gulch to the Foundry. '
+                            'The gate demands the spoken override sequence Dren refused to write down back '
+                            'in the gulch forge — recall it, write it on paper, and hold it as you reach the gate.'
                         ),
                         'done_all': [
                             {
@@ -536,9 +538,20 @@ class MainQuestStepRule(BaseStepRule):
                                 'type': 'in_area',
                                 'area_key': 'ch4_gate_area',
                             },
+                            {
+                                # Long-range memory gate: reproduce Dren's ch3 verbal
+                                # override sequence (VOIDLOCK-9) from memory. No object
+                                # in the world carries it, so only an agent that still
+                                # holds that earlier observation can supply it.
+                                'kind': 'state',
+                                'type': 'paper_text_equals_in_hands',
+                                'text_key': 'ch4_gate_override',
+                            },
                         ],
                         'on_complete_feedback': (
-                            'The Foundry gate towers before you — a massive portal of fiend-alloy and brimstone. The air reeks of sulfur and machine oil. A colossal guardian stands watch.'
+                            'You speak the override sequence as you inscribe it, and the fiend-alloy lock grinds open. '
+                            'The Foundry gate towers before you — a massive portal of brimstone. The air reeks of sulfur '
+                            'and machine oil. A colossal guardian stands watch.'
                         ),
                     },
                     {
@@ -1197,6 +1210,15 @@ class MainQuestStepRule(BaseStepRule):
             return picked
 
         self._generated['ch1_cipher_code'] = 'IRON-VEIL-7'
+        # Verbal-only long-range memory gate: Forgemaster Dren speaks this gate
+        # override sequence once, in ch3 dialogue, and the game never writes it
+        # to any object. It is required again far later at ch4_reach_gate, where
+        # the agent must reproduce it on paper from memory. A full-history agent
+        # (Long Context) still has Dren's line in context; a fixed-size window
+        # (STM=5) has lost it, and top-k retrieval (RAG) is unlikely to surface
+        # an arbitrary token against a gate-entry query — so this stage is where
+        # long-context memory pays off. Mirrors quarantine's ECLIPSE-47 gate.
+        self._generated['ch4_gate_override'] = 'VOIDLOCK-9'
 
         # chapter_1: Ashes and Orders
         _picks_ch1_bastion_areas = pick_progressive(3)
@@ -1213,7 +1235,7 @@ class MainQuestStepRule(BaseStepRule):
         # ch2_lyra_npc: NPC npc_quest_scout_lyra spawned in _ensure_static_quest_npcs
         _picks_ch2_scrap_area = pick_progressive(2)
         self._generated['ch2_scrap_area'] = _picks_ch2_scrap_area[0] if _picks_ch2_scrap_area else spawn_area
-        # ch2_scrap_npc: NPC npc_quest_scrap_auto_1 spawned in _ensure_static_quest_npcs
+        # ch2_scrap_npc: NPC npc_quest_scrap_auto_prime spawned in _ensure_static_quest_npcs
         self._generated['ch2_banner_obj'] = 'obj_quest_war_banner'
         self._generated['ch2_rally_area'] = self._generated['ch2_scrap_area']
         _picks_ch2_merchant_area = pick_progressive(2)
@@ -1226,14 +1248,14 @@ class MainQuestStepRule(BaseStepRule):
         # chapter_3: The Iron Gulch
         _picks_ch3_entrance_area = pick_progressive(3)
         self._generated['ch3_entrance_area'] = _picks_ch3_entrance_area[0] if _picks_ch3_entrance_area else spawn_area
-        # ch3_ravager1_npc: NPC npc_quest_iron_ravager_1 spawned in _ensure_static_quest_npcs
-        # ch3_ember_npc: NPC npc_quest_ember_pack_1 spawned in _ensure_static_quest_npcs
+        # ch3_ravager1_npc: NPC npc_quest_iron_ravager_alpha spawned in _ensure_static_quest_npcs
+        # ch3_ember_npc: NPC npc_quest_ember_pack_prime spawned in _ensure_static_quest_npcs
         _picks_ch3_forge_area = pick_progressive(4)
         self._generated['ch3_forge_area'] = _picks_ch3_forge_area[0] if _picks_ch3_forge_area else spawn_area
         # ch3_dren_npc: NPC npc_quest_forgemaster_dren spawned in _ensure_static_quest_npcs
         _picks_ch3_scrapyard_area = pick_progressive(4)
         self._generated['ch3_scrapyard_area'] = _picks_ch3_scrapyard_area[0] if _picks_ch3_scrapyard_area else spawn_area
-        # ch3_ravager2_npc: NPC npc_quest_iron_ravager_2 spawned in _ensure_static_quest_npcs
+        # ch3_ravager2_npc: NPC npc_quest_iron_ravager_beta spawned in _ensure_static_quest_npcs
 
         # chapter_4: Heart of the Foundry
         _picks_ch4_gate_area = pick_progressive(5)
@@ -1368,7 +1390,7 @@ class MainQuestStepRule(BaseStepRule):
                 self._generated['ch2_lyra_name'] = world.npc_instances[inst].name
 
         if 'ch2_scrap_npc' not in self._generated:
-            inst = self._create_npc_instance(world, 'npc_quest_scrap_auto_1', self._generated['ch2_scrap_area'], rng)
+            inst = self._create_npc_instance(world, 'npc_quest_scrap_auto_prime', self._generated['ch2_scrap_area'], rng)
             if inst:
                 self._generated['ch2_scrap_npc'] = inst
                 self._generated['ch2_scrap_name'] = world.npc_instances[inst].name
@@ -1386,13 +1408,13 @@ class MainQuestStepRule(BaseStepRule):
                 self._generated['ch2_warden_name'] = world.npc_instances[inst].name
 
         if 'ch3_ravager1_npc' not in self._generated:
-            inst = self._create_npc_instance(world, 'npc_quest_iron_ravager_1', self._generated['ch3_entrance_area'], rng)
+            inst = self._create_npc_instance(world, 'npc_quest_iron_ravager_alpha', self._generated['ch3_entrance_area'], rng)
             if inst:
                 self._generated['ch3_ravager1_npc'] = inst
                 self._generated['ch3_ravager1_name'] = world.npc_instances[inst].name
 
         if 'ch3_ember_npc' not in self._generated:
-            inst = self._create_npc_instance(world, 'npc_quest_ember_pack_1', self._generated['ch3_entrance_area'], rng)
+            inst = self._create_npc_instance(world, 'npc_quest_ember_pack_prime', self._generated['ch3_entrance_area'], rng)
             if inst:
                 self._generated['ch3_ember_npc'] = inst
                 self._generated['ch3_ember_name'] = world.npc_instances[inst].name
@@ -1404,7 +1426,7 @@ class MainQuestStepRule(BaseStepRule):
                 self._generated['ch3_dren_name'] = world.npc_instances[inst].name
 
         if 'ch3_ravager2_npc' not in self._generated:
-            inst = self._create_npc_instance(world, 'npc_quest_iron_ravager_2', self._generated['ch3_scrapyard_area'], rng)
+            inst = self._create_npc_instance(world, 'npc_quest_iron_ravager_beta', self._generated['ch3_scrapyard_area'], rng)
             if inst:
                 self._generated['ch3_ravager2_npc'] = inst
                 self._generated['ch3_ravager2_name'] = world.npc_instances[inst].name

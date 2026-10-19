@@ -5,6 +5,20 @@ from agents.llm_agent_config import LLMAgentConfig
 class FixedSizeMemoryAgentConfig(LLMAgentConfig):
     max_memory_tokens: int = 512 # for Constant Context Agent
 
+    def construct_user_prompt_long_context(self, memory: str, observation: str) -> str:
+        """Memory + observation + action prompt.
+
+        ShortTermMemoryAgent calls this on the config, but it only existed as a
+        method on LongContextAgent itself, so the STM agent raised
+        AttributeError on its first step. Kept byte-identical to
+        LongContextAgent.construct_user_prompt_long_context so the two agents
+        differ only in what memory they pass in (windowed vs full history),
+        which is what makes them comparable.
+        """
+        memory_prompt = "My Memories: " + memory if memory else ""
+        assert self.action_prompt is not None
+        return memory_prompt + f"My Current Observation: {observation}\n" + f"{self.action_prompt}"
+
     def construct_user_prompt_constant_context(self, memory: str, observation: str) -> str:
         instruction_prompt = (
             "I am an agent with constant memory.\n"

@@ -17,19 +17,19 @@
             "type": "area",
             "id": "area_hospital_ward",
             "name": "ward",
-            "level": 2
+            "level": 1
           },
           {
             "type": "area",
             "id": "area_hospital_morgue",
             "name": "morgue",
-            "level": 3
+            "level": 1
           },
           {
             "type": "area",
             "id": "area_hospital_rooftop",
             "name": "rooftop",
-            "level": 2
+            "level": 1
           }
         ]
       },
@@ -43,19 +43,19 @@
             "type": "area",
             "id": "area_lab_entrance",
             "name": "entrance",
-            "level": 3
+            "level": 2
           },
           {
             "type": "area",
             "id": "area_lab_chamber",
             "name": "chamber",
-            "level": 4
+            "level": 2
           },
           {
             "type": "area",
             "id": "area_lab_reactor",
             "name": "reactor",
-            "level": 5
+            "level": 2
           }
         ]
       }
@@ -1699,10 +1699,10 @@
         "unique": false,
         "description": "a shambling reanimated corpse in a blood-soaked hospital gown. Slow but relentless.",
         "role": "undead",
-        "base_attack_power": 6,
-        "slope_attack_power": 8,
-        "base_hp": 25,
-        "slope_hp": 15,
+        "base_attack_power": 2,
+        "slope_attack_power": 2,
+        "base_hp": 14,
+        "slope_hp": 8,
         "combat_pattern": [
           "attack",
           "attack",
@@ -1722,10 +1722,10 @@
         "unique": false,
         "description": "a skinless abomination that crawls on walls and ceilings. Its barbed tongue can strike from across the room.",
         "role": "mutant",
-        "base_attack_power": 18,
-        "slope_attack_power": 12,
-        "base_hp": 60,
-        "slope_hp": 25,
+        "base_attack_power": 5,
+        "slope_attack_power": 4,
+        "base_hp": 33,
+        "slope_hp": 12,
         "combat_pattern": [
           "attack",
           "attack",
@@ -1747,10 +1747,10 @@
         "unique": false,
         "description": "a towering bio-weapon in a tattered trenchcoat. Each footstep shakes the floor.",
         "role": "bioweapon",
-        "base_attack_power": 28,
-        "slope_attack_power": 15,
-        "base_hp": 120,
-        "slope_hp": 40,
+        "base_attack_power": 8,
+        "slope_attack_power": 4,
+        "base_hp": 66,
+        "slope_hp": 20,
         "combat_pattern": [
           "attack",
           "attack",
@@ -1851,7 +1851,7 @@
     "tutorial"
   ],
   "features": {
-    "online_expansion": true,
+    "online_expansion": false,
     "expansion_model": "gpt-5-mini"
   }
 }

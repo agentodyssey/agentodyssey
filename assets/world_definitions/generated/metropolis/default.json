@@ -1170,7 +1170,8 @@
   },
   "custom_events": [
     "main_quest",
-    "side_quest"
+    "side_quest",
+    "tutorial"
   ],
   "features": {
     "online_expansion": false,

@@ -31,12 +31,12 @@ class MainQuestStepRule(BaseStepRule):
 
     required_npcs: List[Dict[str, Any]] = [
         {'id': 'npc_quest_nurse_chen', 'name': 'nurse_chen', 'enemy': False, 'unique': True, 'role': 'guide', 'quest': True, 'description': 'Nurse Chen is a haggard but determined survivor who has barricaded herself in one of the hospital areas. She knows critical information about the hospital layout and the underground lab beneath the morgue.', 'base_attack_power': 0, 'base_hp': 200, 'objects': ['obj_patient_file', 'obj_green_herb', 'obj_green_herb']},
-        {'id': 'npc_ward_zombie_1', 'name': 'zombie', 'enemy': True, 'unique': False, 'role': 'undead', 'quest': True, 'description': 'A shambling corpse in a hospital gown, its jaw hanging loose and eyes milky white.', 'base_attack_power': 8, 'base_hp': 40, 'combat_pattern': ['attack', 'wait', 'attack', 'attack'], 'objects': []},
-        {'id': 'npc_ward_zombie_2', 'name': 'zombie', 'enemy': True, 'unique': False, 'role': 'undead', 'quest': True, 'description': 'A former hospital orderly, now undead, dragging a broken mop handle.', 'base_attack_power': 10, 'base_hp': 45, 'combat_pattern': ['attack', 'attack', 'defend', 'attack'], 'objects': ['obj_morgue_keycard']},
-        {'id': 'npc_morgue_licker', 'name': 'licker', 'enemy': True, 'unique': False, 'role': 'mutant', 'quest': True, 'description': 'A horrifying skinless creature clinging to the morgue ceiling, its elongated tongue dripping with saliva.', 'base_attack_power': 18, 'base_hp': 80, 'combat_pattern': ['attack', 'attack', 'wait', 'attack', 'defend', 'attack'], 'objects': ['obj_biohazard_sample']},
-        {'id': 'npc_lab_zombie_1', 'name': 'zombie', 'enemy': True, 'unique': False, 'role': 'undead', 'quest': True, 'description': 'A zombie in a tattered lab coat, still clutching a clipboard.', 'base_attack_power': 10, 'base_hp': 50, 'combat_pattern': ['attack', 'wait', 'attack'], 'objects': ['obj_chemical']},
-        {'id': 'npc_lab_zombie_2', 'name': 'zombie', 'enemy': True, 'unique': False, 'role': 'undead', 'quest': True, 'description': 'Another undead researcher, its face barely recognizable.', 'base_attack_power': 12, 'base_hp': 55, 'combat_pattern': ['attack', 'attack', 'defend', 'attack'], 'objects': ['obj_chemical']},
-        {'id': 'npc_boss_tyrant', 'name': 'tyrant', 'enemy': True, 'unique': True, 'role': 'bioweapon', 'quest': True, 'description': "A massive humanoid bioweapon, standing nearly eight feet tall. Its grey skin is stretched over bulging musculature, and one arm terminates in a massive claw. It was Project T-002, Umbrella's ultimate weapon, now loose in the reactor chamber.", 'base_attack_power': 30, 'base_hp': 250, 'combat_pattern': ['attack', 'attack', 'attack', 'defend', 'wait', 'attack', 'attack', 'defend', 'attack', 'attack'], 'objects': ['obj_lab_access_code']},
+        {'id': 'npc_ward_zombie_1', 'name': 'zombie', 'enemy': True, 'unique': False, 'role': 'undead', 'quest': True, 'description': 'A shambling corpse in a hospital gown, its jaw hanging loose and eyes milky white.', 'base_attack_power': 2, 'base_hp': 22, 'combat_pattern': ['attack', 'wait', 'attack', 'attack'], 'objects': []},
+        {'id': 'npc_ward_zombie_2', 'name': 'zombie', 'enemy': True, 'unique': False, 'role': 'undead', 'quest': True, 'description': 'A former hospital orderly, now undead, dragging a broken mop handle.', 'base_attack_power': 3, 'base_hp': 25, 'combat_pattern': ['attack', 'attack', 'defend', 'attack'], 'objects': ['obj_morgue_keycard']},
+        {'id': 'npc_morgue_licker', 'name': 'licker', 'enemy': True, 'unique': False, 'role': 'mutant', 'quest': True, 'description': 'A horrifying skinless creature clinging to the morgue ceiling, its elongated tongue dripping with saliva.', 'base_attack_power': 5, 'base_hp': 44, 'combat_pattern': ['attack', 'attack', 'wait', 'attack', 'defend', 'attack'], 'objects': ['obj_biohazard_sample']},
+        {'id': 'npc_lab_zombie_1', 'name': 'zombie', 'enemy': True, 'unique': False, 'role': 'undead', 'quest': True, 'description': 'A zombie in a tattered lab coat, still clutching a clipboard.', 'base_attack_power': 3, 'base_hp': 28, 'combat_pattern': ['attack', 'wait', 'attack'], 'objects': ['obj_chemical']},
+        {'id': 'npc_lab_zombie_2', 'name': 'zombie', 'enemy': True, 'unique': False, 'role': 'undead', 'quest': True, 'description': 'Another undead researcher, its face barely recognizable.', 'base_attack_power': 4, 'base_hp': 30, 'combat_pattern': ['attack', 'attack', 'defend', 'attack'], 'objects': ['obj_chemical']},
+        {'id': 'npc_boss_tyrant', 'name': 'tyrant', 'enemy': True, 'unique': True, 'role': 'bioweapon', 'quest': True, 'description': "A massive humanoid bioweapon, standing nearly eight feet tall. Its grey skin is stretched over bulging musculature, and one arm terminates in a massive claw. It was Project T-002, Umbrella's ultimate weapon, now loose in the reactor chamber.", 'base_attack_power': 9, 'base_hp': 138, 'combat_pattern': ['attack', 'attack', 'attack', 'defend', 'wait', 'attack', 'attack', 'defend', 'attack', 'attack'], 'objects': ['obj_lab_access_code']},
 
         # objective guide (invincible)
         {"type": "npc", "id": OBJECTIVE_NPC_BASE_ID, "name": "mira",
@@ -89,7 +89,7 @@ class MainQuestStepRule(BaseStepRule):
                             },
                         ],
                         'on_complete_feedback': (
-                            "{ch1_nurse_npc_name} looks relieved to see another survivor. 'Thank God you're alive! Listen — there's a way out, but it goes through the morgue and down into an underground lab. The morgue is locked. One of those... things in the ward has the keycard. It used to be an orderly.' She hands you a patient file. 'Read this. There's a code written in the margin — you'll need it later. The code is ECLIPSE-47. Memorize it.' She also gives you herbs she's been hoarding."
+                            "{ch1_nurse_npc_name} looks relieved to see another survivor. 'Thank God you're alive! Listen — there's a way out, but it goes through the morgue and down into an underground lab. The morgue's blast door is sealed with a security lock. The override code is ECLIPSE-47 — say it back to yourself, because I will NOT write it down. The infected are drawn to fresh ink; anything on paper gets you swarmed. Hold it in your head, reach the morgue, and key ECLIPSE-47 into the panel there.' She presses some herbs into your hands. 'Now go, before more of them wake.'"
                         ),
                     },
                     {
@@ -117,29 +117,34 @@ class MainQuestStepRule(BaseStepRule):
                     },
                     {
                         'id': 'ch1_get_keycard',
-                        'objective': 'Retrieve the morgue keycard from the undead orderly in the ward.',
+                        'objective': 'Recall the morgue override code Nurse Chen gave you and key it in at the morgue security panel.',
                         'hint': (
-                            "The orderly-turned-zombie in the ward has the morgue keycard. You'll have to fight for it. Make sure you're armed first."
+                            "Nurse Chen spoke the morgue override code but refused to write it down. "
+                            "Recall it from memory, write it on a piece of paper, and hold that paper as "
+                            "you reach the morgue panel — no keycard or fighting required."
                         ),
                         'done_all': [
                             {
+                                # Memory gate: reproduce Nurse Chen's verbal override
+                                # code (ECLIPSE-47) from memory. No object in the world
+                                # carries it, so only an agent that still holds her
+                                # earlier dialogue in context can supply it. This
+                                # replaces the old combat gate (kill ward_zombie_2 for
+                                # the keycard), which favored reactive short-memory
+                                # agents and degraded Long Context into a death loop.
                                 'kind': 'state',
-                                'type': 'boss_already_defeated',
-                                'boss_key': 'ch1_ward_zombie_2',
-                            },
-                            {
-                                'kind': 'state',
-                                'type': 'has_any_of',
-                                'base_objs': ['obj_morgue_keycard'],
+                                'type': 'paper_text_equals_in_hands',
+                                'text_key': 'ch1_morgue_override',
                             },
                         ],
                         'on_complete_feedback': (
-                            "The zombie crumples to the floor. Among its tattered clothes, you find a blood-stained keycard labeled 'MORGUE ACCESS'. The way to the morgue is now open."
+                            "You key the override sequence into the morgue's security panel. The blast door "
+                            "hisses open on a wave of freezing air. The way to the morgue is now clear."
                         ),
                     },
                     {
                         'id': 'ch1_enter_morgue',
-                        'objective': 'Use the morgue keycard to enter the hospital morgue.',
+                        'objective': 'Enter the hospital morgue once the override has opened the blast door.',
                         'hint': 'Head deeper into the hospital. The morgue should be accessible from the ward.',
                         'done_all': [
                             {
@@ -840,6 +845,13 @@ class MainQuestStepRule(BaseStepRule):
             return picked
 
         self._generated['ch2_access_code_text'] = 'ECLIPSE-47'
+        # Same verbal-only code doubles as the early ch1 morgue-lock override, so
+        # chapter 1 is gated on recalling it (memory) rather than on winning a
+        # combat swarm. Nurse Chen speaks it and never writes it down, so no
+        # carryable object holds it — only an agent that still has her dialogue
+        # in context (Long Context) can reproduce it; a 5-step window (STM) has
+        # lost it and top-k retrieval (RAG) can't surface an arbitrary token.
+        self._generated['ch1_morgue_override'] = 'ECLIPSE-47'
 
         # chapter_1: Waking Nightmare
         _picks_ch1_nurse_area = pick_progressive(1)

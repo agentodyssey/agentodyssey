@@ -8,6 +8,18 @@ from games.generated.robot_kingdom.agent import Agent
 from tools.logger import get_logger
 
 
+def _is_protected_quest_object(world, obj_def, base_id) -> bool:
+    """True for a unique/quest-critical object that hazard rules (decay,
+    cannibalize, reclamation) must never destroy. Quest items in this game are
+    not reliably flagged ``obj.quest=True`` — the canonical set of unique quest
+    items is ``initializations.undistributable_objects`` (e.g. the demon_core,
+    worth 200, which a war machine would preferentially eat). Protect both."""
+    if obj_def is not None and getattr(obj_def, "quest", False):
+        return True
+    und = (world.world_definition.get("initializations", {}) or {}).get("undistributable_objects", []) or []
+    return base_id in und
+
+
 class AgentAttackUpdateStepRule(BaseStepRule):
     name = "agent_attack_update_step"
     description = "Update each agent's attack attribute based on their items in hand."
@@ -1454,6 +1466,10 @@ class CorruptionDecayStepRule(BaseStepRule):
                     continue
                 if obj_def.usage in self.IMMUNE_USAGES:
                     continue
+                # Quest items must never decay — a unique quest object destroyed
+                # on a battlefield can soft-lock the main quest.
+                if _is_protected_quest_object(world, obj_def, base_id):
+                    continue
                 # Writable and container instances are also immune
                 if obj_id in world.container_instances or obj_id in world.writable_instances:
                     continue
@@ -1570,8 +1586,16 @@ class IntimidationStepRule(BaseStepRule):
                 if npc.enemy:
                     enemy_npcs.append(npc)
                 else:
-                    # Skip immune NPCs (quest guides)
-                    if get_def_id(npc_id) in self.IMMUNE_NPC_BASE_IDS:
+                    # Skip immune NPCs. Beyond the generic guide base-ids, this
+                    # must protect ANY quest NPC: the game's own quest guide /
+                    # quest-critical friendlies (e.g. scout_lyra, forgemaster_dren)
+                    # must never be intimidated to death, or their info/crafting
+                    # is lost and the main quest soft-locks.
+                    base_id = get_def_id(npc_id)
+                    if base_id in self.IMMUNE_NPC_BASE_IDS:
+                        continue
+                    proto = world.npcs.get(base_id)
+                    if getattr(npc, "quest", False) or (proto is not None and getattr(proto, "quest", False)):
                         continue
                     friendly_npcs.append(npc)
 
@@ -1764,6 +1788,9 @@ class TerritoryReclamationStepRule(BaseStepRule):
                 if obj_def.category in self.IMMUNE_CATEGORIES:
                     continue
                 if obj_def.usage in self.IMMUNE_USAGES:
+                    continue
+                # Never reclaim/diminish a unique quest item left in an area.
+                if _is_protected_quest_object(world, obj_def, base_id):
                     continue
                 if obj_id in world.container_instances or obj_id in world.writable_instances:
                     continue
@@ -2454,6 +2481,12 @@ class WarMachineCannibalizeStepRule(BaseStepRule):
                 if obj_def.category in self.IMMUNE_CATEGORIES:
                     continue
                 if obj_def.usage in self.IMMUNE_USAGES:
+                    continue
+                # Quest items must never be cannibalized — an enemy eating a
+                # unique quest object off the ground (e.g. the demon_core, the
+                # single highest-value object, which this rule picks first) can
+                # soft-lock the main quest.
+                if _is_protected_quest_object(world, obj_def, base_obj_id):
                     continue
                 # Skip container and writable instances
                 if obj_id in world.container_instances or obj_id in world.writable_instances:

@@ -1502,13 +1502,21 @@ class CorpseCorruptionStepRule(BaseStepRule):
 
     # Corruption rises by this amount per corpse per step
     CORRUPTION_PER_CORPSE_PER_STEP = 1
-    # Threshold at which the area starts spawning mutants
-    CORRUPTION_THRESHOLD = 10
+    # Threshold at which the area starts spawning mutants.
+    # Softened for the memory-benchmark build: raised far above what a normal
+    # episode reaches, so the endless-mutant spawner effectively never fires.
+    # Its constant enemy pressure was degrading the Long Context agent into an
+    # incoherent wander/thrash loop (it never got to execute the recall gate).
+    # Combat is now optional, not constant. (Was 10.)
+    CORRUPTION_THRESHOLD = 100000
     # Steps between successive mutant spawns once threshold is crossed
-    SPAWN_COOLDOWN = 5
-    # Stat multiplier for mutated variants
-    MUTANT_HP_MULTIPLIER = 1.5
-    MUTANT_ATK_MULTIPLIER = 1.4
+    SPAWN_COOLDOWN = 30
+    # Stat multiplier for mutated variants (were 1.5 / 1.4). No longer buffed.
+    MUTANT_HP_MULTIPLIER = 1.0
+    MUTANT_ATK_MULTIPLIER = 1.0
+    # Hard ceiling on living enemies in one area (kept low as a backstop even
+    # though the raised threshold means the spawner should never reach here).
+    MAX_ENEMIES_PER_AREA = 2
 
     def apply(self, ctx: RuleContext, res: RuleResult) -> None:
         env, world = ctx.env, ctx.world
@@ -1534,16 +1542,27 @@ class CorpseCorruptionStepRule(BaseStepRule):
                     continue
                 # only track enemy NPCs
                 npc_inst = world.npc_instances.get(npc_id)
+                base_id = get_def_id(npc_id)
+                proto = world.npcs.get(base_id)
                 if npc_inst is None:
                     # already removed; check prototype
-                    base_id = get_def_id(npc_id)
-                    proto = world.npcs.get(base_id)
                     if proto is None or not getattr(proto, "enemy", False):
                         continue
                 elif not getattr(npc_inst, "enemy", True):
                     continue
 
-                area_corpses.setdefault(kill_area, []).append(get_def_id(npc_id))
+                # Never corrupt a QUEST enemy. The morgue-keycard boss
+                # (npc_ward_zombie_2) is a quest enemy; mutating it duplicated
+                # the unique keycard onto every mutant, spawned non-tracked
+                # instances that killing never satisfied `boss_already_defeated`,
+                # and buried the one instance that counts under a swarm — making
+                # ch1_get_keycard flakily unwinnable. Quest enemies are killed
+                # once, for the quest, and must not respawn as farmable mutants.
+                if (proto is not None and getattr(proto, "quest", False)) or \
+                   (npc_inst is not None and getattr(npc_inst, "quest", False)):
+                    continue
+
+                area_corpses.setdefault(kill_area, []).append(base_id)
 
         # --- 2. tick corruption for every area that has corpses ---
         for area_id, corpse_list in list(area_corpses.items()):
@@ -1587,14 +1606,36 @@ class CorpseCorruptionStepRule(BaseStepRule):
             if not corpse_list:
                 continue
 
+            # population cap: never let one area exceed MAX_ENEMIES_PER_AREA
+            # living enemies. Dead NPCs are removed from area.npcs, so counting
+            # live instances here is the right measure.
+            cap_area = world.area_instances.get(area_id)
+            if cap_area is None:
+                continue
+            living_enemies = 0
+            for nid in (getattr(cap_area, "npcs", []) or []):
+                inst = world.npc_instances.get(nid)
+                if inst is not None and getattr(inst, "enemy", False) and getattr(inst, "hp", 0) > 0:
+                    living_enemies += 1
+            if living_enemies >= self.MAX_ENEMIES_PER_AREA:
+                continue
+
             # cooldown management
             cd = corruption_spawn_cd.get(area_id, 0)
             if cd > 0:
                 corruption_spawn_cd[area_id] = cd - 1
                 continue
 
-            # pick a random corpse type to mutate
-            base_npc_id = env.rng.choice(corpse_list)
+            # pick a random NON-QUEST corpse type to mutate. Quest enemies must
+            # never be mutated (see the corpse-recording guard above): doing so
+            # duplicates their unique quest items and breaks boss-defeat
+            # tracking. Belt-and-suspenders in case a quest corpse reaches the
+            # list by any path; also drop such corpses so they can't re-select.
+            spawnable = [b for b in corpse_list
+                         if not getattr(world.npcs.get(b), "quest", False)]
+            if not spawnable:
+                continue
+            base_npc_id = env.rng.choice(spawnable)
             proto = world.npcs.get(base_npc_id)
             if proto is None or not getattr(proto, "enemy", False):
                 continue
@@ -1659,14 +1700,57 @@ class QuarantineLockdownStepRule(BaseStepRule):
     )
     priority = 9  # after corpse corruption (8), before world expansion (100)
 
-    # Steps with corpses before lockdown triggers
-    LOCKDOWN_THRESHOLD = 8
+    # Steps with corpses before lockdown triggers. Raised far above a normal
+    # episode for the memory-benchmark build: sealing areas trapped the agent
+    # with enemies and forced combat, feeding the Long Context degradation.
+    # Effectively disabled so movement stays free. (Was 8.)
+    LOCKDOWN_THRESHOLD = 100000
     # Timer increment per step per area that has corpses
     TIMER_INCREMENT = 1
     # Warning thresholds (fraction of LOCKDOWN_THRESHOLD)
     WARN_AT_HALF = True
 
     MASTER_KEYCARD_ID = "obj_master_keycard"
+    # Resources that make a sealed area survivable.
+    BURN_REQUIREMENTS = {"obj_chemical": 1, "obj_rag": 1}
+    KEYCARD_RECIPE = {"obj_circuit_board": 1, "obj_key_blank": 1, "obj_chemical": 1}
+    WORKBENCH_ID = "obj_workbench"
+
+    @staticmethod
+    def _reachable(world, agent, area, oid: str) -> int:
+        """How many of *oid* the agent can get at without leaving *area*.
+
+        Counts hands, equipped inventory, held containers and the area floor --
+        while sealed in, anything on the floor is still pickable.
+        """
+        n = int(agent.items_in_hands.get(oid, 0))
+        if agent.inventory.container:
+            n += int(agent.inventory.items.get(oid, 0))
+        for held in list(agent.items_in_hands.keys()):
+            ci = world.container_instances.get(held)
+            if ci is not None:
+                n += int(ci.inventory.get(oid, 0))
+        if area is not None:
+            n += int((getattr(area, "objects", {}) or {}).get(oid, 0))
+        return n
+
+    def _escape_available(self, world, agent, area) -> bool:
+        """Whether a lockdown of *area* would still leave this agent a way out.
+
+        Three documented outs: already holding a master_keycard, burning the
+        corpses (chemical + rag), or crafting a master_keycard on a workbench
+        in the area. If none is reachable the seal would be unwinnable.
+        """
+        if self._reachable(world, agent, area, self.MASTER_KEYCARD_ID) >= 1:
+            return True
+        if all(self._reachable(world, agent, area, oid) >= need
+               for oid, need in self.BURN_REQUIREMENTS.items()):
+            return True
+        has_bench = int((getattr(area, "objects", {}) or {}).get(self.WORKBENCH_ID, 0)) >= 1
+        if has_bench and all(self._reachable(world, agent, area, oid) >= need
+                             for oid, need in self.KEYCARD_RECIPE.items()):
+            return True
+        return False
 
     def apply(self, ctx: RuleContext, res: RuleResult) -> None:
         env, world = ctx.env, ctx.world
@@ -1772,8 +1856,22 @@ class QuarantineLockdownStepRule(BaseStepRule):
             area_lock["locked_paths"] = []
             area_lock["locked_containers"] = []
 
+        # The spawn area is where every dead agent respawns
+        # (DeathAndRespawnStepRule sends them to initializations.spawn.area).
+        # It must never lock: a seal that lands while the agent is away dying
+        # would drop it back into a sealed room on respawn -- the per-agent
+        # escape check below can't help, because at seal time no agent is in
+        # the area to be judged "trapped". Exempting the respawn point closes
+        # both that hole and the repeated-death corpse pileup that feeds it.
+        respawn_area_id = ((env.world_definition.get("initializations") or {}).get("spawn") or {}).get("area")
+
         # --- 2. Tick lockdown timers for areas with corpses ---
         for area_id, corpse_list in list(area_corpses.items()):
+            if area_id == respawn_area_id:
+                # Never accumulate a lockdown timer on the respawn area.
+                if area_id in lockdown_state and not lockdown_state[area_id].get("active", False):
+                    lockdown_state[area_id]["timer"] = 0
+                continue
             if not corpse_list:
                 # If corpses were cleared (burned), reset timer
                 if area_id in lockdown_state:
@@ -1823,10 +1921,42 @@ class QuarantineLockdownStepRule(BaseStepRule):
 
             # --- 3. Trigger lockdown ---
             if new_timer >= self.LOCKDOWN_THRESHOLD:
-                lock_info["active"] = True
                 area = world.area_instances.get(area_id)
                 if not area:
                     continue
+
+                # Never seal an agent into an area it cannot get out of. All
+                # three advertised escapes (carry a master_keycard, burn the
+                # corpses, craft a keycard at a bench here) need materials that
+                # may simply not exist in this room -- sealing anyway produces
+                # an unwinnable episode, which is what happened to the lobby in
+                # the 500-step gpt-5 run. Hold the timer one short of the
+                # threshold and re-check every step: the doors close the moment
+                # the agent has a way out, or once it leaves.
+                trapped = [
+                    agent for agent in env.agents
+                    if agent.hp > 0
+                    and env.curr_agents_state["area"].get(agent.id) == area_id
+                    and not self._escape_available(world, agent, area)
+                ]
+                if trapped:
+                    lock_info["timer"] = self.LOCKDOWN_THRESHOLD - 1
+                    for agent in trapped:
+                        res.add_feedback(
+                            agent.id,
+                            f"The blast doors in {area_name} shudder but hold. The quarantine "
+                            f"protocol cannot seal an area with no containment materials — "
+                            f"but the sensors are still screaming. Find a rag and a chemical to "
+                            f"burn the corpses, or leave.\n"
+                        )
+                    res.events.append(Event(
+                        type="quarantine_lockdown_deferred",
+                        agent_id=None,
+                        data={"area_id": area_id, "agents": [a.id for a in trapped]},
+                    ))
+                    continue
+
+                lock_info["active"] = True
 
                 # Lock all paths out of this area
                 locked_paths = []

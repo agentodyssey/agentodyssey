@@ -2261,14 +2261,17 @@
         "obj_workbench": 1
       }
     },
-    "undistributable_objects": ["obj_war_engine_heart"]
+    "undistributable_objects": [
+      "obj_war_engine_heart"
+    ]
   },
   "custom_events": [
     "main_quest",
-    "side_quest"
+    "side_quest",
+    "tutorial"
   ],
   "features": {
-    "online_expansion": true,
+    "online_expansion": false,
     "expansion_model": "gpt-5-mini"
   },
   "graph": {

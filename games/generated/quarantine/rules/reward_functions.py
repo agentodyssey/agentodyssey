@@ -34,11 +34,16 @@ class DefaultRewardFunction(RewardFunction):
                 reward[aid].exploration += 1
                 env.curr_agents_state["areas_visited"][aid].append(env.curr_agents_state["area"][aid])
 
-            # kills
-            prev_kills = len(prev_state["npcs_killed"][aid])
-            curr_kills = len(env.curr_agents_state["npcs_killed"][aid])
-            if curr_kills > prev_kills:
-                reward[aid].kill += curr_kills - prev_kills
+            # kills — award XP only for the FIRST kill of each enemy type
+            # (unique_npcs_killed dedups by base-id + level). Corruption-spawned
+            # mutants all share a type, so this removes the kill-farm: repeat
+            # kills still give combat feedback but no XP, making quest progress
+            # the reward-optimal path instead of grinding a bounded-but-endless
+            # enemy supply. Genuine combat (each new boss/mutant type) still pays.
+            prev_kill_types = len(prev_state["unique_npcs_killed"][aid])
+            curr_kill_types = len(env.curr_agents_state["unique_npcs_killed"][aid])
+            if curr_kill_types > prev_kill_types:
+                reward[aid].kill += curr_kill_types - prev_kill_types
 
             # unique kills
             prev_kills = len(prev_state["unique_npcs_killed"][aid])
